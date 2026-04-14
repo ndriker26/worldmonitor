@@ -1054,9 +1054,14 @@ export const VARIANT_PANEL_OVERRIDES: Partial<Record<string, Partial<Record<stri
     map:         { name: 'World Map' },
   },
   energy: {
-    map:         { name: 'Energy Infrastructure Map' },
-    'live-news': { name: 'Energy Headlines' },
-    insights:    { name: 'AI Energy Insights' },
+    map:                { name: 'Energy Infrastructure Map' },
+    'live-news':        { name: 'Energy Headlines' },
+    insights:           { name: 'AI Energy Insights' },
+    energy:             { name: 'Energy Markets' },
+    commodities:        { name: 'Commodity Prices' },
+    climate:            { name: 'Climate & Weather Impact' },
+    'supply-chain':     { name: 'Supply Chain & Logistics' },
+    'strategic-posture': { name: 'Strategic Posture' },
   },
 };
 
