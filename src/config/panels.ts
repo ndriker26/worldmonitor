@@ -905,6 +905,8 @@ const ENERGY_PANELS: Record<string, PanelConfig> = {
 };
 
 const ENERGY_MAP_LAYERS: MapLayers = {
+  usPlants: true,
+  pipelines: true,
   weather: true,
   waterways: true,
   natural: true,
@@ -926,7 +928,6 @@ const ENERGY_MAP_LAYERS: MapLayers = {
   ais: false,
   flights: false,
   cables: false,
-  pipelines: false,
   outages: false,
   datacenters: false,
   sanctions: false,
@@ -958,10 +959,11 @@ const ENERGY_MAP_LAYERS: MapLayers = {
   resilienceScore: false,
   webcams: false,
   diseaseOutbreaks: false,
-  usPlants: false,
 };
 
 const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
+  usPlants: false,
+  pipelines: false,
   natural: true,
   fires: true,
 
@@ -983,7 +985,6 @@ const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
   ais: false,
   flights: false,
   cables: false,
-  pipelines: false,
   outages: false,
   datacenters: false,
   sanctions: false,
@@ -1015,7 +1016,6 @@ const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
   resilienceScore: false,
   webcams: false,
   diseaseOutbreaks: false,
-  usPlants: false,
 };
 
 // ============================================
