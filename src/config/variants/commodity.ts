@@ -117,6 +117,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   resilienceScore: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -181,6 +182,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   resilienceScore: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 export const VARIANT_CONFIG: VariantConfig = {

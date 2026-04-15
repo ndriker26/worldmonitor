@@ -164,6 +164,7 @@ const FULL_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 const FULL_MOBILE_MAP_LAYERS: MapLayers = {
@@ -227,6 +228,7 @@ const FULL_MOBILE_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ============================================
@@ -334,6 +336,7 @@ const TECH_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 const TECH_MOBILE_MAP_LAYERS: MapLayers = {
@@ -396,6 +399,7 @@ const TECH_MOBILE_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ============================================
@@ -516,6 +520,7 @@ const FINANCE_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
@@ -578,6 +583,7 @@ const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ============================================
@@ -656,6 +662,7 @@ const HAPPY_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -718,6 +725,7 @@ const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ============================================
@@ -813,6 +821,7 @@ const COMMODITY_MAP_LAYERS: MapLayers = {
   commodityPorts: true,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -875,6 +884,7 @@ const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
   commodityPorts: true,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ============================================
@@ -948,6 +958,7 @@ const ENERGY_MAP_LAYERS: MapLayers = {
   resilienceScore: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -1004,6 +1015,7 @@ const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
   resilienceScore: false,
   webcams: false,
   diseaseOutbreaks: false,
+  usPlants: false,
 };
 
 // ============================================

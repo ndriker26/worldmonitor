@@ -93,8 +93,9 @@ import {
   PROCESSING_PLANTS,
   COMMODITY_PORTS as COMMODITY_GEO_PORTS,
   SANCTIONED_COUNTRIES_ALPHA2,
+  US_POWER_PLANTS,
 } from '@/config';
-import type { GulfInvestment } from '@/types';
+import type { GulfInvestment, UsPowerPlant } from '@/types';
 import { resolveTradeRouteSegments, TRADE_ROUTES as TRADE_ROUTES_LIST, type TradeRouteSegment } from '@/config/trade-routes';
 import { getLayersForVariant, resolveLayerLabel, bindLayerSearch, type MapVariant } from '@/config/map-layer-definitions';
 import { getAuthState, subscribeAuthState } from '@/services/auth-state';
@@ -197,6 +198,7 @@ const LAYER_ZOOM_THRESHOLDS: Partial<Record<keyof MapLayers, { minZoom: number; 
   irradiators: { minZoom: 4 },
   spaceports: { minZoom: 3 },
   gulfInvestments: { minZoom: 2, showLabels: 5 },
+  usPlants: { minZoom: 3 },
 };
 // Export for external use
 export { LAYER_ZOOM_THRESHOLDS };
@@ -286,6 +288,20 @@ const BASES_ICON_MAPPING = { triangleUp: { x: 0, y: 0, width: 32, height: 32, ma
 const NUCLEAR_ICON_MAPPING = { hexagon: { x: 0, y: 0, width: 32, height: 32, mask: true } };
 const DATACENTER_ICON_MAPPING = { square: { x: 0, y: 0, width: 32, height: 32, mask: true } };
 const AIRCRAFT_ICON_MAPPING = { plane: { x: 0, y: 0, width: 32, height: 32, mask: true } };
+const US_PLANT_ICON_MAPPING = { circle: { x: 0, y: 0, width: 32, height: 32, mask: true } };
+
+const US_PLANT_FUEL_COLORS: Record<string, [number, number, number, number]> = {
+  natural_gas: [255, 140, 0, 200],
+  coal:        [60, 60, 60, 200],
+  nuclear:     [255, 220, 0, 200],
+  wind:        [100, 180, 255, 200],
+  solar:       [255, 230, 50, 200],
+  hydro:       [50, 130, 220, 200],
+  oil:         [200, 50, 50, 200],
+  biomass:     [100, 180, 80, 200],
+  geothermal:  [180, 80, 200, 200],
+  other:       [150, 150, 150, 200],
+};
 
 const CONFLICT_COUNTRY_ISO: Record<string, string[]> = {
   iran: ['IR'],
@@ -1451,6 +1467,12 @@ export class DeckGLMap {
     }
     layers.push(this.createEmptyGhost('nuclear-layer'));
 
+    // US power plants layer (energy variant) — ~13k points via IconLayer
+    if (mapLayers.usPlants && this.isLayerVisible('usPlants')) {
+      layers.push(this.createUsPlantsLayer());
+    }
+    layers.push(this.createEmptyGhost('us-plants-layer'));
+
     // Gamma irradiators layer — hidden at low zoom
     if (mapLayers.irradiators && this.isLayerVisible('irradiators')) {
       layers.push(this.createIrradiatorsLayer());
@@ -1985,6 +2007,29 @@ export class DeckGLMap {
       sizeMinPixels: 6,
       sizeMaxPixels: 15,
       pickable: true,
+    });
+  }
+
+  private createUsPlantsLayer(): IconLayer {
+    return new IconLayer<UsPowerPlant>({
+      id: 'us-plants-layer',
+      data: US_POWER_PLANTS,
+      getPosition: (d) => [d.lon, d.lat],
+      getIcon: () => 'circle',
+      iconAtlas: MARKER_ICONS.circle,
+      iconMapping: US_PLANT_ICON_MAPPING,
+      getSize: (d) => {
+        // Scale by capacity: tiny plants ~4, large plants (>1000 MW) ~18
+        const mw = d.capacityMW || 1;
+        return Math.min(18, Math.max(4, 4 + Math.sqrt(mw) * 0.4));
+      },
+      getColor: (d) => US_PLANT_FUEL_COLORS[d.fuelType] ?? US_PLANT_FUEL_COLORS.other!,
+      sizeScale: 1,
+      sizeMinPixels: 3,
+      sizeMaxPixels: 20,
+      pickable: true,
+      // Performance: with ~13k points, disable auto-highlight for speed
+      autoHighlight: false,
     });
   }
 
@@ -3622,6 +3667,8 @@ export class DeckGLMap {
         return { html: `<div class="deckgl-tooltip"><strong>${obj.count} bases</strong></div>` };
       case 'nuclear-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.type)}</div>` };
+      case 'us-plants-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.fuelType?.replace('_', ' '))} · ${obj.capacityMW} MW</div>` };
       case 'datacenters-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.owner)}</div>` };
       case 'cables-layer':
@@ -4026,6 +4073,7 @@ export class DeckGLMap {
 
       'bases-layer': 'base',
       'nuclear-layer': 'nuclear',
+      'us-plants-layer': 'usPlant',
       'irradiators-layer': 'irradiator',
       'radiation-watch-layer': 'radiation',
       'datacenters-layer': 'datacenter',

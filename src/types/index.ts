@@ -532,6 +532,30 @@ export interface NuclearFacility {
   operator?: string;  // Operating country
 }
 
+// US power plant fuel categories (EIA Form 860)
+export type UsPowerPlantFuel =
+  | 'natural_gas'
+  | 'coal'
+  | 'nuclear'
+  | 'wind'
+  | 'solar'
+  | 'hydro'
+  | 'oil'
+  | 'biomass'
+  | 'geothermal'
+  | 'other';
+
+export interface UsPowerPlant {
+  id: string;
+  name: string;
+  operator: string;
+  state: string;
+  lat: number;
+  lon: number;
+  fuelType: UsPowerPlantFuel;
+  capacityMW: number;
+}
+
 export interface GammaIrradiator {
   id: string;
   city: string;
@@ -667,6 +691,8 @@ export interface MapLayers {
   webcams: boolean;
   // Health layers
   diseaseOutbreaks: boolean;
+  // Energy variant layers
+  usPlants: boolean;
 }
 
 export interface AIDataCenter {

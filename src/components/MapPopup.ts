@@ -1,4 +1,4 @@
-import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat } from '@/types';
+import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, UsPowerPlant, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat } from '@/types';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { Earthquake } from '@/services/earthquakes';
 import type { WeatherAlert } from '@/services/weather';
@@ -42,7 +42,7 @@ function fmtDelayMin(min: number | undefined): string {
   return `<span style="color:${min > 0 ? '#f97316' : '#22c55e'};font-size:10px;margin-left:3px">${min > 0 ? '+' : ''}${min}m</span>`;
 }
 
-export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
+export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'usPlant' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
 
 interface TechEventPopupData {
   id: string;
@@ -171,7 +171,7 @@ interface DatacenterClusterData {
 
 interface PopupData {
   type: PopupType;
-  data: ConflictZone | Hotspot | Earthquake | WeatherAlert | MilitaryBase | StrategicWaterway | APTGroup | CyberThreat | NuclearFacility | EconomicCenter | GammaIrradiator | Pipeline | UnderseaCable | CableAdvisory | RepairShip | InternetOutage | AIDataCenter | AisDisruptionEvent | SocialUnrestEvent | AirportDelayAlert | PositionSample | MilitaryFlight | MilitaryVessel | MilitaryFlightCluster | MilitaryVesselCluster | NaturalEvent | Port | Spaceport | CriticalMineralProject | StartupHub | CloudRegion | TechHQ | Accelerator | TechEventPopupData | TechHQClusterData | TechEventClusterData | ProtestClusterData | DatacenterClusterData | TechHubActivity | GeoHubActivity | StockExchangePopupData | FinancialCenterPopupData | CentralBankPopupData | CommodityHubPopupData | IranEventPopupData | GpsJammingPopupData | RadiationObservation;
+  data: ConflictZone | Hotspot | Earthquake | WeatherAlert | MilitaryBase | StrategicWaterway | APTGroup | CyberThreat | NuclearFacility | UsPowerPlant | EconomicCenter | GammaIrradiator | Pipeline | UnderseaCable | CableAdvisory | RepairShip | InternetOutage | AIDataCenter | AisDisruptionEvent | SocialUnrestEvent | AirportDelayAlert | PositionSample | MilitaryFlight | MilitaryVessel | MilitaryFlightCluster | MilitaryVesselCluster | NaturalEvent | Port | Spaceport | CriticalMineralProject | StartupHub | CloudRegion | TechHQ | Accelerator | TechEventPopupData | TechHQClusterData | TechEventClusterData | ProtestClusterData | DatacenterClusterData | TechHubActivity | GeoHubActivity | StockExchangePopupData | FinancialCenterPopupData | CentralBankPopupData | CommodityHubPopupData | IranEventPopupData | GpsJammingPopupData | RadiationObservation;
   relatedNews?: NewsItem[];
   x: number;
   y: number;
@@ -466,6 +466,8 @@ export class MapPopup {
         return this.renderCyberThreatPopup(data.data as CyberThreat);
       case 'nuclear':
         return this.renderNuclearPopup(data.data as NuclearFacility);
+      case 'usPlant':
+        return this.renderUsPlantPopup(data.data as UsPowerPlant);
       case 'economic':
         return this.renderEconomicPopup(data.data as EconomicCenter);
       case 'irradiator':
@@ -1555,6 +1557,66 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
           </div>
         </div>
         <p class="popup-description">${t('popups.nuclear.description')}</p>
+      </div>
+    `;
+  }
+
+  private renderUsPlantPopup(plant: UsPowerPlant): string {
+    const fuelLabels: Record<string, string> = {
+      natural_gas: 'Natural Gas',
+      coal: 'Coal',
+      nuclear: 'Nuclear',
+      wind: 'Wind',
+      solar: 'Solar',
+      hydro: 'Hydroelectric',
+      oil: 'Oil / Petroleum',
+      biomass: 'Biomass',
+      geothermal: 'Geothermal',
+      other: 'Other',
+    };
+    const fuelColors: Record<string, string> = {
+      natural_gas: '#ff8c00',
+      coal: '#3c3c3c',
+      nuclear: '#ffdc00',
+      wind: '#64b4ff',
+      solar: '#ffe632',
+      hydro: '#3282dc',
+      oil: '#c83232',
+      biomass: '#64b450',
+      geothermal: '#b450c8',
+      other: '#969696',
+    };
+    const color = fuelColors[plant.fuelType] || fuelColors.other;
+
+    return `
+      <div class="popup-header" style="border-left:3px solid ${color}">
+        <span class="popup-title">${escapeHtml(plant.name.toUpperCase())}</span>
+        <span class="popup-badge" style="background:${color};color:#fff">${escapeHtml(fuelLabels[plant.fuelType] || plant.fuelType)}</span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-stats">
+          <div class="popup-stat">
+            <span class="stat-label">Operator</span>
+            <span class="stat-value">${escapeHtml(plant.operator)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">State</span>
+            <span class="stat-value">${escapeHtml(plant.state)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Fuel Type</span>
+            <span class="stat-value" style="color:${color}">${escapeHtml(fuelLabels[plant.fuelType] || plant.fuelType)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Capacity</span>
+            <span class="stat-value">${plant.capacityMW.toLocaleString()} MW</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">${t('popups.coordinates')}</span>
+            <span class="stat-value">${plant.lat.toFixed(4)}°, ${plant.lon.toFixed(4)}°</span>
+          </div>
+        </div>
       </div>
     `;
   }

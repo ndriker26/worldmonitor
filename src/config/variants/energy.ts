@@ -28,12 +28,14 @@ export const DEFAULT_PANELS: Record<string, PanelConfig> = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAP LAYERS — Energy scaffold (Phase 1)
-// Only contextual layers enabled. Energy-specific layers (power plants,
-// transmission lines, ISO regions, grid outages) will be added in Phase 2.
+// MAP LAYERS — Energy variant (Phase 2)
+// Energy-specific layers enabled. More (transmission lines, ISO regions,
+// grid outages) will be added in later phases.
 // ─────────────────────────────────────────────────────────────────────────────
 export const DEFAULT_MAP_LAYERS: MapLayers = {
-  // ── Contextual layers for energy (ENABLED) ─────────────────────────────────
+  // ── Energy layers (ENABLED) ────────────────────────────────────────────────
+  usPlants: true,
+  pipelines: true,
   weather: true,
   waterways: true,
   natural: true,
@@ -60,7 +62,6 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   flights: false,
   // Infrastructure (non-energy)
   cables: false,
-  pipelines: false,
   outages: false,
   datacenters: false,
   // Sanctions / financial context
@@ -106,7 +107,9 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
 // MOBILE MAP LAYERS — Minimal set for energy mobile view
 // ─────────────────────────────────────────────────────────────────────────────
 export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
-  // Contextual layers (reduced on mobile for performance)
+  // Energy layers (reduced on mobile — 13k plants too heavy)
+  usPlants: false,
+  pipelines: false,
   weather: false,
   waterways: false,
   natural: true,
@@ -129,7 +132,6 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   ais: false,
   flights: false,
   cables: false,
-  pipelines: false,
   outages: false,
   datacenters: false,
   sanctions: false,

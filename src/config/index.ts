@@ -141,3 +141,6 @@ export {
 // COMMODITY_MINERS: 30+ mining company HQs — not yet rendered on map.
 // Uncomment when a miners layer is added to DeckGLMap.ts.
 // export { COMMODITY_MINERS, type CommodityMiner } from './commodity-miners';
+
+// Energy variant - US power plant data
+export { US_POWER_PLANTS } from './us-power-plants';

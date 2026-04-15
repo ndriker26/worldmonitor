@@ -82,6 +82,8 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   webcams:                  def('webcams',                  '&#128247;', 'webcams',                  'Live Webcams'),
   // weatherRadar removed — radar tiles now auto-start when Weather Alerts layer is toggled on
   diseaseOutbreaks:         def('diseaseOutbreaks',         '&#129440;', 'diseaseOutbreaks',         'Disease Outbreaks'),
+  // Energy variant layers
+  usPlants:                 def('usPlants',                 '&#9889;',   'usPowerPlants',            'US Power Plants'),
 };
 
 const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
@@ -118,7 +120,8 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'resilienceScore', 'natural', 'weather', 'outages', 'sanctions', 'dayNight',
   ],
   energy: [
-    'weather', 'waterways', 'natural', 'fires',
+    'usPlants',
+    'pipelines', 'weather', 'waterways', 'natural', 'fires',
   ],
 };
 
@@ -186,7 +189,10 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   demonstration: ['protests'],
   oil: ['pipelines', 'commodityHubs'],
   gas: ['pipelines'],
-  energy: ['pipelines', 'renewableInstallations'],
+  energy: ['pipelines', 'renewableInstallations', 'usPlants'],
+  powerplant: ['usPlants'],
+  generator: ['usPlants'],
+  electricity: ['usPlants'],
   solar: ['renewableInstallations'],
   wind: ['renewableInstallations'],
   green: ['renewableInstallations', 'speciesRecovery'],
