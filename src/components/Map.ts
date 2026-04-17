@@ -405,7 +405,20 @@ export class MapComponent {
     const happyLayers: (keyof MapLayers)[] = [
       'positiveEvents', 'kindness', 'happiness', 'speciesRecovery', 'renewableInstallations',
     ];
-    const layers = SITE_VARIANT === 'tech' ? techLayers : SITE_VARIANT === 'finance' ? financeLayers : SITE_VARIANT === 'happy' ? happyLayers : fullLayers;
+    const commodityLayers: (keyof MapLayers)[] = [
+      'minerals', 'pipelines', 'waterways',                // commodity infrastructure
+      'economic', 'natural', 'weather',                     // context layers
+    ];
+    const energyLayers: (keyof MapLayers)[] = [
+      'usPlants', 'usTransmission',                         // energy infrastructure
+      'pipelines', 'weather', 'waterways', 'natural', 'fires', // context layers
+    ];
+    const layers = SITE_VARIANT === 'tech' ? techLayers
+      : SITE_VARIANT === 'finance' ? financeLayers
+      : SITE_VARIANT === 'happy' ? happyLayers
+      : SITE_VARIANT === 'commodity' ? commodityLayers
+      : SITE_VARIANT === 'energy' ? energyLayers
+      : fullLayers;
     const layerLabelKeys: Partial<Record<keyof MapLayers, string>> = {
       hotspots: 'components.deckgl.layers.intelHotspots',
       conflicts: 'components.deckgl.layers.conflictZones',
@@ -436,6 +449,8 @@ export class MapComponent {
       iranAttacks: 'components.deckgl.layers.iranAttacks',
       gpsJamming: 'components.deckgl.layers.gpsJamming',
       ciiChoropleth: 'components.deckgl.layers.ciiChoropleth',
+      usPlants: 'components.deckgl.layers.usPowerPlants',
+      usTransmission: 'components.deckgl.layers.usTransmissionLines',
     };
     const getLayerLabel = (layer: keyof MapLayers): string => {
       if (layer === 'sanctions') return t('components.deckgl.layerHelp.labels.sanctions');

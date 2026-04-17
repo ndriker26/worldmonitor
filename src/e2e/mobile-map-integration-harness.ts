@@ -140,6 +140,7 @@ const layers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 await initI18n();

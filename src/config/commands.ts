@@ -18,6 +18,7 @@ export const LAYER_PRESETS: Record<string, (keyof MapLayers)[]> = {
   infra: ['cables', 'pipelines', 'datacenters', 'spaceports', 'minerals'],
   intel: ['conflicts', 'hotspots', 'protests', 'ucdpEvents', 'displacement'],
   minimal: ['conflicts', 'hotspots'],
+  energy: ['usPlants', 'usTransmission', 'pipelines'],
 };
 
 // Maps command suffix → actual MapLayers key when they differ
@@ -29,6 +30,9 @@ export const LAYER_KEY_MAP: Record<string, keyof MapLayers> = {
   iran: 'iranAttacks',
   radiation: 'radiationWatch',
   natural: 'natural',
+  transmission: 'usTransmission',
+  grid: 'usTransmission',
+  plants: 'usPlants',
 };
 
 export const COMMANDS: Command[] = [
@@ -84,6 +88,11 @@ export const COMMANDS: Command[] = [
   { id: 'layer:cii', keywords: ['cii', 'instability index', 'country instability'], label: 'Toggle CII instability', icon: '\u{1F30E}', category: 'layers' },
   { id: 'layer:dayNight', keywords: ['day night', 'terminator', 'shadow', 'day/night'], label: 'Toggle day/night overlay', icon: '\u{1F31C}', category: 'layers' },
   { id: 'layer:sanctions', keywords: ['sanctions', 'embargoes'], label: 'Toggle sanctions', icon: '\u{1F6AB}', category: 'layers' },
+  { id: 'layer:usPlants', keywords: ['power plants', 'plants', 'generators', 'electricity'], label: 'Toggle US power plants', icon: '\u26A1', category: 'layers' },
+  { id: 'layer:transmission', keywords: ['transmission', 'transmission lines', 'grid', 'voltage', 'power grid', 'electricity grid'], label: 'Toggle transmission lines', icon: '\u{1F50C}', category: 'layers' },
+
+  // Layer presets - energy
+  { id: 'layers:energy', keywords: ['energy layers', 'show energy', 'power grid', 'electricity'], label: 'Show energy layers', icon: '\u26A1', category: 'layers' },
 
   // Panel navigation (matching actual DEFAULT_PANELS keys)
   { id: 'panel:live-news', keywords: ['news', 'live news', 'headlines'], label: 'Panel: Live News', icon: '\u{1F4F0}', category: 'panels' },

@@ -35,6 +35,7 @@ export const DEFAULT_PANELS: Record<string, PanelConfig> = {
 export const DEFAULT_MAP_LAYERS: MapLayers = {
   // ── Energy layers (ENABLED) ────────────────────────────────────────────────
   usPlants: true,
+  usTransmission: true,
   pipelines: true,
   weather: true,
   waterways: true,
@@ -109,6 +110,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
 export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   // Energy layers (reduced on mobile — 13k plants too heavy)
   usPlants: false,
+  usTransmission: false,
   pipelines: false,
   weather: false,
   waterways: false,

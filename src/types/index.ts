@@ -556,6 +556,14 @@ export interface UsPowerPlant {
   capacityMW: number;
 }
 
+export interface UsTransmissionLine {
+  id: string;
+  voltageKv: number;
+  owner?: string;
+  lineType?: string;
+  coordinates: [number, number][];
+}
+
 export interface GammaIrradiator {
   id: string;
   city: string;
@@ -693,6 +701,7 @@ export interface MapLayers {
   diseaseOutbreaks: boolean;
   // Energy variant layers
   usPlants: boolean;
+  usTransmission: boolean;
 }
 
 export interface AIDataCenter {

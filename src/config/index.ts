@@ -142,5 +142,6 @@ export {
 // Uncomment when a miners layer is added to DeckGLMap.ts.
 // export { COMMODITY_MINERS, type CommodityMiner } from './commodity-miners';
 
-// Energy variant - US power plant data
+// Energy variant - US power plant + transmission line data
 export { US_POWER_PLANTS } from './us-power-plants';
+export { US_TRANSMISSION_LINES } from './us-transmission-lines';

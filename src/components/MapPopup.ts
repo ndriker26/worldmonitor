@@ -1,4 +1,4 @@
-import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, UsPowerPlant, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat } from '@/types';
+import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, UsPowerPlant, UsTransmissionLine, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat } from '@/types';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { Earthquake } from '@/services/earthquakes';
 import type { WeatherAlert } from '@/services/weather';
@@ -42,7 +42,7 @@ function fmtDelayMin(min: number | undefined): string {
   return `<span style="color:${min > 0 ? '#f97316' : '#22c55e'};font-size:10px;margin-left:3px">${min > 0 ? '+' : ''}${min}m</span>`;
 }
 
-export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'usPlant' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
+export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'usPlant' | 'usTransmission' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
 
 interface TechEventPopupData {
   id: string;
@@ -468,6 +468,8 @@ export class MapPopup {
         return this.renderNuclearPopup(data.data as NuclearFacility);
       case 'usPlant':
         return this.renderUsPlantPopup(data.data as UsPowerPlant);
+      case 'usTransmission':
+        return this.renderUsTransmissionPopup(data.data as unknown as UsTransmissionLine);
       case 'economic':
         return this.renderEconomicPopup(data.data as EconomicCenter);
       case 'irradiator':
@@ -1616,6 +1618,39 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
             <span class="stat-label">${t('popups.coordinates')}</span>
             <span class="stat-value">${plant.lat.toFixed(4)}°, ${plant.lon.toFixed(4)}°</span>
           </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private renderUsTransmissionPopup(line: UsTransmissionLine): string {
+    const kv = line.voltageKv;
+    let tierLabel: string;
+    let color: string;
+    if (kv >= 765)      { tierLabel = 'Extra-High Voltage'; color = '#dc3c3c'; }
+    else if (kv >= 500) { tierLabel = 'High Voltage';       color = '#f08c28'; }
+    else if (kv >= 345) { tierLabel = 'Transmission';       color = '#f0c828'; }
+    else if (kv >= 230) { tierLabel = 'Sub-Transmission';   color = '#78b4dc'; }
+    else                { tierLabel = 'Distribution';       color = '#969696'; }
+
+    return `
+      <div class="popup-header" style="border-left:3px solid ${color}">
+        <span class="popup-title">TRANSMISSION LINE</span>
+        <span class="popup-badge" style="background:${color};color:#fff">${kv} kV</span>
+        <button class="popup-close" aria-label="Close">\u00d7</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-stats">
+          <div class="popup-stat">
+            <span class="stat-label">Voltage</span>
+            <span class="stat-value" style="color:${color}">${kv.toLocaleString()} kV</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Class</span>
+            <span class="stat-value">${escapeHtml(tierLabel)}</span>
+          </div>
+          ${line.owner ? `<div class="popup-stat"><span class="stat-label">Owner</span><span class="stat-value">${escapeHtml(line.owner)}</span></div>` : ''}
+          ${line.lineType ? `<div class="popup-stat"><span class="stat-label">Type</span><span class="stat-value">${escapeHtml(line.lineType)}</span></div>` : ''}
         </div>
       </div>
     `;

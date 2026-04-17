@@ -165,6 +165,7 @@ const FULL_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 const FULL_MOBILE_MAP_LAYERS: MapLayers = {
@@ -229,6 +230,7 @@ const FULL_MOBILE_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 // ============================================
@@ -337,6 +339,7 @@ const TECH_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 const TECH_MOBILE_MAP_LAYERS: MapLayers = {
@@ -400,6 +403,7 @@ const TECH_MOBILE_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 // ============================================
@@ -521,6 +525,7 @@ const FINANCE_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
@@ -584,6 +589,7 @@ const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 // ============================================
@@ -663,6 +669,7 @@ const HAPPY_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -726,6 +733,7 @@ const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 // ============================================
@@ -822,6 +830,7 @@ const COMMODITY_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -885,6 +894,7 @@ const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 // ============================================
@@ -906,6 +916,7 @@ const ENERGY_PANELS: Record<string, PanelConfig> = {
 
 const ENERGY_MAP_LAYERS: MapLayers = {
   usPlants: true,
+  usTransmission: true,
   pipelines: true,
   weather: true,
   waterways: true,
@@ -963,6 +974,7 @@ const ENERGY_MAP_LAYERS: MapLayers = {
 
 const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
   usPlants: false,
+  usTransmission: false,
   pipelines: false,
   natural: true,
   fires: true,

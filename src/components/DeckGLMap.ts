@@ -94,8 +94,9 @@ import {
   COMMODITY_PORTS as COMMODITY_GEO_PORTS,
   SANCTIONED_COUNTRIES_ALPHA2,
   US_POWER_PLANTS,
+  US_TRANSMISSION_LINES,
 } from '@/config';
-import type { GulfInvestment, UsPowerPlant } from '@/types';
+import type { GulfInvestment, UsPowerPlant, UsTransmissionLine } from '@/types';
 import { resolveTradeRouteSegments, TRADE_ROUTES as TRADE_ROUTES_LIST, type TradeRouteSegment } from '@/config/trade-routes';
 import { getLayersForVariant, resolveLayerLabel, bindLayerSearch, type MapVariant } from '@/config/map-layer-definitions';
 import { getAuthState, subscribeAuthState } from '@/services/auth-state';
@@ -199,6 +200,7 @@ const LAYER_ZOOM_THRESHOLDS: Partial<Record<keyof MapLayers, { minZoom: number; 
   spaceports: { minZoom: 3 },
   gulfInvestments: { minZoom: 2, showLabels: 5 },
   usPlants: { minZoom: 3 },
+  usTransmission: { minZoom: 3 },
 };
 // Export for external use
 export { LAYER_ZOOM_THRESHOLDS };
@@ -302,6 +304,22 @@ const US_PLANT_FUEL_COLORS: Record<string, [number, number, number, number]> = {
   geothermal:  [180, 80, 200, 200],
   other:       [150, 150, 150, 200],
 };
+
+function getTransmissionColor(kv: number): [number, number, number, number] {
+  if (kv >= 765) return [220, 60, 60, 200];
+  if (kv >= 500) return [240, 140, 40, 200];
+  if (kv >= 345) return [240, 200, 40, 200];
+  if (kv >= 230) return [120, 180, 220, 200];
+  return [150, 150, 150, 120];
+}
+
+function getTransmissionWidth(kv: number): number {
+  if (kv >= 765) return 3.5;
+  if (kv >= 500) return 2.8;
+  if (kv >= 345) return 2.0;
+  if (kv >= 230) return 1.4;
+  return 1.0;
+}
 
 const CONFLICT_COUNTRY_ISO: Record<string, string[]> = {
   iran: ['IR'],
@@ -1467,6 +1485,12 @@ export class DeckGLMap {
     }
     layers.push(this.createEmptyGhost('nuclear-layer'));
 
+    // US transmission lines layer (energy variant) — PathLayer, rendered under plants
+    if (mapLayers.usTransmission && this.isLayerVisible('usTransmission')) {
+      layers.push(this.createUsTransmissionLayer());
+    }
+    layers.push(this.createEmptyGhost('us-transmission-layer'));
+
     // US power plants layer (energy variant) — ~13k points via IconLayer
     if (mapLayers.usPlants && this.isLayerVisible('usPlants')) {
       layers.push(this.createUsPlantsLayer());
@@ -2030,6 +2054,23 @@ export class DeckGLMap {
       pickable: true,
       // Performance: with ~13k points, disable auto-highlight for speed
       autoHighlight: false,
+    });
+  }
+
+  private createUsTransmissionLayer(): PathLayer {
+    return new PathLayer<UsTransmissionLine>({
+      id: 'us-transmission-layer',
+      data: US_TRANSMISSION_LINES,
+      getPath: (d) => d.coordinates,
+      getColor: (d) => getTransmissionColor(d.voltageKv),
+      getWidth: (d) => getTransmissionWidth(d.voltageKv),
+      widthUnits: 'pixels',
+      widthMinPixels: 0.5,
+      widthMaxPixels: 5,
+      pickable: true,
+      autoHighlight: false,
+      jointRounded: true,
+      capRounded: true,
     });
   }
 
@@ -3669,6 +3710,8 @@ export class DeckGLMap {
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.type)}</div>` };
       case 'us-plants-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.fuelType?.replace('_', ' '))} · ${obj.capacityMW} MW</div>` };
+      case 'us-transmission-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${obj.voltageKv} kV</strong>${obj.owner ? `<br/>${text(obj.owner)}` : ''}</div>` };
       case 'datacenters-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.owner)}</div>` };
       case 'cables-layer':
@@ -4074,6 +4117,7 @@ export class DeckGLMap {
       'bases-layer': 'base',
       'nuclear-layer': 'nuclear',
       'us-plants-layer': 'usPlant',
+      'us-transmission-layer': 'usTransmission',
       'irradiators-layer': 'irradiator',
       'radiation-watch-layer': 'radiation',
       'datacenters-layer': 'datacenter',

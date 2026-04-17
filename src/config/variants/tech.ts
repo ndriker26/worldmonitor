@@ -272,6 +272,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 // Mobile defaults for tech variant
@@ -335,6 +336,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   webcams: false,
   diseaseOutbreaks: false,
   usPlants: false,
+  usTransmission: false,
 };
 
 export const VARIANT_CONFIG: VariantConfig = {

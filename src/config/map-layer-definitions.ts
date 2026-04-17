@@ -84,6 +84,7 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   diseaseOutbreaks:         def('diseaseOutbreaks',         '&#129440;', 'diseaseOutbreaks',         'Disease Outbreaks'),
   // Energy variant layers
   usPlants:                 def('usPlants',                 '&#9889;',   'usPowerPlants',            'US Power Plants'),
+  usTransmission:           def('usTransmission',           '&#128268;', 'usTransmissionLines',      'Transmission Lines'),
 };
 
 const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
@@ -120,7 +121,7 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'resilienceScore', 'natural', 'weather', 'outages', 'sanctions', 'dayNight',
   ],
   energy: [
-    'usPlants',
+    'usPlants', 'usTransmission',
     'pipelines', 'weather', 'waterways', 'natural', 'fires',
   ],
 };
@@ -189,10 +190,13 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   demonstration: ['protests'],
   oil: ['pipelines', 'commodityHubs'],
   gas: ['pipelines'],
-  energy: ['pipelines', 'renewableInstallations', 'usPlants'],
+  energy: ['pipelines', 'renewableInstallations', 'usPlants', 'usTransmission'],
   powerplant: ['usPlants'],
   generator: ['usPlants'],
-  electricity: ['usPlants'],
+  electricity: ['usPlants', 'usTransmission'],
+  transmission: ['usTransmission'],
+  grid: ['usTransmission', 'usPlants'],
+  voltage: ['usTransmission'],
   solar: ['renewableInstallations'],
   wind: ['renewableInstallations'],
   green: ['renewableInstallations', 'speciesRecovery'],
