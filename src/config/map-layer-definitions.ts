@@ -122,7 +122,7 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
   ],
   energy: [
     'usPlants', 'usTransmission',
-    'pipelines', 'weather', 'waterways', 'natural', 'fires',
+    'weather', 'natural', 'fires', 'waterways',
   ],
 };
 

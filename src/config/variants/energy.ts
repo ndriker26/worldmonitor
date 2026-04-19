@@ -10,20 +10,14 @@ export * from './base';
 // Minimal set for Phase 1 scaffold. Energy-specific panels (ISO prices,
 // grid status, generation mix) will be added in later phases.
 // ─────────────────────────────────────────────────────────────────────────────
+// Grid's Eye View panels — Phase 4 focused set. See `src/config/panels.ts`
+// for the canonical override list applied via VARIANT_PANEL_OVERRIDES.
 export const DEFAULT_PANELS: Record<string, PanelConfig> = {
-  // Core
   map: { name: 'Energy Infrastructure Map', enabled: true, priority: 1 },
-  'live-news': { name: 'Energy Headlines', enabled: true, priority: 1 },
+  'energy-stats': { name: 'Energy Stats', enabled: true, priority: 1 },
+  energy: { name: 'Energy News', enabled: true, priority: 1 },
   insights: { name: 'AI Energy Insights', enabled: true, priority: 1 },
-  // Energy & commodity context
-  energy: { name: 'Energy Markets', enabled: true, priority: 1 },
-  commodities: { name: 'Commodity Prices', enabled: true, priority: 1 },
   'energy-complex': { name: 'Energy Complex', enabled: true, priority: 1 },
-  climate: { name: 'Climate & Weather Impact', enabled: true, priority: 2 },
-  'supply-chain': { name: 'Supply Chain & Logistics', enabled: true, priority: 2 },
-  // Situational awareness
-  'strategic-posture': { name: 'Strategic Posture', enabled: true, priority: 2 },
-  'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
 };
 
@@ -36,11 +30,13 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   // ── Energy layers (ENABLED) ────────────────────────────────────────────────
   usPlants: true,
   usTransmission: true,
-  pipelines: true,
   weather: true,
   waterways: true,
   natural: true,
   fires: true,
+  // Pipelines intentionally omitted — Phase 4 spec limits the sidebar to
+  // Power Plants, Transmission Lines, Weather, Natural/Fires, and Waterways.
+  pipelines: false,
 
   // ── All non-energy layers (DISABLED) ───────────────────────────────────────
   // Geopolitical / military

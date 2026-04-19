@@ -45,16 +45,18 @@ export function updateMetaTagsForStory(meta: StoryMeta): void {
 
 export function resetMetaTags(): void {
   document.title = variantMeta.title;
+  const socialDescription = variantMeta.socialDescription ?? variantMeta.description;
 
   setMetaTag('title', variantMeta.title);
   setMetaTag('description', variantMeta.description);
   setCanonicalLink(BASE_URL + '/');
   setMetaTag('og:title', variantMeta.title);
-  setMetaTag('og:description', variantMeta.description);
+  setMetaTag('og:description', socialDescription);
+  setMetaTag('og:site_name', variantMeta.siteName);
   setMetaTag('og:url', BASE_URL + '/');
   setMetaTag('og:image', DEFAULT_IMAGE);
   setMetaTag('twitter:title', variantMeta.title);
-  setMetaTag('twitter:description', variantMeta.description);
+  setMetaTag('twitter:description', socialDescription);
   setMetaTag('twitter:url', BASE_URL + '/');
   setMetaTag('twitter:image', DEFAULT_IMAGE);
 

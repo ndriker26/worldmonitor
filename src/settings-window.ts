@@ -6,6 +6,7 @@ import type { PanelConfig } from '@/types';
 import { DEFAULT_PANELS, STORAGE_KEYS, ALL_PANELS, VARIANT_DEFAULTS, getEffectivePanelConfig, isPanelEntitled, FREE_MAX_PANELS } from '@/config';
 import { isProUser } from '@/services/widget-store';
 import { SITE_VARIANT } from '@/config/variant';
+import { VARIANT_META } from '@/config/variant-meta';
 import { loadFromStorage, saveToStorage } from '@/utils';
 import { t } from '@/services/i18n';
 import { escapeHtml } from '@/utils/sanitize';
@@ -26,7 +27,8 @@ export function initSettingsWindow(): void {
   if (!appEl) return;
 
   // This window shows only "which panels to display" (panel display settings).
-  document.title = `${t('header.settings')} - World Monitor`;
+  const siteName = VARIANT_META[SITE_VARIANT]?.siteName ?? VARIANT_META.full.siteName;
+  document.title = `${t('header.settings')} - ${siteName}`;
 
   const panelSettings = loadFromStorage<Record<string, PanelConfig>>(
     STORAGE_KEYS.panels,

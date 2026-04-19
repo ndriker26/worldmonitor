@@ -42,6 +42,7 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
   return {
     name: 'html-variant',
     transformIndexHtml(html) {
+      const socialDescription = activeMeta.socialDescription ?? activeMeta.description;
       let result = html
         .replace(/<title>.*?<\/title>/, `<title>${activeMeta.title}</title>`)
         .replace(/<meta name="title" content=".*?" \/>/, `<meta name="title" content="${activeMeta.title}" />`)
@@ -51,13 +52,13 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
         .replace(/<meta name="application-name" content=".*?" \/>/, `<meta name="application-name" content="${activeMeta.siteName}" />`)
         .replace(/<meta property="og:url" content=".*?" \/>/, `<meta property="og:url" content="${activeMeta.url}" />`)
         .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${activeMeta.title}" />`)
-        .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${activeMeta.description}" />`)
+        .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${socialDescription}" />`)
         .replace(/<meta property="og:site_name" content=".*?" \/>/, `<meta property="og:site_name" content="${activeMeta.siteName}" />`)
         .replace(/<meta name="subject" content=".*?" \/>/, `<meta name="subject" content="${activeMeta.subject}" />`)
         .replace(/<meta name="classification" content=".*?" \/>/, `<meta name="classification" content="${activeMeta.classification}" />`)
         .replace(/<meta name="twitter:url" content=".*?" \/>/, `<meta name="twitter:url" content="${activeMeta.url}" />`)
         .replace(/<meta name="twitter:title" content=".*?" \/>/, `<meta name="twitter:title" content="${activeMeta.title}" />`)
-        .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${activeMeta.description}" />`)
+        .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${socialDescription}" />`)
         .replace(/"name": "World Monitor"/, `"name": "${activeMeta.siteName}"`)
         .replace(/"alternateName": "WorldMonitor"/, `"alternateName": "${activeMeta.siteName.replace(' ', '')}"`)
         .replace(/"url": "https:\/\/worldmonitor\.app\/"/, `"url": "${activeMeta.url}"`)

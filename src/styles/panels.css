@@ -2846,3 +2846,62 @@ a.hub-top-story {
   color: var(--text-muted);
   opacity: 0.7;
 }
+
+/* Energy Stats panel (Grid's Eye View) — Phase 4 scaffold */
+.energy-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px;
+}
+
+.energy-stat-card {
+  background: var(--panel-bg-secondary, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 72px;
+}
+
+.energy-stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #94a3b8);
+}
+
+.energy-stat-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.energy-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary, #f1f5f9);
+  font-variant-numeric: tabular-nums;
+}
+
+.energy-stat-unit {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  font-weight: 500;
+}
+
+.energy-stat-sub {
+  font-size: 9px;
+  color: var(--text-faint, #64748b);
+  opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+  .energy-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}

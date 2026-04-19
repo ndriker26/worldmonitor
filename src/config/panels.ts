@@ -900,17 +900,27 @@ const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
 // ============================================
 // ENERGY VARIANT
 // ============================================
+// Grid's Eye View (energy variant): focused, US-energy-only panel set.
+// Removes cross-variant panels that aren't core to grid intelligence
+// (AI Strategic Posture, Supply Chain, Country Instability, stock / crypto
+// tickers, world clock, generic commodities, etc.). Keeps:
+//   - map: CONUS energy infrastructure map
+//   - energy-stats: 4-up metric cards (price / gas / demand / outages)
+//   - live-news: repurposed to "Energy News"
+//   - insights: AI Energy Insights
+//   - energy + energy-complex: energy-commodity markets (kept because the
+//     spec explicitly allows "energy commodities")
+//   - monitors: user-defined saved monitors
 const ENERGY_PANELS: Record<string, PanelConfig> = {
   map: { name: 'Energy Infrastructure Map', enabled: true, priority: 1 },
-  'live-news': { name: 'Energy Headlines', enabled: true, priority: 1 },
+  'energy-stats': { name: 'Energy Stats', enabled: true, priority: 1 },
+  // Note: the video "live-news" panel is intentionally NOT listed — Grid's
+  // Eye View uses the RSS-backed `energy` NewsPanel as its "Energy News"
+  // surface instead (see VARIANT_PANEL_OVERRIDES.energy.energy below and
+  // ENERGY_FEEDS in src/config/feeds.ts).
+  energy: { name: 'Energy News', enabled: true, priority: 1 },
   insights: { name: 'AI Energy Insights', enabled: true, priority: 1 },
-  energy: { name: 'Energy Markets', enabled: true, priority: 1 },
-  commodities: { name: 'Commodity Prices', enabled: true, priority: 1 },
   'energy-complex': { name: 'Energy Complex', enabled: true, priority: 1 },
-  climate: { name: 'Climate & Weather Impact', enabled: true, priority: 2 },
-  'supply-chain': { name: 'Supply Chain & Logistics', enabled: true, priority: 2 },
-  'strategic-posture': { name: 'Strategic Posture', enabled: true, priority: 2 },
-  'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
 };
 
@@ -1079,13 +1089,11 @@ export const VARIANT_PANEL_OVERRIDES: Partial<Record<string, Partial<Record<stri
   },
   energy: {
     map:                { name: 'Energy Infrastructure Map' },
-    'live-news':        { name: 'Energy Headlines' },
     insights:           { name: 'AI Energy Insights' },
-    energy:             { name: 'Energy Markets' },
-    commodities:        { name: 'Commodity Prices' },
-    climate:            { name: 'Climate & Weather Impact' },
-    'supply-chain':     { name: 'Supply Chain & Logistics' },
-    'strategic-posture': { name: 'Strategic Posture' },
+    // Repurpose the 'energy' news panel as "Energy News" for Grid's Eye
+    // View — this replaces the video-based live-news surface.
+    energy:             { name: 'Energy News' },
+    'energy-stats':     { name: 'Energy Stats' },
   },
 };
 

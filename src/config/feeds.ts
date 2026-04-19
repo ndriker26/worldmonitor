@@ -882,6 +882,24 @@ const COMMODITY_FEEDS: Record<string, Feed[]> = {
   ],
 };
 
+// Grid's Eye View (energy variant) — RSS feeds for the "Energy News" panel.
+// Focused on US grid, utilities, and generation-side reporting. The `energy`
+// key intentionally matches the panel key that's rendered as "Energy News"
+// via VARIANT_PANEL_OVERRIDES in src/config/panels.ts.
+const ENERGY_FEEDS: Record<string, Feed[]> = {
+  energy: [
+    { name: 'EIA Today in Energy', url: rss('https://www.eia.gov/todayinenergy/rss.xml') },
+    { name: 'EIA Press Room', url: rss('https://www.eia.gov/rss/press_room.xml') },
+    { name: 'Utility Dive', url: rss('https://www.utilitydive.com/feeds/news/') },
+    { name: 'Greentech Media', url: rss('https://news.google.com/rss/search?q=(grid+OR+utility+OR+"power+plant"+OR+"transmission"+OR+ISO+OR+PJM+OR+ERCOT+OR+MISO+OR+CAISO)+when:2d&hl=en-US&gl=US&ceid=US:en') },
+    { name: 'FERC News', url: rss('https://news.google.com/rss/search?q=(FERC+OR+"Federal+Energy+Regulatory+Commission"+OR+"grid+reliability")+when:3d&hl=en-US&gl=US&ceid=US:en') },
+    { name: 'Power Outages', url: rss('https://news.google.com/rss/search?q=("power+outage"+OR+blackout+OR+"grid+failure"+OR+"power+restoration")+when:1d&hl=en-US&gl=US&ceid=US:en') },
+    { name: 'Natural Gas (US)', url: rss('https://news.google.com/rss/search?q=("Henry+Hub"+OR+"natural+gas+price"+OR+LNG+US)+when:1d&hl=en-US&gl=US&ceid=US:en') },
+    { name: 'Nuclear (US)', url: rss('https://news.google.com/rss/search?q=("nuclear+power"+OR+"SMR"+OR+"nuclear+plant"+OR+NRC)+when:3d&hl=en-US&gl=US&ceid=US:en') },
+    { name: 'Renewables (US)', url: rss('https://news.google.com/rss/search?q=(solar+OR+wind+OR+"battery+storage"+OR+"renewable+energy")+when:2d&hl=en-US&gl=US&ceid=US:en') },
+  ],
+};
+
 // Variant-aware exports
 export const FEEDS = SITE_VARIANT === 'tech'
   ? TECH_FEEDS
@@ -891,7 +909,9 @@ export const FEEDS = SITE_VARIANT === 'tech'
       ? HAPPY_FEEDS
       : SITE_VARIANT === 'commodity'
         ? COMMODITY_FEEDS
-        : FULL_FEEDS;
+        : SITE_VARIANT === 'energy'
+          ? ENERGY_FEEDS
+          : FULL_FEEDS;
 
 export const SOURCE_REGION_MAP: Record<string, { labelKey: string; feedKeys: string[] }> = {
   // Full (geopolitical) variant regions

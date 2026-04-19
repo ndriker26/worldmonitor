@@ -891,7 +891,10 @@ export class App {
 
     // Phase 1: Layout (creates map + panels — they'll find hydrated data)
     this.panelLayout.init();
-    showProBanner(this.state.container);
+    // Energy variant (Grid's Eye View): suppress the World Monitor Pro promo banner.
+    if (SITE_VARIANT !== 'energy') {
+      showProBanner(this.state.container);
+    }
     this.updateConnectivityUi();
     window.addEventListener('online', this.handleConnectivityChange);
     window.addEventListener('offline', this.handleConnectivityChange);
@@ -911,7 +914,7 @@ export class App {
     this.state.signalModal.setLocationClickHandler((lat, lon) => {
       this.state.map?.setCenter(lat, lon, 4);
     });
-    if (!this.state.isMobile) {
+    if (!this.state.isMobile && SITE_VARIANT !== 'energy') {
       this.state.findingsBadge = new IntelligenceGapBadge();
       this.state.findingsBadge.setOnSignalClick((signal) => {
         if (this.state.countryBriefPage?.isVisible()) return;

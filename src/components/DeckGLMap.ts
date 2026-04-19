@@ -168,9 +168,15 @@ interface TechEventMarker {
   daysUntil: number;
 }
 
-// View presets with longitude, latitude, zoom
+// View presets with longitude, latitude, zoom.
+// For Grid's Eye View (energy variant) the "global" slot is repurposed to
+// focus on the continental United States — it's a US-only app, so there is
+// no meaningful world-scale view.
+const IS_ENERGY_VIEW = SITE_VARIANT === 'energy';
 const VIEW_PRESETS: Record<DeckMapView, { longitude: number; latitude: number; zoom: number }> = {
-  global: { longitude: 0, latitude: 20, zoom: 1.5 },
+  global: IS_ENERGY_VIEW
+    ? { longitude: -98.5, latitude: 39.8, zoom: 4 }
+    : { longitude: 0, latitude: 20, zoom: 1.5 },
   america: { longitude: -95, latitude: 38, zoom: 3 },
   mena: { longitude: 45, latitude: 28, zoom: 3.5 },
   eu: { longitude: 15, latitude: 50, zoom: 3.5 },
@@ -179,6 +185,10 @@ const VIEW_PRESETS: Record<DeckMapView, { longitude: number; latitude: number; z
   africa: { longitude: 20, latitude: 5, zoom: 3 },
   oceania: { longitude: 135, latitude: -25, zoom: 3.5 },
 };
+
+// Energy variant zoom bounds: prevent zooming out past the CONUS frame while
+// still allowing deep drill-down to state / county detail.
+const ENERGY_ZOOM_BOUNDS = { minZoom: 3, maxZoom: 15 } as const;
 
 const MAP_INTERACTION_MODE: MapInteractionMode =
   import.meta.env.VITE_MAP_INTERACTION_MODE === 'flat' ? 'flat' : '3d';
@@ -748,6 +758,7 @@ export class DeckGLMap {
       attributionControl: false,
       interactive: true,
       canvasContextAttributes: { powerPreference: 'high-performance' },
+      ...(IS_ENERGY_VIEW ? ENERGY_ZOOM_BOUNDS : {}),
       ...(MAP_INTERACTION_MODE === 'flat'
         ? {
           maxPitch: 0,
@@ -777,6 +788,7 @@ export class DeckGLMap {
         attributionControl: false,
         interactive: true,
         canvasContextAttributes: { powerPreference: 'high-performance' },
+        ...(IS_ENERGY_VIEW ? ENERGY_ZOOM_BOUNDS : {}),
         ...(MAP_INTERACTION_MODE === 'flat'
           ? {
             maxPitch: 0,
@@ -4395,10 +4407,12 @@ export class DeckGLMap {
       </div>
     `;
 
-    const authorBadge = document.createElement('div');
-    authorBadge.className = 'map-author-badge';
-    authorBadge.textContent = '© Elie Habib · Someone™';
-    toggles.appendChild(authorBadge);
+    if (!IS_ENERGY_VIEW) {
+      const authorBadge = document.createElement('div');
+      authorBadge.className = 'map-author-badge';
+      authorBadge.textContent = '© Elie Habib · Someone™';
+      toggles.appendChild(authorBadge);
+    }
 
     this.container.appendChild(toggles);
 

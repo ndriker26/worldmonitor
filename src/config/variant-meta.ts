@@ -1,6 +1,12 @@
 export interface VariantMeta {
   title: string;
   description: string;
+  /**
+   * Optional override used for Open Graph and Twitter card descriptions
+   * where a punchier social-first copy is preferred. Falls back to
+   * `description` when omitted.
+   */
+  socialDescription?: string;
   keywords: string;
   url: string;
   siteName: string;
@@ -102,6 +108,30 @@ export const VARIANT_META: { full: VariantMeta; [k: string]: VariantMeta } = {
       'Financial center mapping',
       'Sector heatmap',
       'Market radar signals',
+    ],
+  },
+  energy: {
+    title: "Grid's Eye View - Real-Time US Energy Infrastructure Intelligence",
+    description: 'Real-time US energy infrastructure intelligence — every power plant, transmission line, and grid event on one map.',
+    socialDescription: 'Track every US power plant, transmission line, price spike, and grid outage in real time. Built for energy professionals and infrastructure analysts.',
+    keywords: 'US energy dashboard, power plants, transmission lines, grid monitoring, grid intelligence, electricity prices, Henry Hub natural gas, grid demand, power outages, ISO, PJM, ERCOT, MISO, CAISO, FERC, EIA, utility dive, energy news, nuclear power, renewables, energy infrastructure',
+    url: 'https://energy.worldmonitor.app/',
+    siteName: "Grid's Eye View",
+    shortName: "Grid's Eye View",
+    subject: 'US Energy Infrastructure and Grid Intelligence',
+    classification: 'Energy Dashboard, Grid Monitor, Infrastructure Intelligence',
+    categories: ['news', 'business'],
+    features: [
+      'US power plant mapping',
+      'Transmission line tracking',
+      'Grid demand monitoring',
+      'Active outage tracking',
+      'Wholesale electricity prices',
+      'Henry Hub natural gas prices',
+      'EIA Today in Energy feed',
+      'Utility Dive news feed',
+      'Weather & natural disaster overlays',
+      'AI-assisted energy insights',
     ],
   },
   commodity: {
