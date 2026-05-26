@@ -1,0 +1,502 @@
+/* =============================================================
+   Grid's Eye View — Shell Layout
+   Applied only when SITE_VARIANT === 'energy'
+   ============================================================= */
+
+/* ── GEV-specific design tokens ─────────────────────────────── */
+:root {
+  --gev-topbar-h: 48px;
+  --gev-sidebar-w: 280px;
+  --gev-drawer-peek: 44px;
+  --gev-drawer-full: 320px;
+  --gev-radius: 8px;
+  --gev-glass: rgba(10, 12, 16, 0.82);
+  --gev-glass-border: rgba(255, 255, 255, 0.08);
+  --gev-accent: #00c8a0;
+  --gev-accent-dim: rgba(0, 200, 160, 0.15);
+  --gev-accent-glow: rgba(0, 200, 160, 0.35);
+  --gev-live: #22c55e;
+  --gev-topbar-bg: rgba(8, 10, 14, 0.90);
+  --gev-sidebar-bg: rgba(10, 12, 16, 0.90);
+  --gev-drawer-bg: rgba(10, 12, 16, 0.90);
+  --gev-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --gev-tile-bg: rgba(255, 255, 255, 0.04);
+  --gev-tile-border: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] {
+  --gev-glass: rgba(245, 246, 248, 0.90);
+  --gev-glass-border: rgba(0, 0, 0, 0.10);
+  --gev-topbar-bg: rgba(240, 242, 246, 0.94);
+  --gev-sidebar-bg: rgba(240, 242, 246, 0.94);
+  --gev-drawer-bg: rgba(240, 242, 246, 0.94);
+  --gev-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  --gev-tile-bg: rgba(0, 0, 0, 0.04);
+  --gev-tile-border: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Shell root ──────────────────────────────────────────────── */
+.gev-shell {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+/* ── Full-viewport map background ───────────────────────────── */
+.gev-map-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.gev-map-wrap .map-container,
+.gev-map-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────── */
+.gev-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--gev-topbar-h);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 0;
+  background: var(--gev-topbar-bg);
+  border-bottom: 1px solid var(--gev-glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--gev-shadow);
+}
+
+.gev-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.gev-topbar-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.gev-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.gev-sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.gev-sidebar-toggle:hover { background: var(--overlay-light); }
+
+.gev-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--gev-accent);
+  white-space: nowrap;
+}
+
+.gev-version {
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  background: var(--overlay-subtle);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.gev-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gev-live);
+  box-shadow: 0 0 6px var(--gev-live);
+  animation: gev-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes gev-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--gev-live); }
+  50%       { opacity: 0.6; box-shadow: 0 0 12px var(--gev-live); }
+}
+
+.gev-live-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--gev-live);
+}
+
+.gev-clock {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.gev-2d3d-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--overlay-subtle);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gev-dim-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+}
+.gev-dim-btn.active {
+  background: var(--gev-accent-dim);
+  color: var(--gev-accent);
+}
+.gev-dim-btn:hover:not(.active) { background: var(--overlay-light); }
+
+.gev-theme-btn {
+  background: none;
+  border: 1px solid var(--gev-glass-border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.gev-theme-btn:hover { background: var(--overlay-light); }
+
+.gev-search-btn {
+  background: var(--overlay-subtle);
+  border: 1px solid var(--gev-glass-border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.gev-search-btn:hover {
+  background: var(--overlay-light);
+  border-color: var(--gev-accent);
+  color: var(--text);
+}
+.gev-search-btn kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--overlay-medium);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* ── Left sidebar ────────────────────────────────────────────── */
+.gev-sidebar {
+  position: absolute;
+  top: var(--gev-topbar-h);
+  left: 0;
+  bottom: var(--gev-drawer-peek);
+  width: var(--gev-sidebar-w);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: var(--gev-sidebar-bg);
+  border-right: 1px solid var(--gev-glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.gev-sidebar.collapsed {
+  transform: translateX(calc(-1 * var(--gev-sidebar-w)));
+}
+
+.gev-sidebar-header {
+  padding: 14px 16px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--gev-glass-border);
+  flex-shrink: 0;
+}
+
+.gev-layer-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+.gev-layer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+}
+.gev-layer-item:hover { background: var(--overlay-light); }
+.gev-layer-item.active { background: var(--gev-accent-dim); }
+
+.gev-layer-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.12s, border-color 0.12s;
+}
+.gev-layer-item input[type="checkbox"]:checked {
+  background: var(--gev-accent);
+  border-color: var(--gev-accent);
+}
+.gev-layer-item input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  width: 5px;
+  height: 8px;
+  border: 2px solid #000;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.gev-layer-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.gev-layer-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.gev-layer-item.active .gev-layer-label { color: var(--text); }
+
+.gev-sidebar-section {
+  padding: 0 16px 8px;
+  margin-top: 4px;
+}
+
+.gev-sidebar-section-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px 0 4px;
+  border-top: 1px solid var(--gev-glass-border);
+  margin-top: 4px;
+}
+
+/* ── Bottom drawer ───────────────────────────────────────────── */
+.gev-drawer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  height: var(--gev-drawer-peek);
+  background: var(--gev-drawer-bg);
+  border-top: 1px solid var(--gev-glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gev-drawer.expanded {
+  height: var(--gev-drawer-full);
+}
+
+.gev-drawer-handle {
+  flex-shrink: 0;
+  height: var(--gev-drawer-peek);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  cursor: pointer;
+  gap: 12px;
+}
+.gev-drawer-handle:hover { background: var(--overlay-subtle); }
+
+.gev-drawer-grip {
+  width: 32px;
+  height: 3px;
+  background: var(--border-strong);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.gev-drawer-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.gev-drawer-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
+  transition: transform 0.3s;
+}
+
+.gev-drawer.expanded .gev-drawer-toggle {
+  transform: rotate(180deg);
+}
+
+.gev-drawer-body {
+  flex: 1;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Metric tiles ────────────────────────────────────────────── */
+.gev-metrics-col {
+  width: 200px;
+  flex-shrink: 0;
+  padding: 10px 8px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-right: 1px solid var(--gev-glass-border);
+  overflow-y: auto;
+}
+
+.gev-metric-tile {
+  background: var(--gev-tile-bg);
+  border: 1px solid var(--gev-tile-border);
+  border-radius: var(--gev-radius);
+  padding: 8px 10px;
+}
+
+.gev-metric-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.gev-metric-value {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--gev-accent);
+  line-height: 1;
+}
+
+.gev-metric-sub {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ── Embedded news panel ─────────────────────────────────────── */
+.gev-news-wrap {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Strip Panel chrome from the embedded news element */
+.gev-news-wrap .panel {
+  height: 100% !important;
+  min-height: unset !important;
+  resize: none !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.gev-news-wrap .panel-header {
+  padding: 8px 12px !important;
+  min-height: unset !important;
+}
+
+/* ── Map attribution / popup still on top ───────────────────── */
+.gev-shell .maplibregl-popup,
+.gev-shell .mapboxgl-popup,
+.gev-shell .map-popup-container,
+.gev-shell .wm-popup-root {
+  z-index: 200 !important;
+}
+
+/* ── Mobile adjustments ──────────────────────────────────────── */
+@media (max-width: 640px) {
+  :root {
+    --gev-sidebar-w: 240px;
+    --gev-drawer-full: 260px;
+  }
+
+  .gev-brand { font-size: 11px; }
+  .gev-search-btn { display: none; }
+  .gev-clock { display: none; }
+
+  .gev-metrics-col {
+    display: none;
+  }
+}
+
+/* ── Hidden original layout elements (for non-energy fallback) ─ */
+.gev-shell ~ .header { display: none !important; }

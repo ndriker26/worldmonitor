@@ -62,6 +62,7 @@ import { CountryIntelManager } from '@/app/country-intel';
 import { SearchManager } from '@/app/search-manager';
 import { RefreshScheduler } from '@/app/refresh-scheduler';
 import { PanelLayoutManager } from '@/app/panel-layout';
+import { GevShell } from '@/components/gev/GevShell';
 import { DataLoaderManager } from '@/app/data-loader';
 import { EventHandlerManager } from '@/app/event-handlers';
 import { resolveUserRegion, resolvePreciseUserCoordinates, type PreciseCoordinates } from '@/utils/user-location';
@@ -92,6 +93,7 @@ export class App {
   private pendingDeepLinkStoryCode: string | null = null;
 
   private panelLayout: PanelLayoutManager;
+  private gevShell: GevShell | null = null;
   private dataLoader: DataLoaderManager;
   private eventHandlers: EventHandlerManager;
   private searchManager: SearchManager;
@@ -890,7 +892,12 @@ export class App {
     this.state.resolvedLocation = resolvedRegion;
 
     // Phase 1: Layout (creates map + panels — they'll find hydrated data)
-    this.panelLayout.init();
+    if (SITE_VARIANT === 'energy') {
+      this.gevShell = new GevShell(this.state);
+      this.gevShell.init();
+    } else {
+      this.panelLayout.init();
+    }
     // Energy variant (Grid's Eye View): suppress the World Monitor Pro promo banner.
     if (SITE_VARIANT !== 'energy') {
       showProBanner(this.state.container);
