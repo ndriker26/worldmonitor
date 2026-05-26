@@ -27,7 +27,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
 const GPPD_URL =
-  'https://storage.googleapis.com/global-power-plant-database/global_power_plant_database_v1.3.csv';
+  'https://raw.githubusercontent.com/wri/global-power-plant-database/master/output_database/global_power_plant_database.csv';
 
 const OUTPUT_PATH = join(ROOT, 'public', 'data', 'global-plants.json');
 
