@@ -1,0 +1,328 @@
+import type { GlobalOilGasField } from '@/types';
+
+export const GLOBAL_OILGAS_FIELDS: GlobalOilGasField[] = [
+  // ── CASPIAN (carried over from caspian-energy.ts) ────────────────────
+  {
+    id: 'kashagan', name: 'Kashagan', lat: 45.60, lon: 51.20,
+    type: 'field', commodity: 'oil', country: 'Kazakhstan',
+    operator: 'NCOC (Shell/Total/ExxonMobil/ENI/CNPC)',
+    capacityDesc: '400k bpd', status: 'active', year: 2013,
+    notes: 'World\'s largest discovered oil field in 30 years.',
+  },
+  {
+    id: 'tengiz', name: 'Tengiz', lat: 45.47, lon: 53.14,
+    type: 'field', commodity: 'oil', country: 'Kazakhstan',
+    operator: 'Tengizchevroil (Chevron/ExxonMobil/KazMunayGaz)',
+    capacityDesc: '850k bpd', status: 'active', year: 1993,
+    notes: 'Major Chevron-operated supergiant oilfield.',
+  },
+  {
+    id: 'karachaganak', name: 'Karachaganak', lat: 51.64, lon: 53.79,
+    type: 'field', commodity: 'oil', country: 'Kazakhstan',
+    operator: 'KPO (Shell/ENI/Chevron/Lukoil)',
+    capacityDesc: '270k boe/d oil & condensate', status: 'active', year: 1984,
+    notes: 'Large oil/gas condensate field in Kazakhstan.',
+  },
+  {
+    id: 'acg', name: 'ACG (Azeri-Chirag-Gunashli)', lat: 40.45, lon: 50.50,
+    type: 'field', commodity: 'oil', country: 'Azerbaijan',
+    operator: 'BP (operator for AIOC)',
+    capacityDesc: '650k bpd', status: 'active', year: 1997,
+    notes: 'Largest oil field in Azerbaijan; feeds BTC pipeline.',
+  },
+  {
+    id: 'shah-deniz', name: 'Shah Deniz', lat: 39.50, lon: 50.13,
+    type: 'field', commodity: 'gas', country: 'Azerbaijan',
+    operator: 'BP (operator)',
+    capacityDesc: '16 bcm/yr', status: 'active', year: 2006,
+    notes: 'Key gas supplier to Europe via TANAP/TAP corridor.',
+  },
+  {
+    id: 'galkynysh', name: 'Galkynysh', lat: 36.50, lon: 62.40,
+    type: 'field', commodity: 'gas', country: 'Turkmenistan',
+    operator: 'Turkmengas',
+    capacityDesc: '70+ bcm/yr potential', status: 'active', year: 2013,
+    notes: 'One of the world\'s largest natural gas fields.',
+  },
+  {
+    id: 'dostluk', name: 'Dostluk', lat: 40.40, lon: 52.50,
+    type: 'field', commodity: 'oil', country: 'Turkmenistan/Azerbaijan',
+    operator: 'Turkmennebit / SOCAR',
+    capacityDesc: 'exploration stage', status: 'active', year: 2021,
+    notes: 'Joint Turkmenistan–Azerbaijan Caspian offshore field.',
+  },
+  // Caspian terminals
+  {
+    id: 'sangachal', name: 'Sangachal Terminal', lat: 40.11, lon: 49.64,
+    type: 'terminal', commodity: 'oil', country: 'Azerbaijan',
+    operator: 'BP / SOCAR',
+    capacityDesc: 'processing & export hub', status: 'active',
+    notes: 'Main onshore terminal for ACG oil and Shah Deniz gas.',
+  },
+  {
+    id: 'novorossiysk-terminal', name: 'Novorossiysk Marine Terminal', lat: 44.73, lon: 37.77,
+    type: 'terminal', commodity: 'oil', country: 'Russia',
+    operator: 'Caspian Pipeline Consortium',
+    capacityDesc: '1.4M bpd throughput', status: 'active',
+    notes: 'Black Sea export terminal; end-point of CPC pipeline.',
+  },
+  {
+    id: 'ceyhan-terminal', name: 'Ceyhan Export Terminal', lat: 36.88, lon: 35.96,
+    type: 'terminal', commodity: 'oil', country: 'Turkey',
+    operator: 'BOTAŞ / BP',
+    capacityDesc: '1.5M bpd capacity', status: 'active',
+    notes: 'Mediterranean terminus of BTC and Kirkuk–Ceyhan pipelines.',
+  },
+  {
+    id: 'aktau', name: 'Aktau Port', lat: 43.65, lon: 51.17,
+    type: 'terminal', commodity: 'oil', country: 'Kazakhstan',
+    operator: 'KazMunayGaz',
+    capacityDesc: '15M t/yr capacity', status: 'active',
+    notes: 'Kazakhstan\'s main Caspian Sea port and oil export hub.',
+  },
+  {
+    id: 'supsa', name: 'Supsa Terminal', lat: 41.99, lon: 41.70,
+    type: 'terminal', commodity: 'oil', country: 'Georgia',
+    operator: 'BP (operator)',
+    capacityDesc: '145k bpd', status: 'active',
+    notes: 'Georgian Black Sea oil export terminal.',
+  },
+
+  // ── MIDDLE EAST ──────────────────────────────────────────────────────
+  {
+    id: 'ghawar', name: 'Ghawar', lat: 25.40, lon: 49.23,
+    type: 'field', commodity: 'oil', country: 'Saudi Arabia',
+    operator: 'Saudi Aramco',
+    capacityDesc: '3.8M bpd', status: 'active', year: 1951,
+    notes: 'World\'s largest conventional oil field.',
+  },
+  {
+    id: 'safaniyah', name: 'Safaniyah', lat: 28.01, lon: 49.87,
+    type: 'field', commodity: 'oil', country: 'Saudi Arabia',
+    operator: 'Saudi Aramco',
+    capacityDesc: '1.3M bpd', status: 'active', year: 1951,
+    notes: 'World\'s largest offshore oil field.',
+  },
+  {
+    id: 'burgan', name: 'Greater Burgan', lat: 28.95, lon: 48.08,
+    type: 'field', commodity: 'oil', country: 'Kuwait',
+    operator: 'Kuwait Petroleum Corporation',
+    capacityDesc: '1.7M bpd', status: 'active', year: 1938,
+    notes: 'Second largest conventional oil field in the world.',
+  },
+  {
+    id: 'south-pars', name: 'South Pars / North Dome', lat: 26.50, lon: 52.50,
+    type: 'field', commodity: 'gas', country: 'Iran / Qatar',
+    operator: 'NIOC (Iran) / Qatar Petroleum',
+    capacityDesc: 'Largest gas field in the world', status: 'active', year: 1990,
+    notes: 'Shared Iran–Qatar field; world\'s largest natural gas structure.',
+  },
+  {
+    id: 'rumaila', name: 'Rumaila', lat: 30.55, lon: 47.33,
+    type: 'field', commodity: 'oil', country: 'Iraq',
+    operator: 'BP / PetroChina / SOMO',
+    capacityDesc: '1.5M bpd', status: 'active', year: 1953,
+    notes: 'Iraq\'s largest oil field and one of the world\'s largest.',
+  },
+  {
+    id: 'west-qurna', name: 'West Qurna', lat: 31.02, lon: 47.17,
+    type: 'field', commodity: 'oil', country: 'Iraq',
+    operator: 'Lukoil / ExxonMobil / SOMO',
+    capacityDesc: '1M bpd', status: 'active', year: 1970,
+    notes: 'Supergiant oilfield in southern Iraq.',
+  },
+  {
+    id: 'upper-zakum', name: 'Upper Zakum', lat: 25.17, lon: 53.78,
+    type: 'field', commodity: 'oil', country: 'UAE',
+    operator: 'ADNOC / ExxonMobil / JODCO',
+    capacityDesc: '750k bpd', status: 'active', year: 1967,
+    notes: 'One of the world\'s largest offshore oil fields.',
+  },
+  {
+    id: 'ras-tanura', name: 'Ras Tanura Terminal', lat: 26.63, lon: 50.16,
+    type: 'terminal', commodity: 'oil', country: 'Saudi Arabia',
+    operator: 'Saudi Aramco',
+    capacityDesc: '6M+ bpd export capacity', status: 'active',
+    notes: 'World\'s largest oil export terminal.',
+  },
+  {
+    id: 'fujairah', name: 'Fujairah Oil Terminal', lat: 25.12, lon: 56.35,
+    type: 'terminal', commodity: 'oil', country: 'UAE',
+    operator: 'FUJAIRAH OIL TERMINAL FZC',
+    capacityDesc: '14M bbl storage', status: 'active',
+    notes: 'Key oil storage and bunkering hub bypassing Strait of Hormuz.',
+  },
+
+  // ── RUSSIA ───────────────────────────────────────────────────────────
+  {
+    id: 'samotlor', name: 'Samotlor', lat: 61.18, lon: 76.67,
+    type: 'field', commodity: 'oil', country: 'Russia',
+    operator: 'Rosneft / TNK-BP',
+    capacityDesc: 'declining, ~250k bpd', status: 'active', year: 1969,
+    notes: 'One of the world\'s largest oil fields; production peaked in 1980.',
+  },
+  {
+    id: 'urengoy', name: 'Urengoy', lat: 65.97, lon: 76.63,
+    type: 'field', commodity: 'gas', country: 'Russia',
+    operator: 'Gazprom',
+    capacityDesc: '3rd largest gas field globally', status: 'active', year: 1978,
+    notes: 'Supergiant natural gas field in western Siberia.',
+  },
+  {
+    id: 'yamburg', name: 'Yamburg', lat: 67.97, lon: 75.97,
+    type: 'field', commodity: 'gas', country: 'Russia',
+    operator: 'Gazprom',
+    capacityDesc: '80+ bcm/yr', status: 'active', year: 1986,
+    notes: 'Major natural gas field in the Yamal-Nenets region.',
+  },
+  {
+    id: 'priobskoye', name: 'Priobskoye', lat: 61.00, lon: 72.50,
+    type: 'field', commodity: 'oil', country: 'Russia',
+    operator: 'Rosneft',
+    capacityDesc: '~700k bpd', status: 'active', year: 1988,
+    notes: 'One of Russia\'s largest oil fields in western Siberia.',
+  },
+  {
+    id: 'sakhalin', name: 'Sakhalin I/II', lat: 52.00, lon: 143.50,
+    type: 'field', commodity: 'oil', country: 'Russia',
+    operator: 'Rosneft / Gazprom (formerly ExxonMobil/Shell)',
+    capacityDesc: '~200k bpd oil + LNG export', status: 'active', year: 1999,
+    notes: 'Major offshore oil and gas project in Russia\'s Far East.',
+  },
+
+  // ── NORTH AMERICA ────────────────────────────────────────────────────
+  {
+    id: 'permian-basin', name: 'Permian Basin', lat: 31.95, lon: -102.10,
+    type: 'field', commodity: 'oil', country: 'USA',
+    operator: 'Various (Pioneer, ExxonMobil, Chevron, ConocoPhillips…)',
+    capacityDesc: '6M+ bpd region', status: 'active', year: 1920,
+    notes: 'Most prolific oil-producing region in the United States.',
+  },
+  {
+    id: 'eagle-ford', name: 'Eagle Ford Shale', lat: 28.70, lon: -98.50,
+    type: 'field', commodity: 'oil', country: 'USA',
+    operator: 'Various (EOG, Marathon, ConocoPhillips…)',
+    capacityDesc: '~1.1M bpd', status: 'active', year: 2008,
+    notes: 'Major tight oil play in south Texas.',
+  },
+  {
+    id: 'bakken', name: 'Bakken Formation', lat: 48.10, lon: -103.50,
+    type: 'field', commodity: 'oil', country: 'USA / Canada',
+    operator: 'Various (Continental, Hess, ExxonMobil…)',
+    capacityDesc: '~1.1M bpd', status: 'active', year: 2000,
+    notes: 'Large tight oil formation spanning North Dakota and Montana.',
+  },
+  {
+    id: 'prudhoe-bay', name: 'Prudhoe Bay', lat: 70.25, lon: -148.33,
+    type: 'field', commodity: 'oil', country: 'USA',
+    operator: 'BP / ConocoPhillips / ExxonMobil',
+    capacityDesc: 'declining, ~450k bpd', status: 'active', year: 1977,
+    notes: 'Largest oil field ever discovered in North America; feeds TAPS.',
+  },
+  {
+    id: 'athabasca', name: 'Athabasca Oil Sands', lat: 56.95, lon: -111.50,
+    type: 'field', commodity: 'oil', country: 'Canada',
+    operator: 'Suncor / Canadian Natural / Imperial Oil',
+    capacityDesc: '3M+ bpd (in-situ + mining)', status: 'active', year: 1967,
+    notes: 'World\'s third-largest proven oil reserve; bitumen extraction.',
+  },
+  {
+    id: 'cushing', name: 'Cushing Hub', lat: 35.98, lon: -96.77,
+    type: 'terminal', commodity: 'oil', country: 'USA',
+    operator: 'Various',
+    capacityDesc: '90M bbl storage', status: 'active',
+    notes: 'WTI crude oil benchmark delivery point and major storage hub.',
+  },
+  {
+    id: 'loop', name: 'LOOP (Louisiana Offshore Oil Port)', lat: 28.88, lon: -90.02,
+    type: 'terminal', commodity: 'oil', country: 'USA',
+    operator: 'LOOP LLC',
+    capacityDesc: '1.5M bpd throughput', status: 'active', year: 1981,
+    notes: 'Only US deepwater port capable of handling fully-laden VLCCs.',
+  },
+  {
+    id: 'houston-ship-channel', name: 'Houston Ship Channel', lat: 29.73, lon: -95.27,
+    type: 'terminal', commodity: 'oil', country: 'USA',
+    operator: 'Port of Houston Authority',
+    capacityDesc: 'largest US energy export hub', status: 'active',
+    notes: 'Primary US Gulf Coast oil, LNG, and petrochemical export terminal.',
+  },
+
+  // ── SOUTH AMERICA ────────────────────────────────────────────────────
+  {
+    id: 'pre-salt-santos', name: 'Pre-Salt Santos Basin', lat: -25.00, lon: -42.00,
+    type: 'field', commodity: 'oil', country: 'Brazil',
+    operator: 'Petrobras',
+    capacityDesc: '2M+ bpd', status: 'active', year: 2010,
+    notes: 'Offshore deepwater pre-salt cluster; Brazil\'s main production growth driver.',
+  },
+  {
+    id: 'vaca-muerta', name: 'Vaca Muerta', lat: -38.50, lon: -69.00,
+    type: 'field', commodity: 'oil', country: 'Argentina',
+    operator: 'YPF / TotalEnergies / Shell',
+    capacityDesc: 'largest shale oil/gas outside North America', status: 'active', year: 2013,
+    notes: 'Second largest shale gas and fourth largest shale oil reserve globally.',
+  },
+  {
+    id: 'orinoco-belt', name: 'Orinoco Oil Belt', lat: 8.50, lon: -63.50,
+    type: 'field', commodity: 'oil', country: 'Venezuela',
+    operator: 'PDVSA',
+    capacityDesc: 'largest proven reserves in world (heavy crude)', status: 'active', year: 1970,
+    notes: 'World\'s largest proven oil reserves; extra-heavy crude.',
+  },
+
+  // ── AFRICA ───────────────────────────────────────────────────────────
+  {
+    id: 'hassi-messaoud', name: 'Hassi Messaoud', lat: 31.68, lon: 6.05,
+    type: 'field', commodity: 'oil', country: 'Algeria',
+    operator: 'Sonatrach',
+    capacityDesc: '~450k bpd', status: 'active', year: 1956,
+    notes: 'Algeria\'s most important oil field.',
+  },
+  {
+    id: 'jubilee', name: 'Jubilee Field', lat: 4.50, lon: -2.82,
+    type: 'field', commodity: 'oil', country: 'Ghana',
+    operator: 'Tullow Oil / CNOOC / Kosmos Energy',
+    capacityDesc: '~70k bpd', status: 'active', year: 2010,
+    notes: 'Ghana\'s largest offshore oil discovery.',
+  },
+  {
+    id: 'agbami', name: 'Agbami Field', lat: 4.20, lon: 4.40,
+    type: 'field', commodity: 'oil', country: 'Nigeria',
+    operator: 'Chevron / Star Deep Water / NNPC',
+    capacityDesc: '~250k bpd', status: 'active', year: 2008,
+    notes: 'Nigeria\'s deepwater ultra-deepwater oil field.',
+  },
+
+  // ── EUROPE ───────────────────────────────────────────────────────────
+  {
+    id: 'rotterdam-europoort', name: 'Rotterdam Europoort', lat: 51.96, lon: 4.03,
+    type: 'terminal', commodity: 'oil', country: 'Netherlands',
+    operator: 'Port of Rotterdam Authority',
+    capacityDesc: 'Europe\'s largest port, 400M+ t/yr total', status: 'active',
+    notes: 'Largest oil and chemical products port in Europe.',
+  },
+
+  // ── ASIA-PACIFIC ─────────────────────────────────────────────────────
+  {
+    id: 'daqing', name: 'Daqing', lat: 46.60, lon: 124.80,
+    type: 'field', commodity: 'oil', country: 'China',
+    operator: 'PetroChina',
+    capacityDesc: '~800k bpd (declining)', status: 'active', year: 1959,
+    notes: 'China\'s first major oil field; production declining after 1990s peak.',
+  },
+  {
+    id: 'south-china-sea', name: 'South China Sea Fields', lat: 15.00, lon: 115.00,
+    type: 'field', commodity: 'oil', country: 'Disputed',
+    operator: 'Various (CNOOC, PetroVietnam, Shell…)',
+    capacityDesc: '~2.5M bpd region (disputed)', status: 'active',
+    notes: 'Contested offshore oil and gas fields in the South China Sea.',
+  },
+  {
+    id: 'ningbo-zhoushan', name: 'Ningbo-Zhoushan Port', lat: 29.87, lon: 122.10,
+    type: 'terminal', commodity: 'oil', country: 'China',
+    operator: 'Port of Ningbo-Zhoushan',
+    capacityDesc: 'world\'s busiest port by cargo tonnage', status: 'active',
+    notes: 'China\'s largest crude oil import terminal.',
+  },
+];

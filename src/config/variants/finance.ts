@@ -237,7 +237,8 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   diseaseOutbreaks: false,
   usPlants: false,
   usTransmission: false,
-  caspianEnergy: false,
+  oilGasPipelines: false,
+  oilGasFields: false,
 };
 
 // Mobile defaults for finance variant
@@ -302,7 +303,8 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   diseaseOutbreaks: false,
   usPlants: false,
   usTransmission: false,
-  caspianEnergy: false,
+  oilGasPipelines: false,
+  oilGasFields: false,
 };
 
 export const VARIANT_CONFIG: VariantConfig = {

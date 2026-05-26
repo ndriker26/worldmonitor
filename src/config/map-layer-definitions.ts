@@ -85,7 +85,8 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   // Energy variant layers
   usPlants:                 def('usPlants',                 '&#9889;',   'usPowerPlants',            'Power Plants'),
   usTransmission:           def('usTransmission',           '&#128268;', 'usTransmissionLines',      'Transmission Lines'),
-  caspianEnergy:            def('caspianEnergy',            '&#128518;', 'caspianEnergy',            'Caspian Energy Basin'),
+  oilGasPipelines:          def('oilGasPipelines',          '&#128699;', 'oilGasPipelines',          'Oil & Gas Pipelines'),
+  oilGasFields:             def('oilGasFields',             '&#128202;', 'oilGasFields',             'Oil & Gas Fields'),
 };
 
 const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
@@ -122,7 +123,7 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'resilienceScore', 'natural', 'weather', 'outages', 'sanctions', 'dayNight',
   ],
   energy: [
-    'usPlants', 'usTransmission', 'caspianEnergy',
+    'usPlants', 'usTransmission', 'oilGasPipelines', 'oilGasFields',
     'weather', 'natural', 'fires', 'waterways',
   ],
 };
@@ -189,20 +190,20 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   migration: ['displacement'],
   riot: ['protests'],
   demonstration: ['protests'],
-  oil: ['pipelines', 'commodityHubs'],
-  gas: ['pipelines'],
-  energy: ['pipelines', 'renewableInstallations', 'usPlants', 'usTransmission', 'caspianEnergy'],
+  oil: ['pipelines', 'commodityHubs', 'oilGasPipelines', 'oilGasFields'],
+  gas: ['pipelines', 'oilGasPipelines'],
+  energy: ['pipelines', 'renewableInstallations', 'usPlants', 'usTransmission', 'oilGasPipelines', 'oilGasFields'],
   powerplant: ['usPlants'],
   generator: ['usPlants'],
   electricity: ['usPlants', 'usTransmission'],
   transmission: ['usTransmission'],
   grid: ['usTransmission', 'usPlants'],
   voltage: ['usTransmission'],
-  caspian: ['caspianEnergy'],
-  pipeline: ['pipelines', 'caspianEnergy'],
-  oilfield: ['caspianEnergy'],
-  kazakh: ['caspianEnergy'],
-  azerbaijan: ['caspianEnergy'],
+  caspian: ['oilGasPipelines', 'oilGasFields'],
+  pipeline: ['pipelines', 'oilGasPipelines'],
+  oilfield: ['oilGasFields'],
+  kazakh: ['oilGasFields', 'oilGasPipelines'],
+  azerbaijan: ['oilGasFields', 'oilGasPipelines'],
   solar: ['renewableInstallations'],
   wind: ['renewableInstallations'],
   green: ['renewableInstallations', 'speciesRecovery'],

@@ -95,11 +95,10 @@ import {
   SANCTIONED_COUNTRIES_ALPHA2,
   US_POWER_PLANTS,
   US_TRANSMISSION_LINES,
-  CASPIAN_FIELDS,
-  CASPIAN_TERMINALS,
-  CASPIAN_PIPELINES,
+  GLOBAL_PIPELINES,
+  GLOBAL_OILGAS_FIELDS,
 } from '@/config';
-import type { GulfInvestment, UsPowerPlant, UsTransmissionLine, CaspianField, CaspianTerminal, CaspianPipeline } from '@/types';
+import type { GulfInvestment, UsPowerPlant, UsTransmissionLine, GlobalPipeline, GlobalOilGasField } from '@/types';
 import { resolveTradeRouteSegments, TRADE_ROUTES as TRADE_ROUTES_LIST, type TradeRouteSegment } from '@/config/trade-routes';
 import { getLayersForVariant, resolveLayerLabel, bindLayerSearch, type MapVariant } from '@/config/map-layer-definitions';
 import { getAuthState, subscribeAuthState } from '@/services/auth-state';
@@ -213,7 +212,8 @@ const LAYER_ZOOM_THRESHOLDS: Partial<Record<keyof MapLayers, { minZoom: number; 
   gulfInvestments: { minZoom: 2, showLabels: 5 },
   usPlants: { minZoom: 2 },
   usTransmission: { minZoom: 2 },
-  caspianEnergy: { minZoom: 1 },
+  oilGasPipelines: { minZoom: 1 },
+  oilGasFields: { minZoom: 1 },
 };
 // Export for external use
 export { LAYER_ZOOM_THRESHOLDS };
@@ -1515,15 +1515,17 @@ export class DeckGLMap {
     }
     layers.push(this.createEmptyGhost('us-plants-layer'));
 
-    // Caspian energy infrastructure layer — pipelines under fields/terminals
-    if (mapLayers.caspianEnergy && this.isLayerVisible('caspianEnergy')) {
-      layers.push(this.createCaspianPipelinesLayer());
-      layers.push(this.createCaspianFieldsLayer());
-      layers.push(this.createCaspianTerminalsLayer());
+    // Global oil & gas pipelines layer
+    if (mapLayers.oilGasPipelines && this.isLayerVisible('oilGasPipelines')) {
+      layers.push(this.createOilGasPipelinesLayer());
     }
-    layers.push(this.createEmptyGhost('caspian-pipelines-layer'));
-    layers.push(this.createEmptyGhost('caspian-fields-layer'));
-    layers.push(this.createEmptyGhost('caspian-terminals-layer'));
+    layers.push(this.createEmptyGhost('oil-gas-pipelines-layer'));
+
+    // Global oil & gas fields + terminals layer
+    if (mapLayers.oilGasFields && this.isLayerVisible('oilGasFields')) {
+      layers.push(this.createOilGasFieldsLayer());
+    }
+    layers.push(this.createEmptyGhost('oil-gas-fields-layer'));
 
     // Gamma irradiators layer — hidden at low zoom
     if (mapLayers.irradiators && this.isLayerVisible('irradiators')) {
@@ -2116,54 +2118,19 @@ export class DeckGLMap {
     }
   }
 
-  private createCaspianFieldsLayer(): ScatterplotLayer {
-    const fieldColors: Record<string, [number, number, number, number]> = {
-      oil:           [120, 60,  20,  230],
-      gas:           [30,  100, 220, 230],
-      gas_condensate:[20,  180, 180, 230],
-      oil_gas:       [160, 40,  200, 230],
+  private createOilGasPipelinesLayer(): PathLayer {
+    const commodityColors: Record<string, [number, number, number, number]> = {
+      crude:      [139, 0,   0,   220],   // dark red
+      gas:        [37,  99,  235, 220],   // blue
+      refined:    [234, 88,  12,  220],   // orange
+      condensate: [13,  148, 136, 220],   // teal
     };
-    return new ScatterplotLayer<CaspianField>({
-      id: 'caspian-fields-layer',
-      data: CASPIAN_FIELDS,
-      getPosition: (d) => [d.lon, d.lat],
-      getRadius: 30000,
-      getFillColor: (d) => fieldColors[d.type] ?? [120, 60, 20, 230],
-      getLineColor: [255, 255, 255, 120],
-      lineWidthMinPixels: 1,
-      stroked: true,
-      radiusMinPixels: 10,
-      radiusMaxPixels: 28,
-      pickable: true,
-    });
-  }
-
-  private createCaspianTerminalsLayer(): ScatterplotLayer {
-    return new ScatterplotLayer<CaspianTerminal>({
-      id: 'caspian-terminals-layer',
-      data: CASPIAN_TERMINALS,
-      getPosition: (d) => [d.lon, d.lat],
-      getRadius: 20000,
-      getFillColor: [255, 180, 0, 230],
-      getLineColor: [255, 255, 255, 140],
-      lineWidthMinPixels: 1,
-      stroked: true,
-      radiusMinPixels: 8,
-      radiusMaxPixels: 18,
-      pickable: true,
-    });
-  }
-
-  private createCaspianPipelinesLayer(): PathLayer {
-    const pipelineColors: Record<string, [number, number, number, number]> = {
-      crude_oil:    [160, 30, 30,  220],
-      natural_gas:  [30,  80, 200, 220],
-    };
-    return new PathLayer<CaspianPipeline>({
-      id: 'caspian-pipelines-layer',
-      data: CASPIAN_PIPELINES,
+    const inactiveColor: [number, number, number, number] = [120, 120, 120, 140];
+    return new PathLayer<GlobalPipeline>({
+      id: 'oil-gas-pipelines-layer',
+      data: GLOBAL_PIPELINES,
       getPath: (d) => d.coordinates,
-      getColor: (d) => pipelineColors[d.commodity] ?? [160, 30, 30, 220],
+      getColor: (d) => d.status === 'inactive' ? inactiveColor : (commodityColors[d.commodity] ?? commodityColors['crude']!),
       getWidth: 4,
       widthUnits: 'pixels',
       widthMinPixels: 2,
@@ -2171,6 +2138,29 @@ export class DeckGLMap {
       pickable: true,
       jointRounded: true,
       capRounded: true,
+    });
+  }
+
+  private createOilGasFieldsLayer(): ScatterplotLayer {
+    const fieldColors: Record<string, [number, number, number, number]> = {
+      oil:      [139, 69,  19,  230],   // brown
+      gas:      [30,  64,  175, 230],   // dark blue
+      'oil/gas':[107, 33,  168, 230],   // purple
+      condensate:[13, 148, 136, 230],   // teal
+    };
+    const terminalColor: [number, number, number, number] = [217, 119, 6, 230]; // amber
+    return new ScatterplotLayer<GlobalOilGasField>({
+      id: 'oil-gas-fields-layer',
+      data: GLOBAL_OILGAS_FIELDS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: 30000,
+      getFillColor: (d) => d.type === 'terminal' ? terminalColor : (fieldColors[d.commodity] ?? fieldColors['oil']!),
+      getLineColor: [255, 255, 255, 120],
+      lineWidthMinPixels: 1,
+      stroked: true,
+      radiusMinPixels: 7,
+      radiusMaxPixels: 24,
+      pickable: true,
     });
   }
 
@@ -3812,12 +3802,10 @@ export class DeckGLMap {
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.fuelType?.replace('_', ' '))} · ${obj.capacityMW} MW</div>` };
       case 'us-transmission-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${obj.voltageKv} kV</strong>${obj.owner ? `<br/>${text(obj.owner)}` : ''}</div>` };
-      case 'caspian-fields-layer':
-        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.type?.replace('_', '/'))} · ${text(obj.country)}</div>` };
-      case 'caspian-terminals-layer':
-        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.country)}</div>` };
-      case 'caspian-pipelines-layer':
-        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.commodity?.replace('_', ' '))} · ${obj.lengthKm?.toLocaleString()} km</div>` };
+      case 'oil-gas-fields-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.commodity)} ${text(obj.type)} · ${text(obj.country)}</div>` };
+      case 'oil-gas-pipelines-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.commodity)} · ${obj.lengthKm?.toLocaleString()} km · ${text(obj.region)}</div>` };
       case 'datacenters-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.owner)}</div>` };
       case 'cables-layer':
@@ -4224,9 +4212,8 @@ export class DeckGLMap {
       'nuclear-layer': 'nuclear',
       'us-plants-layer': 'usPlant',
       'us-transmission-layer': 'usTransmission',
-      'caspian-fields-layer': 'caspianField',
-      'caspian-terminals-layer': 'caspianTerminal',
-      'caspian-pipelines-layer': 'caspianPipeline',
+      'oil-gas-fields-layer': 'oilGasField',
+      'oil-gas-pipelines-layer': 'oilGasPipeline',
       'irradiators-layer': 'irradiator',
       'radiation-watch-layer': 'radiation',
       'datacenters-layer': 'datacenter',

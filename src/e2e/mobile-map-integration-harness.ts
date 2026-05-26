@@ -141,7 +141,8 @@ const layers = {
   diseaseOutbreaks: false,
   usPlants: false,
   usTransmission: false,
-  caspianEnergy: false,
+  oilGasPipelines: false,
+  oilGasFields: false,
 };
 
 await initI18n();

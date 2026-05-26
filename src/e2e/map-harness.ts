@@ -192,7 +192,8 @@ const allLayersEnabled: MapLayers = {
   diseaseOutbreaks: true,
   usPlants: false,
   usTransmission: false,
-  caspianEnergy: false,
+  oilGasPipelines: false,
+  oilGasFields: false,
 };
 
 const allLayersDisabled: MapLayers = {
@@ -252,7 +253,8 @@ const allLayersDisabled: MapLayers = {
   diseaseOutbreaks: true,
   usPlants: false,
   usTransmission: false,
-  caspianEnergy: false,
+  oilGasPipelines: false,
+  oilGasFields: false,
 };
 
 const SEEDED_NEWS_LOCATIONS: Array<{

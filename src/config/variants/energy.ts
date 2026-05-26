@@ -30,7 +30,8 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   // ── Energy layers (ENABLED) ────────────────────────────────────────────────
   usPlants: true,
   usTransmission: true,
-  caspianEnergy: true,
+  oilGasPipelines: true,
+  oilGasFields: true,
   weather: true,
   waterways: true,
   natural: true,
@@ -108,7 +109,8 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   // Energy layers (reduced on mobile — heavy data disabled)
   usPlants: false,
   usTransmission: false,
-  caspianEnergy: true,
+  oilGasPipelines: true,
+  oilGasFields: true,
   pipelines: false,
   weather: false,
   waterways: false,

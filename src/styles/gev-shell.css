@@ -320,6 +320,12 @@
 
 .gev-layer-item.active .gev-layer-label { color: var(--text); }
 
+.gev-layer-region {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
 .gev-sidebar-section {
   padding: 0 16px 8px;
   margin-top: 4px;

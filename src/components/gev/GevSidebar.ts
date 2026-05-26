@@ -29,7 +29,7 @@ export class GevSidebar {
         <label class="gev-layer-item ${active}" data-layer="${key}">
           <input type="checkbox" data-layer="${key}" ${checked} />
           <span class="gev-layer-icon">${def.icon}</span>
-          <span class="gev-layer-label">${def.fallbackLabel}</span>
+          <span class="gev-layer-label">${def.fallbackLabel}${key === 'usTransmission' ? ' <span class="gev-layer-region">(US)</span>' : ''}</span>
         </label>`;
     }).join('');
 

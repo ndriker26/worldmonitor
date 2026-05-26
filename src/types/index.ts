@@ -567,43 +567,38 @@ export interface UsTransmissionLine {
   coordinates: [number, number][];
 }
 
-// Caspian basin energy infrastructure
-export type CaspianFieldType = 'oil' | 'gas' | 'gas_condensate' | 'oil_gas';
+// Global oil & gas infrastructure
+export type GlobalPipelineCommodity = 'crude' | 'gas' | 'refined' | 'condensate';
+export type GlobalPipelineStatus = 'active' | 'inactive' | 'construction';
 
-export interface CaspianField {
-  id: string;
-  name: string;
-  lat: number;
-  lon: number;
-  type: CaspianFieldType;
-  country: string;
-  operator: string;
-  capacity: string;
-  status: 'active' | 'development';
-  year?: number;
-  description?: string;
-}
-
-export interface CaspianTerminal {
-  id: string;
-  name: string;
-  lat: number;
-  lon: number;
-  country: string;
-  operator: string;
-  notes: string;
-}
-
-export type CaspianCommodity = 'crude_oil' | 'natural_gas';
-
-export interface CaspianPipeline {
+export interface GlobalPipeline {
   id: string;
   name: string;
   coordinates: [number, number][];
   lengthKm: number;
   capacityDesc: string;
-  commodity: CaspianCommodity;
+  commodity: GlobalPipelineCommodity;
   operator: string;
+  status: GlobalPipelineStatus;
+  region: string;
+}
+
+export type GlobalOilGasFieldType = 'field' | 'terminal';
+export type GlobalOilGasCommodity = 'oil' | 'gas' | 'oil/gas' | 'condensate';
+
+export interface GlobalOilGasField {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  type: GlobalOilGasFieldType;
+  commodity: GlobalOilGasCommodity;
+  country: string;
+  operator: string;
+  capacityDesc: string;
+  status: 'active' | 'inactive' | 'development';
+  year?: number;
+  notes?: string;
 }
 
 export interface GammaIrradiator {
@@ -744,7 +739,8 @@ export interface MapLayers {
   // Energy variant layers
   usPlants: boolean;
   usTransmission: boolean;
-  caspianEnergy: boolean;
+  oilGasPipelines: boolean;
+  oilGasFields: boolean;
 }
 
 export interface AIDataCenter {
