@@ -23,7 +23,7 @@ export class GevSidebar {
     const LAYER_COUNTS: Partial<Record<string, string>> = {
       usPlants: '35k',
       usTransmission: '97k',
-      oilGasPipelines: '25',
+      oilGasPipelines: '162',
       oilGasFields: '50+',
       weather: 'live',
       waterways: 'static',
