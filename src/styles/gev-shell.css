@@ -506,3 +506,179 @@
 
 /* ── Hidden original layout elements (for non-energy fallback) ─ */
 .gev-shell ~ .header { display: none !important; }
+
+/* ── Loading screen ──────────────────────────────────────────── */
+.gev-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #07090e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.6s ease-out;
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+[data-theme="light"] .gev-loading { background: #eef0f4; }
+
+.gev-loading.fadeout {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gev-loading-logo {
+  animation: gev-logo-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes gev-logo-breathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(59,130,246,0.4)); }
+  50%       { transform: scale(1.06); filter: drop-shadow(0 0 16px rgba(59,130,246,0.7)); }
+}
+
+.gev-loading-brand {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--gev-accent);
+  margin-top: 4px;
+}
+
+.gev-loading-sub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+[data-theme="light"] .gev-loading-sub { color: rgba(0, 0, 0, 0.40); }
+
+.gev-loading-bar-wrap {
+  width: 180px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+[data-theme="light"] .gev-loading-bar-wrap { background: rgba(0, 0, 0, 0.08); }
+
+.gev-loading-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--gev-accent);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--gev-accent-glow);
+  animation: gev-load-progress 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes gev-load-progress {
+  0%   { width: 0% }
+  40%  { width: 55% }
+  72%  { width: 80% }
+  90%  { width: 94% }
+  100% { width: 100% }
+}
+
+/* ── Map edge vignette ───────────────────────────────────────── */
+.gev-map-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 52%, rgba(0,0,0,0.30) 100%);
+  z-index: 1;
+}
+
+[data-theme="light"] .gev-map-wrap::after {
+  background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 52%, rgba(0,0,0,0.10) 100%);
+}
+
+/* ── Layer count badge ───────────────────────────────────────── */
+.gev-layer-count {
+  font-size: 9px;
+  color: var(--text-muted);
+  background: var(--overlay-subtle);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* ── Sidebar legend ──────────────────────────────────────────── */
+.gev-legend-grid {
+  display: grid;
+  grid-template-columns: 8px 1fr 8px 1fr;
+  gap: 5px 6px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.gev-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+}
+
+.gev-legend-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gev-legend-pipe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.gev-legend-pipe-line {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.gev-sidebar-footer {
+  padding: 10px 16px 14px;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  border-top: 1px solid var(--gev-glass-border);
+  flex-shrink: 0;
+}
+
+/* ── Metric tile sparkline + trend ───────────────────────────── */
+.gev-metric-sparkline {
+  margin-top: 5px;
+  display: block;
+  opacity: 0.85;
+}
+
+.gev-metric-change {
+  font-size: 9px;
+  font-weight: 700;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  letter-spacing: 0.04em;
+}
+
+.gev-metric-change.up   { color: var(--gev-live); }
+.gev-metric-change.down { color: #ef4444; }
+.gev-metric-change.flat { color: var(--text-muted); }
+
+/* ── Mobile: hide legends on very small screens ──────────────── */
+@media (max-width: 640px) {
+  .gev-sidebar-footer { display: none; }
+  .gev-layer-count { display: none; }
+}

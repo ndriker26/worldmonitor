@@ -451,6 +451,8 @@ export class DeckGLMap {
   private renewableInstallations: RenewableInstallation[] = [];
   private webcamData: Array<WebcamEntry | WebcamCluster> = [];
   private globalPlantsData: UsPowerPlant[] = US_POWER_PLANTS;
+  private pipelineDashOffset = 0;
+  private pipelineAnimFrame: number | null = null;
   private countriesGeoJsonData: FeatureCollection<Geometry> | null = null;
   private conflictZoneGeoJson: GeoJSON.FeatureCollection | null = null;
 
@@ -602,7 +604,10 @@ export class DeckGLMap {
       this.initDeck();
       this.loadCountryBoundaries();
       this.fetchServerBases();
-      if (IS_ENERGY_VIEW) this.loadGlobalPlants();
+      if (IS_ENERGY_VIEW) {
+        this.loadGlobalPlants();
+        this.startPipelineAnimation();
+      }
       this.render();
     });
 
@@ -808,7 +813,10 @@ export class DeckGLMap {
         this.initDeck();
         this.loadCountryBoundaries();
         this.fetchServerBases();
-        if (IS_ENERGY_VIEW) this.loadGlobalPlants();
+        if (IS_ENERGY_VIEW) {
+          this.loadGlobalPlants();
+          this.startPipelineAnimation();
+        }
         this.render();
       });
     };
@@ -1509,8 +1517,9 @@ export class DeckGLMap {
     }
     layers.push(this.createEmptyGhost('us-transmission-layer'));
 
-    // US power plants layer (energy variant) — global dataset via IconLayer
+    // US power plants layer (energy variant) — glow halo first, then icon on top
     if (mapLayers.usPlants && this.isLayerVisible('usPlants')) {
+      layers.push(this.createUsPlantsGlowLayer());
       layers.push(this.createUsPlantsLayer());
     }
     layers.push(this.createEmptyGhost('us-plants-layer'));
@@ -1521,8 +1530,9 @@ export class DeckGLMap {
     }
     layers.push(this.createEmptyGhost('oil-gas-pipelines-layer'));
 
-    // Global oil & gas fields + terminals layer
+    // Global oil & gas fields + terminals layer — glow halo first, then dot on top
     if (mapLayers.oilGasFields && this.isLayerVisible('oilGasFields')) {
+      layers.push(this.createOilGasFieldsGlowLayer());
       layers.push(this.createOilGasFieldsLayer());
     }
     layers.push(this.createEmptyGhost('oil-gas-fields-layer'));
@@ -2120,25 +2130,34 @@ export class DeckGLMap {
 
   private createOilGasPipelinesLayer(): PathLayer {
     const commodityColors: Record<string, [number, number, number, number]> = {
-      crude:      [139, 0,   0,   220],   // dark red
-      gas:        [37,  99,  235, 220],   // blue
-      refined:    [234, 88,  12,  220],   // orange
-      condensate: [13,  148, 136, 220],   // teal
+      crude:      [139, 0,   0,   200],
+      gas:        [37,  99,  235, 200],
+      refined:    [234, 88,  12,  200],
+      condensate: [13,  148, 136, 200],
     };
-    const inactiveColor: [number, number, number, number] = [120, 120, 120, 140];
-    return new PathLayer<GlobalPipeline>({
+    const inactiveColor: [number, number, number, number] = [100, 100, 100, 100];
+    const dashOffset = this.pipelineDashOffset;
+    const baseProps = {
       id: 'oil-gas-pipelines-layer',
       data: GLOBAL_PIPELINES,
-      getPath: (d) => d.coordinates,
-      getColor: (d) => d.status === 'inactive' ? inactiveColor : (commodityColors[d.commodity] ?? commodityColors['crude']!),
-      getWidth: 4,
-      widthUnits: 'pixels',
-      widthMinPixels: 2,
-      widthMaxPixels: 8,
+      getPath: (d: GlobalPipeline) => d.coordinates,
+      getColor: (d: GlobalPipeline) => d.status === 'inactive' ? inactiveColor : (commodityColors[d.commodity] ?? commodityColors['crude']!),
+      getWidth: (d: GlobalPipeline) => d.status === 'inactive' ? 2 : 4,
+      widthUnits: 'pixels' as const,
+      widthMinPixels: 1.5,
+      widthMaxPixels: 6,
       pickable: true,
       jointRounded: true,
       capRounded: true,
-    });
+    };
+    const extProps = {
+      getDashArray: (d: GlobalPipeline) => (d.status === 'inactive' ? [6, 6] : [16, 6]) as [number, number],
+      dashJustified: true,
+      dashOffset,
+      extensions: [new PathStyleExtension({ dash: true, highPrecisionDash: true })],
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return new PathLayer<GlobalPipeline>({ ...baseProps, ...extProps } as any);
   }
 
   private createOilGasFieldsLayer(): ScatterplotLayer {
@@ -2161,6 +2180,69 @@ export class DeckGLMap {
       radiusMinPixels: 7,
       radiusMaxPixels: 24,
       pickable: true,
+    });
+  }
+
+  private startPipelineAnimation(): void {
+    if (this.pipelineAnimFrame !== null) return;
+    let last = 0;
+    const animate = (ts: number) => {
+      if (ts - last >= 33) {
+        this.pipelineDashOffset = (this.pipelineDashOffset + 0.8) % 10000;
+        if (this.state.layers.oilGasPipelines) this.render();
+        last = ts;
+      }
+      this.pipelineAnimFrame = requestAnimationFrame(animate);
+    };
+    this.pipelineAnimFrame = requestAnimationFrame(animate);
+  }
+
+  private stopPipelineAnimation(): void {
+    if (this.pipelineAnimFrame !== null) {
+      cancelAnimationFrame(this.pipelineAnimFrame);
+      this.pipelineAnimFrame = null;
+    }
+  }
+
+  private createUsPlantsGlowLayer(): ScatterplotLayer<UsPowerPlant> {
+    return new ScatterplotLayer<UsPowerPlant>({
+      id: 'us-plants-glow-layer',
+      data: this.globalPlantsData,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: (d) => {
+        const mw = d.capacityMW || 1;
+        return Math.min(28, Math.max(8, 8 + Math.sqrt(mw) * 0.5));
+      },
+      getFillColor: (d) => {
+        const c = US_PLANT_FUEL_COLORS[d.fuelType] ?? US_PLANT_FUEL_COLORS.other!;
+        return [c[0], c[1], c[2], 38] as [number, number, number, number];
+      },
+      radiusUnits: 'pixels',
+      radiusMinPixels: 6,
+      radiusMaxPixels: 28,
+      pickable: false,
+      stroked: false,
+    });
+  }
+
+  private createOilGasFieldsGlowLayer(): ScatterplotLayer<GlobalOilGasField> {
+    const glowColors: Record<string, [number, number, number, number]> = {
+      oil:       [139, 69,  19,  52],
+      gas:       [30,  64,  175, 52],
+      'oil/gas': [107, 33,  168, 52],
+      condensate:[13,  148, 136, 52],
+    };
+    const terminalGlow: [number, number, number, number] = [217, 119, 6, 52];
+    return new ScatterplotLayer<GlobalOilGasField>({
+      id: 'oil-gas-fields-glow-layer',
+      data: GLOBAL_OILGAS_FIELDS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: 50000,
+      getFillColor: (d) => d.type === 'terminal' ? terminalGlow : (glowColors[d.commodity] ?? glowColors['oil']!),
+      radiusMinPixels: 12,
+      radiusMaxPixels: 36,
+      pickable: false,
+      stroked: false,
     });
   }
 
@@ -6261,6 +6343,7 @@ export class DeckGLMap {
   public destroy(): void {
     this._unsubscribeAuthState?.();
     this._unsubscribeAuthState = null;
+    this.stopPipelineAnimation();
     window.removeEventListener('theme-changed', this.handleThemeChange);
     window.removeEventListener('map-theme-changed', this.handleMapThemeChange);
     this.debouncedRebuildLayers.cancel();

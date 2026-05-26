@@ -5,12 +5,39 @@ interface MetricTile {
   value: string;
   sub: string;
   id: string;
+  sparkline: string;
+  trend: '+' | '-' | '';
+  change: string;
 }
 
 const PLACEHOLDER_METRICS: MetricTile[] = [
-  { id: 'wti', label: 'WTI Crude', value: '—', sub: 'USD/bbl' },
-  { id: 'ng', label: 'Nat. Gas', value: '—', sub: 'USD/MMBtu' },
-  { id: 'brent', label: 'Brent', value: '—', sub: 'USD/bbl' },
+  {
+    id: 'wti',
+    label: 'WTI Crude',
+    value: '—',
+    sub: 'USD/bbl',
+    sparkline: '0,14 8,12 16,15 24,10 32,13 40,9 48,11 56,8 60,10',
+    trend: '-',
+    change: '1.2%',
+  },
+  {
+    id: 'ng',
+    label: 'Nat. Gas',
+    value: '—',
+    sub: 'USD/MMBtu',
+    sparkline: '0,16 8,14 16,11 24,13 32,9 40,12 48,7 56,10 60,8',
+    trend: '+',
+    change: '2.3%',
+  },
+  {
+    id: 'brent',
+    label: 'Brent',
+    value: '—',
+    sub: 'USD/bbl',
+    sparkline: '0,13 8,11 16,14 24,10 32,12 40,9 48,11 56,9 60,11',
+    trend: '-',
+    change: '0.8%',
+  },
 ];
 
 export class GevDrawer {
@@ -27,12 +54,22 @@ export class GevDrawer {
   }
 
   private render(): string {
-    const tiles = PLACEHOLDER_METRICS.map(m => `
-      <div class="gev-metric-tile" id="gevMetric-${m.id}">
-        <div class="gev-metric-label">${m.label}</div>
-        <div class="gev-metric-value" id="gevMetricVal-${m.id}">${m.value}</div>
-        <div class="gev-metric-sub">${m.sub}</div>
-      </div>`).join('');
+    const tiles = PLACEHOLDER_METRICS.map(m => {
+      const changeClass = m.trend === '+' ? 'up' : m.trend === '-' ? 'down' : 'flat';
+      const arrow = m.trend === '+' ? '▲' : m.trend === '-' ? '▼' : '—';
+      const strokeColor = m.trend === '+' ? '#22c55e' : m.trend === '-' ? '#ef4444' : '#888';
+      return `
+        <div class="gev-metric-tile" id="gevMetric-${m.id}">
+          <div class="gev-metric-label">${m.label}</div>
+          <div class="gev-metric-value" id="gevMetricVal-${m.id}">${m.value}</div>
+          <div class="gev-metric-sub">${m.sub}</div>
+          <svg class="gev-metric-sparkline" width="60" height="20" viewBox="0 0 60 20">
+            <polyline points="${m.sparkline}" fill="none" stroke="${strokeColor}" stroke-width="1.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="gev-metric-change ${changeClass}">${arrow} ${m.change} 24h</div>
+        </div>`;
+    }).join('');
 
     return `
       <div class="gev-drawer-handle" id="gevDrawerHandle">

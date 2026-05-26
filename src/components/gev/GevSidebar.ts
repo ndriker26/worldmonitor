@@ -20,24 +20,64 @@ export class GevSidebar {
 
   private render(): void {
     const layerDefs = getLayersForVariant('energy', 'flat');
+    const LAYER_COUNTS: Partial<Record<string, string>> = {
+      usPlants: '35k',
+      usTransmission: '97k',
+      oilGasPipelines: '25',
+      oilGasFields: '50+',
+      weather: 'live',
+      waterways: 'static',
+      natural: 'live',
+      fires: 'live',
+    };
 
     const items = layerDefs.map(def => {
       const key = def.key as keyof MapLayers;
       const checked = this.layers[key] ? 'checked' : '';
       const active = this.layers[key] ? 'active' : '';
+      const count = LAYER_COUNTS[key];
       return `
         <label class="gev-layer-item ${active}" data-layer="${key}">
           <input type="checkbox" data-layer="${key}" ${checked} />
           <span class="gev-layer-icon">${def.icon}</span>
           <span class="gev-layer-label">${def.fallbackLabel}${key === 'usTransmission' ? ' <span class="gev-layer-region">(US)</span>' : ''}</span>
+          ${count ? `<span class="gev-layer-count">${count}</span>` : ''}
         </label>`;
     }).join('');
+
+    const fuelLegend = [
+      ['#ff8c00', 'Nat. Gas'], ['#3c3c3c', 'Coal'],
+      ['#ffdc00', 'Nuclear'],  ['#64b4ff', 'Wind'],
+      ['#ffe632', 'Solar'],    ['#3282dc', 'Hydro'],
+      ['#c83232', 'Oil'],      ['#64b450', 'Biomass'],
+      ['#b450c8', 'Geo.'],     ['#969696', 'Other'],
+    ].map(([color, label]) =>
+      `<span class="gev-legend-dot" style="background:${color}"></span><span class="gev-legend-label">${label}</span>`
+    ).join('');
+
+    const pipeLegend = [
+      ['#8b0000', 'Crude Oil'],
+      ['#2563eb', 'Natural Gas'],
+      ['#ea580c', 'Refined'],
+      ['#0d9488', 'Condensate'],
+    ].map(([color, label]) =>
+      `<div class="gev-legend-pipe"><div class="gev-legend-pipe-line" style="background:${color}"></div><span class="gev-legend-label">${label}</span></div>`
+    ).join('');
 
     this.el.innerHTML = `
       <div class="gev-sidebar-header">Map Layers</div>
       <div class="gev-layer-list" id="gevLayerList">
         ${items}
       </div>
+      <div class="gev-sidebar-section">
+        <div class="gev-sidebar-section-title">Plant Fuel Types</div>
+        <div class="gev-legend-grid">${fuelLegend}</div>
+      </div>
+      <div class="gev-sidebar-section">
+        <div class="gev-sidebar-section-title">Pipeline Types</div>
+        ${pipeLegend}
+      </div>
+      <div class="gev-sidebar-footer">by natantheskier</div>
     `;
 
     this.el.addEventListener('change', (e) => {

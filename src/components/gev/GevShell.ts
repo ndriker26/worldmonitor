@@ -21,11 +21,57 @@ export class GevShell {
   }
 
   init(): void {
+    const loadingEl = this.buildLoadingScreen();
+    this.setupBranding();
     initGevTheme();
     this.buildDOM();
     this.mountMap();
     this.mountNewsPanel();
     this.wireSidebarToggle();
+    // Dismiss after the progress bar animation completes (2.4s) + buffer
+    setTimeout(() => this.dismissLoadingScreen(loadingEl), 2800);
+  }
+
+  private setupBranding(): void {
+    document.title = "Grid's Eye View — Energy Infrastructure Monitor";
+    const existing = document.querySelector<HTMLLinkElement>('link[rel="icon"][type="image/svg+xml"]');
+    const link = existing ?? document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    (link as HTMLLinkElement).href = '/favicon-gev.svg';
+    if (!existing) document.head.appendChild(link);
+  }
+
+  private buildLoadingScreen(): HTMLElement {
+    const el = document.createElement('div');
+    el.className = 'gev-loading';
+    el.id = 'gevLoading';
+    el.innerHTML = `
+      <div class="gev-loading-logo">
+        <svg width="52" height="52" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1,16 C6,7 12,4 16,4 C20,4 26,7 31,16 C26,25 20,28 16,28 C12,28 6,25 1,16 Z"
+                fill="rgba(59,130,246,0.08)" stroke="#3b82f6" stroke-width="2"/>
+          <circle cx="16" cy="16" r="7" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+          <line x1="9" y1="16" x2="23" y2="16" stroke="#3b82f6" stroke-width="0.7" opacity="0.6"/>
+          <line x1="16" y1="9" x2="16" y2="23" stroke="#3b82f6" stroke-width="0.7" opacity="0.6"/>
+          <circle cx="16" cy="16" r="3" fill="#3b82f6"/>
+          <circle cx="3.5" cy="16" r="1.5" fill="#3b82f6" opacity="0.8"/>
+          <circle cx="28.5" cy="16" r="1.5" fill="#3b82f6" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="gev-loading-brand">GRID'S EYE VIEW</div>
+      <div class="gev-loading-sub">Energy Infrastructure Monitor</div>
+      <div class="gev-loading-bar-wrap">
+        <div class="gev-loading-bar"></div>
+      </div>
+    `;
+    document.body.appendChild(el);
+    return el;
+  }
+
+  private dismissLoadingScreen(el: HTMLElement): void {
+    el.classList.add('fadeout');
+    setTimeout(() => { if (el.parentNode) el.remove(); }, 700);
   }
 
   private buildDOM(): void {
