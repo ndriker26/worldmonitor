@@ -145,3 +145,5 @@ export {
 // Energy variant - US power plant + transmission line data
 export { US_POWER_PLANTS } from './us-power-plants';
 export { US_TRANSMISSION_LINES } from './us-transmission-lines';
+// Energy variant - Caspian basin infrastructure
+export { CASPIAN_FIELDS, CASPIAN_TERMINALS, CASPIAN_PIPELINES } from './caspian-energy';

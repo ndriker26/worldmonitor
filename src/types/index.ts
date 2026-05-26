@@ -549,7 +549,10 @@ export interface UsPowerPlant {
   id: string;
   name: string;
   operator: string;
-  state: string;
+  state?: string;        // US-specific; absent for non-US plants
+  country?: string;      // Full country name (e.g. 'United States', 'Germany')
+  countryCode?: string;  // ISO 3166-1 alpha-3 (e.g. 'USA', 'DEU')
+  commissioningYear?: number;
   lat: number;
   lon: number;
   fuelType: UsPowerPlantFuel;
@@ -562,6 +565,45 @@ export interface UsTransmissionLine {
   owner?: string;
   lineType?: string;
   coordinates: [number, number][];
+}
+
+// Caspian basin energy infrastructure
+export type CaspianFieldType = 'oil' | 'gas' | 'gas_condensate' | 'oil_gas';
+
+export interface CaspianField {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  type: CaspianFieldType;
+  country: string;
+  operator: string;
+  capacity: string;
+  status: 'active' | 'development';
+  year?: number;
+  description?: string;
+}
+
+export interface CaspianTerminal {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  country: string;
+  operator: string;
+  notes: string;
+}
+
+export type CaspianCommodity = 'crude_oil' | 'natural_gas';
+
+export interface CaspianPipeline {
+  id: string;
+  name: string;
+  coordinates: [number, number][];
+  lengthKm: number;
+  capacityDesc: string;
+  commodity: CaspianCommodity;
+  operator: string;
 }
 
 export interface GammaIrradiator {
@@ -702,6 +744,7 @@ export interface MapLayers {
   // Energy variant layers
   usPlants: boolean;
   usTransmission: boolean;
+  caspianEnergy: boolean;
 }
 
 export interface AIDataCenter {

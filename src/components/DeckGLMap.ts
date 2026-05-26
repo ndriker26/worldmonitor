@@ -95,8 +95,11 @@ import {
   SANCTIONED_COUNTRIES_ALPHA2,
   US_POWER_PLANTS,
   US_TRANSMISSION_LINES,
+  CASPIAN_FIELDS,
+  CASPIAN_TERMINALS,
+  CASPIAN_PIPELINES,
 } from '@/config';
-import type { GulfInvestment, UsPowerPlant, UsTransmissionLine } from '@/types';
+import type { GulfInvestment, UsPowerPlant, UsTransmissionLine, CaspianField, CaspianTerminal, CaspianPipeline } from '@/types';
 import { resolveTradeRouteSegments, TRADE_ROUTES as TRADE_ROUTES_LIST, type TradeRouteSegment } from '@/config/trade-routes';
 import { getLayersForVariant, resolveLayerLabel, bindLayerSearch, type MapVariant } from '@/config/map-layer-definitions';
 import { getAuthState, subscribeAuthState } from '@/services/auth-state';
@@ -169,13 +172,13 @@ interface TechEventMarker {
 }
 
 // View presets with longitude, latitude, zoom.
-// For Grid's Eye View (energy variant) the "global" slot is repurposed to
-// focus on the continental United States — it's a US-only app, so there is
-// no meaningful world-scale view.
+// For Grid's Eye View (energy variant) the "global" slot opens on a world view
+// centred on the Caspian/Middle East region so both US plants and Caspian
+// infrastructure are in frame at the default zoom.
 const IS_ENERGY_VIEW = SITE_VARIANT === 'energy';
 const VIEW_PRESETS: Record<DeckMapView, { longitude: number; latitude: number; zoom: number }> = {
   global: IS_ENERGY_VIEW
-    ? { longitude: -98.5, latitude: 39.8, zoom: 4 }
+    ? { longitude: 40, latitude: 30, zoom: 2.5 }
     : { longitude: 0, latitude: 20, zoom: 1.5 },
   america: { longitude: -95, latitude: 38, zoom: 3 },
   mena: { longitude: 45, latitude: 28, zoom: 3.5 },
@@ -186,9 +189,8 @@ const VIEW_PRESETS: Record<DeckMapView, { longitude: number; latitude: number; z
   oceania: { longitude: 135, latitude: -25, zoom: 3.5 },
 };
 
-// Energy variant zoom bounds: prevent zooming out past the CONUS frame while
-// still allowing deep drill-down to state / county detail.
-const ENERGY_ZOOM_BOUNDS = { minZoom: 3, maxZoom: 15 } as const;
+// Energy variant zoom bounds: global coverage with full drill-down capability.
+const ENERGY_ZOOM_BOUNDS = { minZoom: 1.5, maxZoom: 18 } as const;
 
 const MAP_INTERACTION_MODE: MapInteractionMode =
   import.meta.env.VITE_MAP_INTERACTION_MODE === 'flat' ? 'flat' : '3d';
@@ -209,8 +211,9 @@ const LAYER_ZOOM_THRESHOLDS: Partial<Record<keyof MapLayers, { minZoom: number; 
   irradiators: { minZoom: 4 },
   spaceports: { minZoom: 3 },
   gulfInvestments: { minZoom: 2, showLabels: 5 },
-  usPlants: { minZoom: 3 },
-  usTransmission: { minZoom: 3 },
+  usPlants: { minZoom: 2 },
+  usTransmission: { minZoom: 2 },
+  caspianEnergy: { minZoom: 1 },
 };
 // Export for external use
 export { LAYER_ZOOM_THRESHOLDS };
@@ -447,6 +450,7 @@ export class DeckGLMap {
   private speciesRecoveryZones: Array<SpeciesRecovery & { recoveryZone: { name: string; lat: number; lon: number } }> = [];
   private renewableInstallations: RenewableInstallation[] = [];
   private webcamData: Array<WebcamEntry | WebcamCluster> = [];
+  private globalPlantsData: UsPowerPlant[] = US_POWER_PLANTS;
   private countriesGeoJsonData: FeatureCollection<Geometry> | null = null;
   private conflictZoneGeoJson: GeoJSON.FeatureCollection | null = null;
 
@@ -598,6 +602,7 @@ export class DeckGLMap {
       this.initDeck();
       this.loadCountryBoundaries();
       this.fetchServerBases();
+      if (IS_ENERGY_VIEW) this.loadGlobalPlants();
       this.render();
     });
 
@@ -803,6 +808,7 @@ export class DeckGLMap {
         this.initDeck();
         this.loadCountryBoundaries();
         this.fetchServerBases();
+        if (IS_ENERGY_VIEW) this.loadGlobalPlants();
         this.render();
       });
     };
@@ -1503,11 +1509,21 @@ export class DeckGLMap {
     }
     layers.push(this.createEmptyGhost('us-transmission-layer'));
 
-    // US power plants layer (energy variant) — ~13k points via IconLayer
+    // US power plants layer (energy variant) — global dataset via IconLayer
     if (mapLayers.usPlants && this.isLayerVisible('usPlants')) {
       layers.push(this.createUsPlantsLayer());
     }
     layers.push(this.createEmptyGhost('us-plants-layer'));
+
+    // Caspian energy infrastructure layer — pipelines under fields/terminals
+    if (mapLayers.caspianEnergy && this.isLayerVisible('caspianEnergy')) {
+      layers.push(this.createCaspianPipelinesLayer());
+      layers.push(this.createCaspianFieldsLayer());
+      layers.push(this.createCaspianTerminalsLayer());
+    }
+    layers.push(this.createEmptyGhost('caspian-pipelines-layer'));
+    layers.push(this.createEmptyGhost('caspian-fields-layer'));
+    layers.push(this.createEmptyGhost('caspian-terminals-layer'));
 
     // Gamma irradiators layer — hidden at low zoom
     if (mapLayers.irradiators && this.isLayerVisible('irradiators')) {
@@ -2049,7 +2065,7 @@ export class DeckGLMap {
   private createUsPlantsLayer(): IconLayer {
     return new IconLayer<UsPowerPlant>({
       id: 'us-plants-layer',
-      data: US_POWER_PLANTS,
+      data: this.globalPlantsData,
       getPosition: (d) => [d.lon, d.lat],
       getIcon: () => 'circle',
       iconAtlas: MARKER_ICONS.circle,
@@ -2081,6 +2097,78 @@ export class DeckGLMap {
       widthMaxPixels: 5,
       pickable: true,
       autoHighlight: false,
+      jointRounded: true,
+      capRounded: true,
+    });
+  }
+
+  private async loadGlobalPlants(): Promise<void> {
+    try {
+      const res = await fetch('/data/global-plants.json');
+      if (!res.ok) return;
+      const plants: UsPowerPlant[] = await res.json();
+      if (Array.isArray(plants) && plants.length > 0) {
+        this.globalPlantsData = plants;
+        this.render();
+      }
+    } catch {
+      // Fall back to US-only dataset already in globalPlantsData
+    }
+  }
+
+  private createCaspianFieldsLayer(): ScatterplotLayer {
+    const fieldColors: Record<string, [number, number, number, number]> = {
+      oil:           [120, 60,  20,  230],
+      gas:           [30,  100, 220, 230],
+      gas_condensate:[20,  180, 180, 230],
+      oil_gas:       [160, 40,  200, 230],
+    };
+    return new ScatterplotLayer<CaspianField>({
+      id: 'caspian-fields-layer',
+      data: CASPIAN_FIELDS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: 30000,
+      getFillColor: (d) => fieldColors[d.type] ?? [120, 60, 20, 230],
+      getLineColor: [255, 255, 255, 120],
+      lineWidthMinPixels: 1,
+      stroked: true,
+      radiusMinPixels: 10,
+      radiusMaxPixels: 28,
+      pickable: true,
+    });
+  }
+
+  private createCaspianTerminalsLayer(): ScatterplotLayer {
+    return new ScatterplotLayer<CaspianTerminal>({
+      id: 'caspian-terminals-layer',
+      data: CASPIAN_TERMINALS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: 20000,
+      getFillColor: [255, 180, 0, 230],
+      getLineColor: [255, 255, 255, 140],
+      lineWidthMinPixels: 1,
+      stroked: true,
+      radiusMinPixels: 8,
+      radiusMaxPixels: 18,
+      pickable: true,
+    });
+  }
+
+  private createCaspianPipelinesLayer(): PathLayer {
+    const pipelineColors: Record<string, [number, number, number, number]> = {
+      crude_oil:    [160, 30, 30,  220],
+      natural_gas:  [30,  80, 200, 220],
+    };
+    return new PathLayer<CaspianPipeline>({
+      id: 'caspian-pipelines-layer',
+      data: CASPIAN_PIPELINES,
+      getPath: (d) => d.coordinates,
+      getColor: (d) => pipelineColors[d.commodity] ?? [160, 30, 30, 220],
+      getWidth: 4,
+      widthUnits: 'pixels',
+      widthMinPixels: 2,
+      widthMaxPixels: 8,
+      pickable: true,
       jointRounded: true,
       capRounded: true,
     });
@@ -3724,6 +3812,12 @@ export class DeckGLMap {
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.fuelType?.replace('_', ' '))} · ${obj.capacityMW} MW</div>` };
       case 'us-transmission-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${obj.voltageKv} kV</strong>${obj.owner ? `<br/>${text(obj.owner)}` : ''}</div>` };
+      case 'caspian-fields-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.type?.replace('_', '/'))} · ${text(obj.country)}</div>` };
+      case 'caspian-terminals-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.country)}</div>` };
+      case 'caspian-pipelines-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.commodity?.replace('_', ' '))} · ${obj.lengthKm?.toLocaleString()} km</div>` };
       case 'datacenters-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.owner)}</div>` };
       case 'cables-layer':
@@ -4130,6 +4224,9 @@ export class DeckGLMap {
       'nuclear-layer': 'nuclear',
       'us-plants-layer': 'usPlant',
       'us-transmission-layer': 'usTransmission',
+      'caspian-fields-layer': 'caspianField',
+      'caspian-terminals-layer': 'caspianTerminal',
+      'caspian-pipelines-layer': 'caspianPipeline',
       'irradiators-layer': 'irradiator',
       'radiation-watch-layer': 'radiation',
       'datacenters-layer': 'datacenter',

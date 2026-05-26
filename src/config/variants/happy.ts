@@ -1,4 +1,4 @@
-// Happy variant - happy.worldmonitor.app
+﻿// Happy variant - happy.worldmonitor.app
 import type { PanelConfig, MapLayers } from '@/types';
 import type { VariantConfig } from './base';
 
@@ -81,6 +81,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   diseaseOutbreaks: false,
   usPlants: false,
   usTransmission: false,
+  caspianEnergy: false,
 };
 
 // Mobile defaults — same as desktop for happy variant
@@ -146,6 +147,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   diseaseOutbreaks: false,
   usPlants: false,
   usTransmission: false,
+  caspianEnergy: false,
 };
 
 export const VARIANT_CONFIG: VariantConfig = {

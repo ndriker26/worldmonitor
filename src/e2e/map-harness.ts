@@ -1,4 +1,4 @@
-import 'maplibre-gl/dist/maplibre-gl.css';
+﻿import 'maplibre-gl/dist/maplibre-gl.css';
 import '../styles/main.css';
 import type { Map as MapLibreMap } from 'maplibre-gl';
 import { DeckGLMap } from '../components/DeckGLMap';
@@ -192,6 +192,7 @@ const allLayersEnabled: MapLayers = {
   diseaseOutbreaks: true,
   usPlants: false,
   usTransmission: false,
+  caspianEnergy: false,
 };
 
 const allLayersDisabled: MapLayers = {
@@ -251,6 +252,7 @@ const allLayersDisabled: MapLayers = {
   diseaseOutbreaks: true,
   usPlants: false,
   usTransmission: false,
+  caspianEnergy: false,
 };
 
 const SEEDED_NEWS_LOCATIONS: Array<{

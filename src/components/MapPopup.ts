@@ -1,4 +1,4 @@
-import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, UsPowerPlant, UsTransmissionLine, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat } from '@/types';
+import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, UsPowerPlant, UsTransmissionLine, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat, CaspianField, CaspianTerminal, CaspianPipeline } from '@/types';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { Earthquake } from '@/services/earthquakes';
 import type { WeatherAlert } from '@/services/weather';
@@ -42,7 +42,7 @@ function fmtDelayMin(min: number | undefined): string {
   return `<span style="color:${min > 0 ? '#f97316' : '#22c55e'};font-size:10px;margin-left:3px">${min > 0 ? '+' : ''}${min}m</span>`;
 }
 
-export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'usPlant' | 'usTransmission' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
+export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'usPlant' | 'usTransmission' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation' | 'caspianField' | 'caspianTerminal' | 'caspianPipeline';
 
 interface TechEventPopupData {
   id: string;
@@ -171,7 +171,7 @@ interface DatacenterClusterData {
 
 interface PopupData {
   type: PopupType;
-  data: ConflictZone | Hotspot | Earthquake | WeatherAlert | MilitaryBase | StrategicWaterway | APTGroup | CyberThreat | NuclearFacility | UsPowerPlant | EconomicCenter | GammaIrradiator | Pipeline | UnderseaCable | CableAdvisory | RepairShip | InternetOutage | AIDataCenter | AisDisruptionEvent | SocialUnrestEvent | AirportDelayAlert | PositionSample | MilitaryFlight | MilitaryVessel | MilitaryFlightCluster | MilitaryVesselCluster | NaturalEvent | Port | Spaceport | CriticalMineralProject | StartupHub | CloudRegion | TechHQ | Accelerator | TechEventPopupData | TechHQClusterData | TechEventClusterData | ProtestClusterData | DatacenterClusterData | TechHubActivity | GeoHubActivity | StockExchangePopupData | FinancialCenterPopupData | CentralBankPopupData | CommodityHubPopupData | IranEventPopupData | GpsJammingPopupData | RadiationObservation;
+  data: ConflictZone | Hotspot | Earthquake | WeatherAlert | MilitaryBase | StrategicWaterway | APTGroup | CyberThreat | NuclearFacility | UsPowerPlant | EconomicCenter | GammaIrradiator | Pipeline | UnderseaCable | CableAdvisory | RepairShip | InternetOutage | AIDataCenter | AisDisruptionEvent | SocialUnrestEvent | AirportDelayAlert | PositionSample | MilitaryFlight | MilitaryVessel | MilitaryFlightCluster | MilitaryVesselCluster | NaturalEvent | Port | Spaceport | CriticalMineralProject | StartupHub | CloudRegion | TechHQ | Accelerator | TechEventPopupData | TechHQClusterData | TechEventClusterData | ProtestClusterData | DatacenterClusterData | TechHubActivity | GeoHubActivity | StockExchangePopupData | FinancialCenterPopupData | CentralBankPopupData | CommodityHubPopupData | IranEventPopupData | GpsJammingPopupData | RadiationObservation | CaspianField | CaspianTerminal | CaspianPipeline;
   relatedNews?: NewsItem[];
   x: number;
   y: number;
@@ -542,6 +542,12 @@ export class MapPopup {
         return this.renderGpsJammingPopup(data.data as GpsJammingPopupData);
       case 'radiation':
         return this.renderRadiationPopup(data.data as RadiationObservation);
+      case 'caspianField':
+        return this.renderCaspianFieldPopup(data.data as CaspianField);
+      case 'caspianTerminal':
+        return this.renderCaspianTerminalPopup(data.data as CaspianTerminal);
+      case 'caspianPipeline':
+        return this.renderCaspianPipelinePopup(data.data as CaspianPipeline);
       default:
         return '';
     }
@@ -1602,10 +1608,8 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
             <span class="stat-label">Operator</span>
             <span class="stat-value">${escapeHtml(plant.operator)}</span>
           </div>
-          <div class="popup-stat">
-            <span class="stat-label">State</span>
-            <span class="stat-value">${escapeHtml(plant.state)}</span>
-          </div>
+          ${plant.country ? `<div class="popup-stat"><span class="stat-label">Country</span><span class="stat-value">${escapeHtml(plant.country)}</span></div>` : ''}
+          ${plant.state ? `<div class="popup-stat"><span class="stat-label">State</span><span class="stat-value">${escapeHtml(plant.state)}</span></div>` : ''}
           <div class="popup-stat">
             <span class="stat-label">Fuel Type</span>
             <span class="stat-value" style="color:${color}">${escapeHtml(fuelLabels[plant.fuelType] || plant.fuelType)}</span>
@@ -1651,6 +1655,112 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
           </div>
           ${line.owner ? `<div class="popup-stat"><span class="stat-label">Owner</span><span class="stat-value">${escapeHtml(line.owner)}</span></div>` : ''}
           ${line.lineType ? `<div class="popup-stat"><span class="stat-label">Type</span><span class="stat-value">${escapeHtml(line.lineType)}</span></div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  private renderCaspianFieldPopup(field: CaspianField): string {
+    const typeColors: Record<string, string> = {
+      oil:           '#7840c8',
+      gas:           '#1e64dc',
+      gas_condensate:'#14b4b4',
+      oil_gas:       '#a028c8',
+    };
+    const typeLabels: Record<string, string> = {
+      oil: 'Oil Field', gas: 'Gas Field',
+      gas_condensate: 'Gas/Condensate Field', oil_gas: 'Oil & Gas Field',
+    };
+    const color = typeColors[field.type] ?? '#7840c8';
+    const statusBadge = field.status === 'active' ? 'elevated' : 'low';
+    return `
+      <div class="popup-header" style="border-left:3px solid ${color}">
+        <span class="popup-title">${escapeHtml(field.name.toUpperCase())}</span>
+        <span class="popup-badge ${statusBadge}">${escapeHtml(field.status.toUpperCase())}</span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-subtitle" style="color:${color}">${escapeHtml(typeLabels[field.type] ?? field.type)}</div>
+        <div class="popup-stats">
+          <div class="popup-stat">
+            <span class="stat-label">Country</span>
+            <span class="stat-value">${escapeHtml(field.country)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Operator</span>
+            <span class="stat-value">${escapeHtml(field.operator)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Capacity</span>
+            <span class="stat-value">${escapeHtml(field.capacity)}</span>
+          </div>
+          ${field.year ? `<div class="popup-stat"><span class="stat-label">Production Start</span><span class="stat-value">${field.year}</span></div>` : ''}
+          <div class="popup-stat">
+            <span class="stat-label">Coordinates</span>
+            <span class="stat-value">${field.lat.toFixed(4)}°, ${field.lon.toFixed(4)}°</span>
+          </div>
+        </div>
+        ${field.description ? `<p class="popup-description">${escapeHtml(field.description)}</p>` : ''}
+      </div>
+    `;
+  }
+
+  private renderCaspianTerminalPopup(terminal: CaspianTerminal): string {
+    return `
+      <div class="popup-header" style="border-left:3px solid #ffb400">
+        <span class="popup-title">${escapeHtml(terminal.name.toUpperCase())}</span>
+        <span class="popup-badge elevated">TERMINAL</span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-stats">
+          <div class="popup-stat">
+            <span class="stat-label">Country</span>
+            <span class="stat-value">${escapeHtml(terminal.country)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Operator</span>
+            <span class="stat-value">${escapeHtml(terminal.operator)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Coordinates</span>
+            <span class="stat-value">${terminal.lat.toFixed(4)}°, ${terminal.lon.toFixed(4)}°</span>
+          </div>
+        </div>
+        <p class="popup-description">${escapeHtml(terminal.notes)}</p>
+      </div>
+    `;
+  }
+
+  private renderCaspianPipelinePopup(pipeline: CaspianPipeline): string {
+    const commodityColors: Record<string, string> = {
+      crude_oil: '#a01e1e',
+      natural_gas: '#1e50c8',
+    };
+    const commodityLabels: Record<string, string> = {
+      crude_oil: 'Crude Oil', natural_gas: 'Natural Gas',
+    };
+    const color = commodityColors[pipeline.commodity] ?? '#a01e1e';
+    return `
+      <div class="popup-header" style="border-left:3px solid ${color}">
+        <span class="popup-title">${escapeHtml(pipeline.name.toUpperCase())}</span>
+        <span class="popup-badge" style="background:${color};color:#fff">${escapeHtml(commodityLabels[pipeline.commodity] ?? pipeline.commodity)}</span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-stats">
+          <div class="popup-stat">
+            <span class="stat-label">Length</span>
+            <span class="stat-value">${pipeline.lengthKm.toLocaleString()} km</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Capacity</span>
+            <span class="stat-value">${escapeHtml(pipeline.capacityDesc)}</span>
+          </div>
+          <div class="popup-stat">
+            <span class="stat-label">Operator</span>
+            <span class="stat-value">${escapeHtml(pipeline.operator)}</span>
+          </div>
         </div>
       </div>
     `;

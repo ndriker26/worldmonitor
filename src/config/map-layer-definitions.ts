@@ -83,8 +83,9 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   // weatherRadar removed — radar tiles now auto-start when Weather Alerts layer is toggled on
   diseaseOutbreaks:         def('diseaseOutbreaks',         '&#129440;', 'diseaseOutbreaks',         'Disease Outbreaks'),
   // Energy variant layers
-  usPlants:                 def('usPlants',                 '&#9889;',   'usPowerPlants',            'US Power Plants'),
+  usPlants:                 def('usPlants',                 '&#9889;',   'usPowerPlants',            'Power Plants'),
   usTransmission:           def('usTransmission',           '&#128268;', 'usTransmissionLines',      'Transmission Lines'),
+  caspianEnergy:            def('caspianEnergy',            '&#128518;', 'caspianEnergy',            'Caspian Energy Basin'),
 };
 
 const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
@@ -121,7 +122,7 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'resilienceScore', 'natural', 'weather', 'outages', 'sanctions', 'dayNight',
   ],
   energy: [
-    'usPlants', 'usTransmission',
+    'usPlants', 'usTransmission', 'caspianEnergy',
     'weather', 'natural', 'fires', 'waterways',
   ],
 };
@@ -190,13 +191,18 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   demonstration: ['protests'],
   oil: ['pipelines', 'commodityHubs'],
   gas: ['pipelines'],
-  energy: ['pipelines', 'renewableInstallations', 'usPlants', 'usTransmission'],
+  energy: ['pipelines', 'renewableInstallations', 'usPlants', 'usTransmission', 'caspianEnergy'],
   powerplant: ['usPlants'],
   generator: ['usPlants'],
   electricity: ['usPlants', 'usTransmission'],
   transmission: ['usTransmission'],
   grid: ['usTransmission', 'usPlants'],
   voltage: ['usTransmission'],
+  caspian: ['caspianEnergy'],
+  pipeline: ['pipelines', 'caspianEnergy'],
+  oilfield: ['caspianEnergy'],
+  kazakh: ['caspianEnergy'],
+  azerbaijan: ['caspianEnergy'],
   solar: ['renewableInstallations'],
   wind: ['renewableInstallations'],
   green: ['renewableInstallations', 'speciesRecovery'],

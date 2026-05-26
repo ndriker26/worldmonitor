@@ -1,4 +1,4 @@
-import '../styles/main.css';
+﻿import '../styles/main.css';
 import { MapComponent } from '../components/Map';
 import { initI18n } from '../services/i18n';
 
@@ -141,6 +141,7 @@ const layers = {
   diseaseOutbreaks: false,
   usPlants: false,
   usTransmission: false,
+  caspianEnergy: false,
 };
 
 await initI18n();
