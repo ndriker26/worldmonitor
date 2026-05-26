@@ -3,6 +3,7 @@ import { getLayersForVariant } from '@/config/map-layer-definitions';
 import { saveToStorage } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 import type { MapContainer } from '@/components';
+import { getDistanceUnit, setDistanceUnit, type DistanceUnit } from '@/utils/unit-pref';
 
 export class GevSidebar {
   private el: HTMLElement;
@@ -33,16 +34,14 @@ export class GevSidebar {
 
     const items = layerDefs.map(def => {
       const key = def.key as keyof MapLayers;
-      const checked = this.layers[key] ? 'checked' : '';
       const active = this.layers[key] ? 'active' : '';
       const count = LAYER_COUNTS[key];
       return `
-        <label class="gev-layer-item ${active}" data-layer="${key}">
-          <input type="checkbox" data-layer="${key}" ${checked} />
+        <div class="gev-layer-item ${active}" data-layer="${key}" role="button" tabindex="0" aria-pressed="${this.layers[key] ? 'true' : 'false'}">
           <span class="gev-layer-icon">${def.icon}</span>
           <span class="gev-layer-label">${def.fallbackLabel}${key === 'usTransmission' ? ' <span class="gev-layer-region">(US)</span>' : ''}</span>
           ${count ? `<span class="gev-layer-count">${count}</span>` : ''}
-        </label>`;
+        </div>`;
     }).join('');
 
     const fuelLegend = [
@@ -64,31 +63,53 @@ export class GevSidebar {
       `<div class="gev-legend-pipe"><div class="gev-legend-pipe-line" style="background:${color}"></div><span class="gev-legend-label">${label}</span></div>`
     ).join('');
 
+    const unit = getDistanceUnit();
+
     this.el.innerHTML = `
       <div class="gev-sidebar-header">Map Layers</div>
       <div class="gev-layer-list" id="gevLayerList">
         ${items}
       </div>
-      <div class="gev-sidebar-section">
-        <div class="gev-sidebar-section-title">Plant Fuel Types</div>
-        <div class="gev-legend-grid">${fuelLegend}</div>
+      <div class="gev-sidebar-divider"></div>
+      <div class="gev-sidebar-scroll">
+        <div class="gev-sidebar-section">
+          <div class="gev-sidebar-section-title">Plant Fuel Types</div>
+          <div class="gev-legend-grid">${fuelLegend}</div>
+        </div>
+        <div class="gev-sidebar-section">
+          <div class="gev-sidebar-section-title">Pipeline Types</div>
+          ${pipeLegend}
+        </div>
+        <div class="gev-sidebar-section gev-unit-section">
+          <div class="gev-sidebar-section-title">Distance Units</div>
+          <div class="gev-unit-toggle" id="gevUnitToggle">
+            <button class="gev-unit-btn${unit === 'mi' ? ' active' : ''}" data-unit="mi">mi</button>
+            <button class="gev-unit-btn${unit === 'km' ? ' active' : ''}" data-unit="km">km</button>
+          </div>
+        </div>
+        <div class="gev-sidebar-footer">by natantheskier</div>
       </div>
-      <div class="gev-sidebar-section">
-        <div class="gev-sidebar-section-title">Pipeline Types</div>
-        ${pipeLegend}
-      </div>
-      <div class="gev-sidebar-footer">by natantheskier</div>
     `;
 
-    this.el.addEventListener('change', (e) => {
-      const input = e.target as HTMLInputElement;
-      if (input.type !== 'checkbox') return;
-      const key = input.dataset.layer as keyof MapLayers;
-      if (!key) return;
-      (this.layers as unknown as Record<string, boolean>)[key] = input.checked;
-      saveToStorage(STORAGE_KEYS.mapLayers, this.layers);
-      input.closest('.gev-layer-item')?.classList.toggle('active', input.checked);
-      this.map?.setLayers({ ...this.layers });
+    this.el.addEventListener('click', (e) => {
+      const item = (e.target as HTMLElement).closest<HTMLElement>('[data-layer]');
+      if (item) {
+        const key = item.dataset.layer as keyof MapLayers;
+        if (!key) return;
+        const newVal = !(this.layers as unknown as Record<string, boolean>)[key];
+        (this.layers as unknown as Record<string, boolean>)[key] = newVal;
+        saveToStorage(STORAGE_KEYS.mapLayers, this.layers);
+        item.classList.toggle('active', newVal);
+        item.setAttribute('aria-pressed', String(newVal));
+        this.map?.setLayers({ ...this.layers });
+      }
+      const unitBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-unit]');
+      if (unitBtn) {
+        const unit = unitBtn.dataset.unit as DistanceUnit;
+        setDistanceUnit(unit);
+        this.el.querySelectorAll('.gev-unit-btn').forEach(b => b.classList.remove('active'));
+        unitBtn.classList.add('active');
+      }
     });
   }
 
@@ -102,11 +123,12 @@ export class GevSidebar {
 
   setLayers(layers: MapLayers): void {
     this.layers = { ...layers };
-    this.el.querySelectorAll<HTMLInputElement>('input[data-layer]').forEach(input => {
-      const key = input.dataset.layer as keyof MapLayers;
+    this.el.querySelectorAll<HTMLElement>('[data-layer]').forEach(item => {
+      const key = item.dataset.layer as keyof MapLayers;
       if (!key) return;
-      input.checked = !!(this.layers as unknown as Record<string, boolean>)[key];
-      input.closest('.gev-layer-item')?.classList.toggle('active', input.checked);
+      const active = !!(this.layers as unknown as Record<string, boolean>)[key];
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-pressed', String(active));
     });
   }
 

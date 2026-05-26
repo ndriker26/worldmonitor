@@ -2,7 +2,28 @@
 // 162 major global pipelines — all continents
 import type { GlobalPipeline } from '@/types';
 
-export const GLOBAL_PIPELINES: GlobalPipeline[] = [
+function smoothCoords(coords: [number, number][], maxDeg = 3): [number, number][] {
+  if (coords.length < 2) return coords;
+  const out: [number, number][] = [coords[0]!];
+  for (let i = 1; i < coords.length; i++) {
+    const [x1, y1] = coords[i - 1]!;
+    const [x2, y2] = coords[i]!;
+    const dx = Math.abs(x2 - x1);
+    const dy = Math.abs(y2 - y1);
+    const steps = Math.max(1, Math.ceil(Math.max(dx, dy) / maxDeg));
+    for (let s = 1; s <= steps; s++) {
+      const t = s / steps;
+      out.push([x1 + (x2 - x1) * t, y1 + (y2 - y1) * t]);
+    }
+  }
+  return out;
+}
+
+function smooth(pipelines: GlobalPipeline[]): GlobalPipeline[] {
+  return pipelines.map(p => ({ ...p, coordinates: smoothCoords(p.coordinates) }));
+}
+
+const RAW_PIPELINES: GlobalPipeline[] = [
   {
     "id": "druzhba",
     "name": "Druzhba Pipeline",
@@ -5520,3 +5541,5 @@ export const GLOBAL_PIPELINES: GlobalPipeline[] = [
     ]
   }
 ];
+
+export const GLOBAL_PIPELINES: GlobalPipeline[] = smooth(RAW_PIPELINES);

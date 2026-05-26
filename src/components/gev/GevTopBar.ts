@@ -1,12 +1,12 @@
-import { loadFromStorage, saveToStorage } from '@/utils';
-import { STORAGE_KEYS } from '@/config';
-import { toggleGevTheme, getGevTheme } from './GevTheme';
+import { toggleGevTheme, getGevTheme, THEME_CHANGE_EVENT } from './GevTheme';
 import type { MapContainer } from '@/components';
+import { FALLBACK_DARK_STYLE, FALLBACK_LIGHT_STYLE } from '@/config/basemap';
 
 export class GevTopBar {
   private el: HTMLElement;
   private clockInterval: ReturnType<typeof setInterval> | null = null;
   private map: MapContainer | null = null;
+  private themeHandler: ((e: Event) => void) | null = null;
 
   constructor() {
     this.el = document.createElement('header');
@@ -16,7 +16,6 @@ export class GevTopBar {
   }
 
   private render(): string {
-    const savedMode = loadFromStorage<string>(STORAGE_KEYS.mapMode, 'flat');
     const theme = getGevTheme();
     return `
       <div class="gev-topbar-left">
@@ -35,10 +34,6 @@ export class GevTopBar {
         <span class="gev-live-dot" aria-hidden="true"></span>
         <span class="gev-live-label">LIVE</span>
         <span class="gev-clock" id="gevClock"></span>
-        <div class="gev-2d3d-toggle" id="gevDimToggle">
-          <button class="gev-dim-btn ${savedMode !== 'globe' ? 'active' : ''}" data-mode="flat" title="2D flat map">2D</button>
-          <button class="gev-dim-btn ${savedMode === 'globe' ? 'active' : ''}" data-mode="globe" title="3D globe">3D</button>
-        </div>
       </div>
 
       <div class="gev-topbar-right">
@@ -82,18 +77,28 @@ export class GevTopBar {
       if (btn) btn.textContent = getGevTheme() === 'dark' ? '☀' : '🌙';
     });
 
-    this.el.querySelector('#gevDimToggle')?.addEventListener('click', (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-mode]');
-      if (!btn || !this.map) return;
-      const mode = btn.dataset.mode as 'flat' | 'globe';
-      saveToStorage(STORAGE_KEYS.mapMode, mode);
-      this.el.querySelectorAll('.gev-dim-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      (this.map as unknown as { setMode?: (m: string) => void }).setMode?.(mode);
-    });
+    this.themeHandler = (e: Event) => {
+      const theme = (e as CustomEvent<string>).detail;
+      this.switchBasemap(theme);
+    };
+    window.addEventListener(THEME_CHANGE_EVENT, this.themeHandler);
+  }
+
+  private switchBasemap(theme: string): void {
+    if (!this.map) return;
+    // Access the underlying MapLibre instance via the DeckGLMap internals
+    const mapLibre = (this.map as unknown as { deckGLMap?: { maplibreMap?: { setStyle: (s: string) => void } } }).deckGLMap?.maplibreMap;
+    if (!mapLibre) return;
+    const style = theme === 'light' ? FALLBACK_LIGHT_STYLE : FALLBACK_DARK_STYLE;
+    try {
+      (mapLibre as unknown as { setStyle(s: string, opts: object): void }).setStyle(style, { diff: false });
+    } catch {
+      // Silently ignore style switch errors
+    }
   }
 
   destroy(): void {
     if (this.clockInterval) clearInterval(this.clockInterval);
+    if (this.themeHandler) window.removeEventListener(THEME_CHANGE_EVENT, this.themeHandler);
   }
 }

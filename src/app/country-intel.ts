@@ -1,3 +1,4 @@
+import { SITE_VARIANT } from '@/config';
 import type { AppContext, AppModule, CountryBriefSignals } from '@/app/app-context';
 import { getRpcBaseUrl } from '@/services/rpc-client';
 import type { TimelineEvent } from '@/components/CountryTimeline';
@@ -69,6 +70,8 @@ export class CountryIntelManager implements AppModule {
   }
 
   init(): void {
+    // Energy variant uses GevCountryPanel instead of the geopolitical country brief
+    if (SITE_VARIANT === 'energy') return;
     this.setupCountryIntel();
     this.frameworkUnsubscribe = subscribeFrameworkChange('country-brief', () => {
       const page = this.ctx.countryBriefPage;

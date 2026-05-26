@@ -599,6 +599,7 @@ export interface GlobalOilGasField {
   status: 'active' | 'inactive' | 'development';
   year?: number;
   notes?: string;
+  economicContribution?: string;
 }
 
 export interface GammaIrradiator {

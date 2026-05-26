@@ -1696,6 +1696,9 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
           </div>
         </div>
         ${field.notes ? `<p class="popup-description">${escapeHtml(field.notes)}</p>` : ''}
+        ${(field as GlobalOilGasField & { economicContribution?: string }).economicContribution ? `
+        <div class="popup-section-title" style="margin-top:10px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">Economic Impact</div>
+        <p class="popup-description" style="margin-top:4px">${escapeHtml((field as GlobalOilGasField & { economicContribution?: string }).economicContribution ?? '')}</p>` : ''}
       </div>
     `;
   }
@@ -1728,7 +1731,7 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
           </div>
           <div class="popup-stat">
             <span class="stat-label">Length</span>
-            <span class="stat-value">${pipeline.lengthKm.toLocaleString()} km</span>
+            <span class="stat-value">${(() => { const u = localStorage.getItem('gev-distance-unit') ?? 'mi'; return u === 'mi' ? `${Math.round(pipeline.lengthKm * 0.621371).toLocaleString()} mi` : `${pipeline.lengthKm.toLocaleString()} km`; })()}</span>
           </div>
           <div class="popup-stat">
             <span class="stat-label">Capacity</span>

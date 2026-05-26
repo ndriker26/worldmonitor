@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'gev-theme';
 const DEFAULT_THEME = 'dark';
+export const THEME_CHANGE_EVENT = 'gev-theme-change';
 
 export function initGevTheme(): void {
   const saved = localStorage.getItem(STORAGE_KEY) ?? DEFAULT_THEME;
@@ -18,4 +19,5 @@ export function getGevTheme(): string {
 function applyTheme(theme: string): void {
   document.documentElement.dataset.theme = theme;
   localStorage.setItem(STORAGE_KEY, theme);
+  window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: theme }));
 }

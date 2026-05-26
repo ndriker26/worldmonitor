@@ -2136,28 +2136,19 @@ export class DeckGLMap {
       condensate: [13,  148, 136, 200],
     };
     const inactiveColor: [number, number, number, number] = [100, 100, 100, 100];
-    const dashOffset = this.pipelineDashOffset;
-    const baseProps = {
+    return new PathLayer<GlobalPipeline>({
       id: 'oil-gas-pipelines-layer',
       data: GLOBAL_PIPELINES,
       getPath: (d: GlobalPipeline) => d.coordinates,
       getColor: (d: GlobalPipeline) => d.status === 'inactive' ? inactiveColor : (commodityColors[d.commodity] ?? commodityColors['crude']!),
-      getWidth: (d: GlobalPipeline) => d.status === 'inactive' ? 2 : 4,
+      getWidth: (d: GlobalPipeline) => d.status === 'inactive' ? 1.2 : 2.4,
       widthUnits: 'pixels' as const,
-      widthMinPixels: 1.5,
-      widthMaxPixels: 6,
+      widthMinPixels: 1.0,
+      widthMaxPixels: 3.6,
       pickable: true,
       jointRounded: true,
       capRounded: true,
-    };
-    const extProps = {
-      getDashArray: (d: GlobalPipeline) => (d.status === 'inactive' ? [6, 6] : [16, 6]) as [number, number],
-      dashJustified: true,
-      dashOffset,
-      extensions: [new PathStyleExtension({ dash: true, highPrecisionDash: true })],
-    };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return new PathLayer<GlobalPipeline>({ ...baseProps, ...extProps } as any);
+    });
   }
 
   private createOilGasFieldsLayer(): ScatterplotLayer {
@@ -2172,13 +2163,13 @@ export class DeckGLMap {
       id: 'oil-gas-fields-layer',
       data: GLOBAL_OILGAS_FIELDS,
       getPosition: (d) => [d.lon, d.lat],
-      getRadius: 30000,
+      getRadius: 21000,
       getFillColor: (d) => d.type === 'terminal' ? terminalColor : (fieldColors[d.commodity] ?? fieldColors['oil']!),
-      getLineColor: [255, 255, 255, 120],
-      lineWidthMinPixels: 1,
+      getLineColor: (d) => d.status === 'active' ? [16, 185, 129, 200] : [255, 255, 255, 120],
+      lineWidthMinPixels: 1.5,
       stroked: true,
-      radiusMinPixels: 7,
-      radiusMaxPixels: 24,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 17,
       pickable: true,
     });
   }
