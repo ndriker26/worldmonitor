@@ -110,8 +110,36 @@ export default async function handler(req) {
     }
   }
 
-  return Response.json({ error: 'Not found' }, {
-    status: 404,
-    headers: cors,
-  });
+  // Generic pass-through: forward any other path to EIA v2 API
+  try {
+    const eiaPath = path.startsWith('/') ? path.slice(1) : path;
+    if (!eiaPath) {
+      return Response.json({ error: 'Not found' }, { status: 404, headers: cors });
+    }
+
+    const eiaUrl = new URL(`https://api.eia.gov/v2/${eiaPath}`);
+    eiaUrl.searchParams.set('api_key', apiKey);
+
+    // Forward all client query params (proxy injects the api_key)
+    for (const [key, val] of url.searchParams.entries()) {
+      if (key !== 'api_key') eiaUrl.searchParams.append(key, val);
+    }
+
+    const upstream = await fetch(eiaUrl.toString(), {
+      headers: { 'Accept': 'application/json' },
+    });
+
+    const body = await upstream.text();
+    return new Response(body, {
+      status: upstream.status,
+      headers: {
+        ...cors,
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=900, s-maxage=900, stale-while-revalidate=300',
+      },
+    });
+  } catch (err) {
+    console.error('[EIA proxy] pass-through error:', err.message);
+    return Response.json({ error: 'EIA proxy error' }, { status: 502, headers: cors });
+  }
 }

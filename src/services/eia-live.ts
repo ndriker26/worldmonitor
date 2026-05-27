@@ -1,6 +1,7 @@
-const BASE_URL = 'https://api.eia.gov/v2';
-const API_KEY = import.meta.env.VITE_EIA_API_KEY as string;
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+// All EIA requests are routed through /api/eia/ (Vercel Edge Function).
+// The proxy injects the API key server-side — no key is sent from the browser.
+const BASE = '/api/eia';
+const CACHE_TTL_MS = 15 * 60 * 1000;
 
 interface CacheEntry<T> { data: T; ts: number }
 const cache = new Map<string, CacheEntry<unknown>>();
@@ -10,19 +11,18 @@ function isFresh<T>(entry: CacheEntry<T>): boolean {
 }
 
 async function eia<T>(path: string, params: Record<string, string>): Promise<T> {
-  const url = new URL(`${BASE_URL}/${path}`);
-  url.searchParams.set('api_key', API_KEY);
+  const url = new URL(`${BASE}/${path}`, window.location.origin);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-  const key = url.toString();
+  const cacheKey = url.pathname + url.search;
 
-  const cached = cache.get(key) as CacheEntry<T> | undefined;
+  const cached = cache.get(cacheKey) as CacheEntry<T> | undefined;
   if (cached && isFresh(cached)) return cached.data;
 
   const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`EIA ${res.status}: ${path}`);
-  const json = await res.json() as { response?: { data?: T[] } };
+  if (!res.ok) throw new Error(`EIA proxy ${res.status}: ${path}`);
+  const json = await res.json() as { response?: { data?: unknown[] } };
   const data = (json?.response?.data ?? []) as T;
-  cache.set(key, { data, ts: Date.now() });
+  cache.set(cacheKey, { data, ts: Date.now() });
   return data;
 }
 
@@ -41,10 +41,13 @@ export async function fetchElectricityPrice(): Promise<MetricResult> {
   const rows = await eia<EiaRow[]>('electricity/retail-sales/data/', {
     'frequency': 'monthly',
     'data[0]': 'price',
+    'facets[sectorid][]': 'RES',
+    'facets[stateid][]': 'US',
     'sort[0][column]': 'period',
     'sort[0][direction]': 'desc',
     'length': '13',
   });
+  // Price is in cents/kWh; ×10 → $/MWh
   const vals = rows
     .map(r => Number(r['price']) * 10)
     .filter(v => !isNaN(v) && v > 0)
@@ -95,10 +98,10 @@ export async function fetchGridDemand(): Promise<MetricResult> {
     'facets[type][]': 'D',
     'sort[0][column]': 'period',
     'sort[0][direction]': 'desc',
-    'length': '240', // 10 regions × 24 hours
+    'length': '240',
   });
 
-  // Group by period and sum across regions
+  // Sum demand across all RTO regions per hour
   const byPeriod = new Map<string, number>();
   for (const r of rows) {
     const period = String(r['period'] ?? '');

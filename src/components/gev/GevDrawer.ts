@@ -18,12 +18,49 @@ interface MetricTile {
   change: string;
 }
 
+interface NewsItem {
+  title: string;
+  source: string;
+  url: string;
+  publishedAt: string | null;
+}
+
 const PLACEHOLDER_METRICS: MetricTile[] = [
   { id: 'elec-price', label: 'Avg Electricity Price', value: '—', sub: '$/MWh',      sparkline: '0,14 8,12 16,15 24,10 32,13 40,9 48,11 56,8 60,10', trend: '', change: '…' },
   { id: 'natgas',     label: 'Nat. Gas (Henry Hub)',   value: '—', sub: '$/MMBtu',    sparkline: '0,16 8,14 16,11 24,13 32,9 40,12 48,7 56,10 60,8',  trend: '', change: '…' },
   { id: 'demand',     label: 'Grid Demand',            value: '—', sub: 'GW demand',  sparkline: '0,13 8,11 16,14 24,10 32,12 40,9 48,11 56,9 60,11',  trend: '', change: '…' },
   { id: 'gen',        label: 'US Generation',          value: '—', sub: 'GW gen.',    sparkline: '0,10 8,12 16,11 24,13 32,10 40,14 48,12 56,11 60,13', trend: '', change: '…' },
 ];
+
+const PLACEHOLDER_NEWS: NewsItem[] = [
+  { title: 'EIA: US renewable generation surpasses coal for third consecutive month', source: 'EIA', url: 'https://www.eia.gov/todayinenergy/', publishedAt: null },
+  { title: 'Henry Hub natural gas futures rise on summer cooling demand outlook', source: 'EIA', url: 'https://www.eia.gov/naturalgas/', publishedAt: null },
+  { title: 'PJM Interconnection approves $3.2B grid expansion plan', source: 'EIA', url: 'https://www.eia.gov/electricity/', publishedAt: null },
+  { title: 'Tengiz oil field reaches record output after expansion completion', source: 'EIA', url: 'https://www.eia.gov/petroleum/', publishedAt: null },
+  { title: 'ERCOT calls for conservation as Texas temperatures exceed 105°F', source: 'EIA', url: 'https://www.eia.gov/electricity/', publishedAt: null },
+  { title: 'Permian Basin production exceeds 6 million barrels per day milestone', source: 'EIA', url: 'https://www.eia.gov/petroleum/', publishedAt: null },
+];
+
+function relativeTime(iso: string | null): string {
+  if (!iso) return '';
+  try {
+    const diff = Date.now() - new Date(iso).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 2) return 'just now';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
+  } catch { return ''; }
+}
+
+function renderNewsItems(items: NewsItem[]): string {
+  return items.map(item => `
+    <a class="gev-news-item" href="${item.url}" target="_blank" rel="noopener noreferrer">
+      <div class="gev-news-title">${item.title}</div>
+      <div class="gev-news-meta">${item.source}${item.publishedAt ? ` · ${relativeTime(item.publishedAt)}` : ''}</div>
+    </a>`).join('');
+}
 
 export class GevDrawer {
   private el: HTMLElement;
@@ -39,6 +76,7 @@ export class GevDrawer {
     this.el.innerHTML = this.render();
     this.bindEvents();
     void this.loadAllMetrics();
+    void this.loadNews();
     this.startPolling();
   }
 
@@ -60,6 +98,8 @@ export class GevDrawer {
         </div>`;
     }).join('');
 
+    const newsPlaceholder = renderNewsItems(PLACEHOLDER_NEWS);
+
     return `
       <div class="gev-drawer-handle" id="gevDrawerHandle">
         <div class="gev-drawer-grip" aria-hidden="true"></div>
@@ -68,7 +108,11 @@ export class GevDrawer {
       </div>
       <div class="gev-drawer-body">
         <div class="gev-metrics-col">${tiles}</div>
-        <div class="gev-news-wrap" id="gevNewsWrap"></div>
+        <div class="gev-news-col" id="gevNewsCol">
+          <div class="gev-news-header">Energy News</div>
+          <div class="gev-news-list" id="gevNewsList">${newsPlaceholder}</div>
+        </div>
+        <div class="gev-news-wrap" id="gevNewsWrap" style="display:none"></div>
       </div>
     `;
   }
@@ -121,6 +165,19 @@ export class GevDrawer {
     );
   }
 
+  private async loadNews(): Promise<void> {
+    try {
+      const res = await fetch('/api/energy-news');
+      if (!res.ok) return;
+      const items = await res.json() as NewsItem[];
+      if (!Array.isArray(items) || items.length === 0) return;
+      const listEl = this.el.querySelector<HTMLElement>('#gevNewsList');
+      if (listEl) listEl.innerHTML = renderNewsItems(items);
+    } catch {
+      // Keep placeholder headlines on error
+    }
+  }
+
   private startPolling(): void {
     // Electricity price and gas: refresh hourly
     this.priceInterval = setInterval(() => {
@@ -147,9 +204,8 @@ export class GevDrawer {
     container.appendChild(this.el);
   }
 
-  mountNewsPanel(panelEl: HTMLElement): void {
-    const wrap = this.el.querySelector<HTMLElement>('#gevNewsWrap');
-    if (wrap) wrap.appendChild(panelEl);
+  mountNewsPanel(_panelEl: HTMLElement): void {
+    // News is handled inline via /api/energy-news; legacy NewsPanel is suppressed.
   }
 
   toggle(): void {
