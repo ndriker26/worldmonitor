@@ -581,6 +581,12 @@ export interface GlobalPipeline {
   operator: string;
   status: GlobalPipelineStatus;
   region: string;
+  // GEM-enriched optional fields
+  countries?: string;
+  diameter?: string;
+  startYear?: number;
+  wiki?: string;
+  segment?: string;
 }
 
 export type GlobalOilGasFieldType = 'field' | 'terminal';
@@ -600,6 +606,15 @@ export interface GlobalOilGasField {
   year?: number;
   notes?: string;
   economicContribution?: string;
+  // GEM-enriched optional fields
+  subnatUnit?: string;
+  basin?: string;
+  discoveryYear?: number;
+  wiki?: string;
+  // LNG terminal specific
+  facilityType?: string;
+  floating?: boolean;
+  offshore?: boolean;
 }
 
 export interface GammaIrradiator {

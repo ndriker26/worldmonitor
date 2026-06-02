@@ -22,10 +22,10 @@ export class GevSidebar {
   private render(): void {
     const layerDefs = getLayersForVariant('energy', 'flat');
     const LAYER_COUNTS: Partial<Record<string, string>> = {
-      usPlants: '35k',
-      usTransmission: '97k',
-      oilGasPipelines: '162',
-      oilGasFields: '50+',
+      usPlants: '13k',
+      usTransmission: '10k',
+      oilGasPipelines: '4k',
+      oilGasFields: '6.7k',
       weather: 'live',
       waterways: 'static',
       natural: 'live',
@@ -58,10 +58,11 @@ export class GevSidebar {
       ['#8b0000', 'Crude Oil'],
       ['#2563eb', 'Natural Gas'],
       ['#ea580c', 'Refined'],
-      ['#0d9488', 'Condensate'],
+      ['#0d9488', 'Condensate/NGL'],
     ].map(([color, label]) =>
       `<div class="gev-legend-pipe"><div class="gev-legend-pipe-line" style="background:${color}"></div><span class="gev-legend-label">${label}</span></div>`
-    ).join('');
+    ).join('') +
+    `<div class="gev-legend-pipe"><div class="gev-legend-pipe-dot" style="background:#d97706"></div><span class="gev-legend-label">LNG Terminal</span></div>`;
 
     const unit = getDistanceUnit();
 
@@ -88,6 +89,9 @@ export class GevSidebar {
           </div>
         </div>
         <div class="gev-sidebar-footer">by natantheskier</div>
+        <div class="gev-sidebar-attribution">
+          Data: <a href="https://globalenergymonitor.org" target="_blank" rel="noopener">Global Energy Monitor</a> (CC BY 4.0)
+        </div>
       </div>
     `;
 

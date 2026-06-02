@@ -1665,9 +1665,13 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
       'oil/gas': '#6b21a8',
       condensate:'#0d9488',
     };
-    const color = field.type === 'terminal' ? '#d97706' : (commodityColors[field.commodity] ?? '#8B4513');
-    const typeLabel = field.type === 'terminal' ? 'Export Terminal' : `${field.commodity.charAt(0).toUpperCase()}${field.commodity.slice(1)} Field`;
+    const isTerminal = field.type === 'terminal';
+    const color = isTerminal ? '#d97706' : (commodityColors[field.commodity] ?? '#8B4513');
+    const facilityLabel = isTerminal
+      ? (field.facilityType === 'export' ? 'LNG Export Terminal' : field.facilityType === 'import' ? 'LNG Import Terminal' : 'LNG Terminal')
+      : `${field.commodity.charAt(0).toUpperCase()}${field.commodity.slice(1)} Field`;
     const statusBadge = field.status === 'active' ? 'elevated' : 'low';
+    const locationParts = [field.subnatUnit, field.country].filter(Boolean);
     return `
       <div class="popup-header" style="border-left:3px solid ${color}">
         <span class="popup-title">${escapeHtml(field.name.toUpperCase())}</span>
@@ -1675,30 +1679,26 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
         <button class="popup-close" aria-label="Close">×</button>
       </div>
       <div class="popup-body">
-        <div class="popup-subtitle" style="color:${color}">${escapeHtml(typeLabel)}</div>
+        <div class="popup-subtitle" style="color:${color}">${escapeHtml(facilityLabel)}</div>
         <div class="popup-stats">
           <div class="popup-stat">
-            <span class="stat-label">Country</span>
-            <span class="stat-value">${escapeHtml(field.country)}</span>
+            <span class="stat-label">Location</span>
+            <span class="stat-value">${escapeHtml(locationParts.join(', ') || field.country)}</span>
           </div>
-          <div class="popup-stat">
-            <span class="stat-label">Operator</span>
-            <span class="stat-value">${escapeHtml(field.operator)}</span>
-          </div>
-          <div class="popup-stat">
-            <span class="stat-label">Capacity</span>
-            <span class="stat-value">${escapeHtml(field.capacityDesc)}</span>
-          </div>
-          ${field.year ? `<div class="popup-stat"><span class="stat-label">Production Start</span><span class="stat-value">${field.year}</span></div>` : ''}
-          <div class="popup-stat">
-            <span class="stat-label">Coordinates</span>
-            <span class="stat-value">${field.lat.toFixed(4)}°, ${field.lon.toFixed(4)}°</span>
-          </div>
+          ${field.operator ? `<div class="popup-stat"><span class="stat-label">Operator</span><span class="stat-value">${escapeHtml(field.operator)}</span></div>` : ''}
+          ${field.capacityDesc ? `<div class="popup-stat"><span class="stat-label">Capacity</span><span class="stat-value">${escapeHtml(field.capacityDesc)}</span></div>` : ''}
+          ${field.year ? `<div class="popup-stat"><span class="stat-label">${isTerminal ? 'Start Year' : 'Production Start'}</span><span class="stat-value">${field.year}</span></div>` : ''}
+          ${field.discoveryYear ? `<div class="popup-stat"><span class="stat-label">Discovery</span><span class="stat-value">${field.discoveryYear}</span></div>` : ''}
+          ${field.basin ? `<div class="popup-stat"><span class="stat-label">Basin</span><span class="stat-value">${escapeHtml(field.basin)}</span></div>` : ''}
+          ${(field.floating || field.offshore) ? `<div class="popup-stat"><span class="stat-label">Type</span><span class="stat-value">${field.floating ? 'Floating' : 'Offshore'}</span></div>` : ''}
         </div>
         ${field.notes ? `<p class="popup-description">${escapeHtml(field.notes)}</p>` : ''}
-        ${(field as GlobalOilGasField & { economicContribution?: string }).economicContribution ? `
+        ${field.economicContribution ? `
         <div class="popup-section-title" style="margin-top:10px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">Economic Impact</div>
-        <p class="popup-description" style="margin-top:4px">${escapeHtml((field as GlobalOilGasField & { economicContribution?: string }).economicContribution ?? '')}</p>` : ''}
+        <p class="popup-description" style="margin-top:4px">${escapeHtml(field.economicContribution)}</p>` : ''}
+        <div style="margin-top:8px;font-size:9px;color:var(--text-muted)">
+          Source: <a href="https://globalenergymonitor.org" target="_blank" rel="noopener" style="color:var(--text-muted)">Global Energy Monitor</a>${field.wiki ? ` · <a href="${escapeHtml(field.wiki)}" target="_blank" rel="noopener" style="color:var(--text-muted)">Wiki</a>` : ''}
+        </div>
       </div>
     `;
   }
@@ -1716,6 +1716,10 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
     };
     const color = pipeline.status === 'inactive' ? '#6b7280' : (commodityColors[pipeline.commodity] ?? '#8B0000');
     const statusBadge = pipeline.status === 'active' ? 'elevated' : 'low';
+    const lengthStr = (() => {
+      if (!pipeline.lengthKm) return '—';
+      try { const u = localStorage.getItem('gev-distance-unit') ?? 'mi'; return u === 'mi' ? `${Math.round(pipeline.lengthKm * 0.621371).toLocaleString()} mi` : `${pipeline.lengthKm.toLocaleString()} km`; } catch { return `${pipeline.lengthKm.toLocaleString()} km`; }
+    })();
     return `
       <div class="popup-header" style="border-left:3px solid ${color}">
         <span class="popup-title">${escapeHtml(pipeline.name.toUpperCase())}</span>
@@ -1725,22 +1729,18 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
       <div class="popup-body">
         <div class="popup-subtitle" style="color:${color}">${escapeHtml(commodityLabels[pipeline.commodity] ?? pipeline.commodity)} Pipeline</div>
         <div class="popup-stats">
-          <div class="popup-stat">
-            <span class="stat-label">Region</span>
-            <span class="stat-value">${escapeHtml(pipeline.region)}</span>
-          </div>
+          ${pipeline.countries ? `<div class="popup-stat"><span class="stat-label">Countries</span><span class="stat-value">${escapeHtml(pipeline.countries)}</span></div>` : `<div class="popup-stat"><span class="stat-label">Region</span><span class="stat-value">${escapeHtml(pipeline.region)}</span></div>`}
           <div class="popup-stat">
             <span class="stat-label">Length</span>
-            <span class="stat-value">${(() => { const u = localStorage.getItem('gev-distance-unit') ?? 'mi'; return u === 'mi' ? `${Math.round(pipeline.lengthKm * 0.621371).toLocaleString()} mi` : `${pipeline.lengthKm.toLocaleString()} km`; })()}</span>
+            <span class="stat-value">${escapeHtml(lengthStr)}</span>
           </div>
-          <div class="popup-stat">
-            <span class="stat-label">Capacity</span>
-            <span class="stat-value">${escapeHtml(pipeline.capacityDesc)}</span>
-          </div>
-          <div class="popup-stat">
-            <span class="stat-label">Operator</span>
-            <span class="stat-value">${escapeHtml(pipeline.operator)}</span>
-          </div>
+          ${pipeline.capacityDesc ? `<div class="popup-stat"><span class="stat-label">Capacity</span><span class="stat-value">${escapeHtml(pipeline.capacityDesc)}</span></div>` : ''}
+          ${pipeline.diameter ? `<div class="popup-stat"><span class="stat-label">Diameter</span><span class="stat-value">${escapeHtml(pipeline.diameter)}</span></div>` : ''}
+          ${pipeline.operator ? `<div class="popup-stat"><span class="stat-label">Operator</span><span class="stat-value">${escapeHtml(pipeline.operator)}</span></div>` : ''}
+          ${pipeline.startYear ? `<div class="popup-stat"><span class="stat-label">Commissioned</span><span class="stat-value">${pipeline.startYear}</span></div>` : ''}
+        </div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text-muted)">
+          Source: <a href="https://globalenergymonitor.org" target="_blank" rel="noopener" style="color:var(--text-muted)">Global Energy Monitor</a>${pipeline.wiki ? ` · <a href="${escapeHtml(pipeline.wiki)}" target="_blank" rel="noopener" style="color:var(--text-muted)">Wiki</a>` : ''}
         </div>
       </div>
     `;

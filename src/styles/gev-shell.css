@@ -702,11 +702,32 @@
 }
 
 .gev-sidebar-footer {
-  padding: 10px 16px 14px;
+  padding: 10px 16px 6px;
   font-size: 9px;
   color: var(--text-muted);
   letter-spacing: 0.06em;
   border-top: 1px solid var(--gev-glass-border);
+  flex-shrink: 0;
+}
+
+.gev-sidebar-attribution {
+  padding: 0 16px 14px;
+  font-size: 9px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+.gev-sidebar-attribution a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.gev-sidebar-attribution a:hover {
+  text-decoration: underline;
+}
+
+.gev-legend-pipe-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
   flex-shrink: 0;
 }
 
