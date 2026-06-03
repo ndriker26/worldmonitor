@@ -1,12 +1,14 @@
 import { toggleGevTheme, getGevTheme, THEME_CHANGE_EVENT } from './GevTheme';
 import type { MapContainer } from '@/components';
 import { FALLBACK_DARK_STYLE, FALLBACK_LIGHT_STYLE } from '@/config/basemap';
+import { GEV_STATUS_EVENT, type ConnectionState } from '@/services/energy-events';
 
 export class GevTopBar {
   private el: HTMLElement;
   private clockInterval: ReturnType<typeof setInterval> | null = null;
   private map: MapContainer | null = null;
   private themeHandler: ((e: Event) => void) | null = null;
+  private statusHandler: ((e: Event) => void) | null = null;
 
   constructor() {
     this.el = document.createElement('header');
@@ -82,6 +84,24 @@ export class GevTopBar {
       this.switchBasemap(theme);
     };
     window.addEventListener(THEME_CHANGE_EVENT, this.themeHandler);
+
+    this.statusHandler = (e: Event) => {
+      const state = (e as CustomEvent<ConnectionState>).detail;
+      this.applyLiveStatus(state);
+    };
+    window.addEventListener(GEV_STATUS_EVENT, this.statusHandler);
+  }
+
+  private applyLiveStatus(state: ConnectionState): void {
+    const dot = this.el.querySelector<HTMLElement>('.gev-live-dot');
+    const label = this.el.querySelector<HTMLElement>('.gev-live-label');
+    if (!dot) return;
+    dot.dataset['status'] = state.status;
+    const tooltip = state.lastUpdate
+      ? `Last update: ${state.lastUpdate.toLocaleTimeString()} · Sources: ${state.active}/${state.total} active`
+      : `Connecting… · Sources: 0/${state.total}`;
+    dot.title = tooltip;
+    if (label) label.title = tooltip;
   }
 
   private switchBasemap(theme: string): void {
@@ -100,5 +120,6 @@ export class GevTopBar {
   destroy(): void {
     if (this.clockInterval) clearInterval(this.clockInterval);
     if (this.themeHandler) window.removeEventListener(THEME_CHANGE_EVENT, this.themeHandler);
+    if (this.statusHandler) window.removeEventListener(GEV_STATUS_EVENT, this.statusHandler);
   }
 }

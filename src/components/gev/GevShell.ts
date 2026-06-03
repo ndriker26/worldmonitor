@@ -7,6 +7,8 @@ import { GevTopBar } from './GevTopBar';
 import { GevSidebar } from './GevSidebar';
 import { GevDrawer } from './GevDrawer';
 import { GevCountryPanel } from './GevCountryPanel';
+import { GevToast } from './GevToast';
+import { startEnergyEventService } from '@/services/energy-events';
 
 export class GevShell {
   private ctx: AppContext;
@@ -14,6 +16,7 @@ export class GevShell {
   private sidebar: GevSidebar;
   private drawer: GevDrawer;
   private countryPanel: GevCountryPanel;
+  private toast: GevToast;
 
   constructor(ctx: AppContext) {
     this.ctx = ctx;
@@ -21,6 +24,7 @@ export class GevShell {
     this.sidebar = new GevSidebar(ctx.mapLayers);
     this.drawer = new GevDrawer();
     this.countryPanel = new GevCountryPanel();
+    this.toast = new GevToast();
   }
 
   init(): void {
@@ -31,6 +35,7 @@ export class GevShell {
     this.mountMap();
     this.mountNewsPanel();
     this.wireSidebarToggle();
+    this.startEventFeed();
     setTimeout(() => this.dismissLoadingScreen(loadingEl), 2800);
   }
 
@@ -119,6 +124,7 @@ export class GevShell {
 
     this.topBar.setMap(this.ctx.map);
     this.sidebar.setMap(this.ctx.map);
+    this.drawer.setMap(this.ctx.map);
 
     // Register energy-specific country click handler
     this.ctx.map.onCountryClicked((payload) => {
@@ -139,6 +145,16 @@ export class GevShell {
     this.drawer.mountNewsPanel(panel.getElement());
   }
 
+  private startEventFeed(): void {
+    this.toast.onToastClick(() => this.drawer.expandToFeed());
+    startEnergyEventService();
+    // Wire new energy events to the toast
+    window.addEventListener('gev:energy-event', (e) => {
+      const ev = (e as CustomEvent).detail;
+      if (ev) this.toast.show(ev);
+    });
+  }
+
   private wireSidebarToggle(): void {
     this.ctx.container.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).closest('#gevSidebarToggle')) {
@@ -157,5 +173,6 @@ export class GevShell {
     this.topBar.destroy();
     this.countryPanel.destroy();
     this.drawer.destroy();
+    this.toast.destroy();
   }
 }

@@ -407,7 +407,18 @@
   letter-spacing: 0.08em;
   color: var(--text-secondary);
   text-transform: uppercase;
+  flex: 0 0 auto;
+}
+
+.gev-peek-ticker {
   flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 10px;
 }
 
 .gev-drawer-toggle {
@@ -427,7 +438,156 @@
 .gev-drawer-body {
   flex: 1;
   display: flex;
+  flex-direction: column;
   gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Drawer tab bar ──────────────────────────────────────────── */
+.gev-drawer-tabs {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--gev-glass-border);
+  background: transparent;
+}
+
+.gev-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 7px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.gev-tab:hover { color: var(--text-secondary); }
+.gev-tab.active { color: var(--gev-accent); border-bottom-color: var(--gev-accent); }
+
+/* Live pulse dot in the LIVE FEED tab */
+.gev-feed-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gev-live);
+  box-shadow: 0 0 5px var(--gev-live);
+  animation: gev-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.gev-feed-pulse[data-status="stale"] {
+  background: #f59e0b;
+  box-shadow: 0 0 5px #f59e0b;
+  animation: none;
+}
+.gev-feed-pulse[data-status="dead"] {
+  background: #6b7280;
+  box-shadow: none;
+  animation: none;
+}
+
+/* ── Live feed panel ─────────────────────────────────────────── */
+.gev-feed-panel {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+
+/* ── Event cards ─────────────────────────────────────────────── */
+.gev-event-card {
+  background: var(--gev-tile-bg);
+  border: 1px solid var(--gev-tile-border);
+  border-left: 3px solid var(--text-muted);
+  border-radius: var(--gev-radius);
+  padding: 8px 10px;
+  flex-shrink: 0;
+}
+.gev-event-card.gev-event-info     { border-left-color: #3b82f6; }
+.gev-event-card.gev-event-warning  { border-left-color: #f59e0b; }
+.gev-event-card.gev-event-critical { border-left-color: #ef4444; }
+
+@keyframes gev-card-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.gev-event-new { animation: gev-card-in 0.35s ease-out; }
+
+.gev-event-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+.gev-event-icon { font-size: 14px; line-height: 1.3; flex-shrink: 0; }
+.gev-event-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+.gev-event-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 6px;
+  padding-left: 21px;
+}
+.gev-event-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 21px;
+  flex-wrap: wrap;
+}
+.gev-event-time {
+  font-size: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.gev-event-source {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--overlay-light);
+  border: 1px solid var(--gev-glass-border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.gev-event-location {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gev-accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  flex-shrink: 0;
+}
+.gev-event-location:hover { opacity: 0.75; }
+
+/* ── Metrics panel (wraps metrics-col + news-col) ────────────── */
+.gev-metrics-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
   overflow: hidden;
   min-height: 0;
 }
@@ -952,4 +1112,82 @@
     right: 12px;
     bottom: calc(var(--gev-drawer-peek) + 8px);
   }
+}
+
+/* ── Live indicator status variants ─────────────────────────── */
+.gev-live-dot[data-status="stale"] {
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+  animation: none;
+}
+.gev-live-dot[data-status="dead"] {
+  background: #6b7280;
+  box-shadow: none;
+  animation: none;
+}
+
+/* ── Toast notifications ─────────────────────────────────────── */
+.gev-toast {
+  position: fixed;
+  top: calc(var(--gev-topbar-h) + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-16px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 12px;
+  border-radius: var(--gev-radius);
+  background: var(--gev-glass);
+  border: 1px solid var(--gev-glass-border);
+  border-left: 3px solid var(--text-muted);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--gev-shadow);
+  cursor: pointer;
+  max-width: min(520px, calc(100vw - 32px));
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+.gev-toast.gev-toast-in {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.gev-toast.gev-toast-warning  { border-left-color: #f59e0b; }
+.gev-toast.gev-toast-critical { border-left-color: #ef4444; }
+
+.gev-toast-icon { font-size: 16px; flex-shrink: 0; }
+.gev-toast-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  min-width: 0;
+}
+.gev-toast-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 0.12s;
+  line-height: 1;
+}
+.gev-toast-close:hover { background: var(--overlay-light); color: var(--text); }
+
+/* ── Light theme adjustments ─────────────────────────────────── */
+[data-theme="light"] .gev-event-card { border-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .gev-tab.active { color: var(--gev-accent); }
+[data-theme="light"] .gev-event-source { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.10); }
+
+/* ── Mobile: hide metrics col in feed view ───────────────────── */
+@media (max-width: 640px) {
+  .gev-event-desc { display: none; }
+  .gev-metrics-panel .gev-metrics-col { display: none; }
 }
