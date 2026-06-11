@@ -67,13 +67,29 @@ function emitStatus(): void {
 
 type EiaRow = Record<string, string | number | null>;
 
+const _EIA_PROXY = '/api/eia';
+const _EIA_DIRECT = 'https://api.eia.gov/v2';
+const _EIA_KEY: string = (import.meta.env.VITE_EIA_API_KEY as string | undefined) ?? '';
+
 async function fetchEia(path: string, params: Record<string, string>): Promise<EiaRow[]> {
-  const url = new URL(`/api/eia/${path}`, window.location.origin);
-  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`EIA ${res.status}`);
-  const json = await res.json() as { response?: { data?: EiaRow[] } };
-  return json?.response?.data ?? [];
+  const qs = new URLSearchParams(params).toString();
+
+  try {
+    const res = await fetch(`${_EIA_PROXY}/${path}?${qs}`);
+    if (res.ok) {
+      const json = await res.json() as { response?: { data?: EiaRow[] } };
+      return json?.response?.data ?? [];
+    }
+  } catch { /* proxy not available locally */ }
+
+  if (_EIA_KEY) {
+    const res = await fetch(`${_EIA_DIRECT}/${path}?api_key=${_EIA_KEY}&${qs}`);
+    if (!res.ok) throw new Error(`EIA ${res.status}`);
+    const json = await res.json() as { response?: { data?: EiaRow[] } };
+    return json?.response?.data ?? [];
+  }
+
+  throw new Error('EIA unavailable');
 }
 
 // ── Source 1: Electricity price (30-min poll) ─────────────────

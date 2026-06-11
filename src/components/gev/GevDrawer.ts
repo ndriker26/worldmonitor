@@ -50,6 +50,51 @@ const PLACEHOLDER_NEWS: NewsItem[] = [
   { title: 'Permian Basin production exceeds 6 million barrels per day milestone', source: 'EIA', url: 'https://www.eia.gov/petroleum/', publishedAt: null },
 ];
 
+// ── Geographic keyword → map location ─────────────────────────────────
+interface GeoEntry { re: RegExp; lat: number; lon: number; zoom: number }
+const GEO_LOCATIONS: GeoEntry[] = [
+  { re: /\b(Texas|ERCOT)\b/i,                         lat: 31.5,  lon: -99.0,  zoom: 5 },
+  { re: /\b(California|CAISO)\b/i,                     lat: 37.0,  lon: -120.0, zoom: 5 },
+  { re: /\b(PJM|mid-Atlantic)\b/i,                     lat: 39.5,  lon: -77.5,  zoom: 5 },
+  { re: /\b(MISO|Midwest)\b/i,                         lat: 41.0,  lon: -89.0,  zoom: 5 },
+  { re: /\b(New York|NYISO)\b/i,                       lat: 42.5,  lon: -75.5,  zoom: 6 },
+  { re: /\b(New England|ISO-NE)\b/i,                   lat: 42.5,  lon: -71.5,  zoom: 6 },
+  { re: /\bSPP\b/,                                     lat: 36.0,  lon: -97.0,  zoom: 5 },
+  { re: /\b(Gulf Coast|Houston)\b/i,                   lat: 29.7,  lon: -95.4,  zoom: 6 },
+  { re: /\bAlaska\b/i,                                 lat: 64.0,  lon: -153.0, zoom: 4 },
+  { re: /\bPermian\b/i,                                lat: 31.95, lon: -102.1, zoom: 7 },
+  { re: /\bBakken\b/i,                                 lat: 48.1,  lon: -103.5, zoom: 7 },
+  { re: /\bEagle Ford\b/i,                             lat: 28.7,  lon: -98.5,  zoom: 7 },
+  { re: /\bMarcellus\b/i,                              lat: 41.0,  lon: -77.5,  zoom: 6 },
+  { re: /\bHaynesville\b/i,                            lat: 32.5,  lon: -93.5,  zoom: 7 },
+  { re: /\bKashagan\b/i,                               lat: 45.4,  lon: 53.0,   zoom: 7 },
+  { re: /\b(Kazakhstan|Tengiz)\b/i,                    lat: 46.5,  lon: 52.5,   zoom: 5 },
+  { re: /\bCaspian\b/i,                                lat: 42.0,  lon: 50.0,   zoom: 5 },
+  { re: /\b(Azerbaijan|Baku)\b/i,                      lat: 40.4,  lon: 49.8,   zoom: 6 },
+  { re: /\b(Saudi|Ghawar)\b/i,                         lat: 25.5,  lon: 49.5,   zoom: 6 },
+  { re: /\b(Nord Stream|Baltic)\b/i,                   lat: 57.0,  lon: 18.0,   zoom: 5 },
+  { re: /\bEurope(an)?\b/i,                            lat: 50.0,  lon: 10.0,   zoom: 4 },
+  { re: /\bRussi(a|an)\b/i,                            lat: 60.0,  lon: 80.0,   zoom: 3 },
+  { re: /\bChin(a|ese)\b/i,                            lat: 35.0,  lon: 105.0,  zoom: 4 },
+  { re: /\bIran(ian)?\b/i,                             lat: 32.0,  lon: 53.0,   zoom: 5 },
+  { re: /\bIraqi?\b/i,                                 lat: 33.0,  lon: 44.0,   zoom: 5 },
+  { re: /\bNigeria(n)?\b/i,                            lat: 9.0,   lon: 7.5,    zoom: 5 },
+  { re: /\bColonial Pipeline\b/i,                      lat: 34.0,  lon: -84.0,  zoom: 5 },
+  { re: /\bKeystone\b/i,                               lat: 45.0,  lon: -100.0, zoom: 4 },
+];
+
+function findNewsLocation(title: string): { lat: number; lon: number; zoom: number } | null {
+  for (const entry of GEO_LOCATIONS) {
+    if (entry.re.test(title)) return { lat: entry.lat, lon: entry.lon, zoom: entry.zoom };
+  }
+  return null;
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────
+function escHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function relativeTime(ts: Date | string | null): string {
   if (!ts) return '';
   try {
@@ -63,12 +108,28 @@ function relativeTime(ts: Date | string | null): string {
   } catch { return ''; }
 }
 
-function renderNewsItems(items: NewsItem[]): string {
-  return items.map(item => `
-    <a class="gev-news-item" href="${item.url}" target="_blank" rel="noopener noreferrer">
-      <div class="gev-news-title">${item.title}</div>
-      <div class="gev-news-meta">${item.source}${item.publishedAt ? ` · ${relativeTime(item.publishedAt)}` : ''}</div>
-    </a>`).join('');
+function renderNewsItems(items: NewsItem[], isPlaceholder = false): string {
+  const rows = items.map(item => {
+    const loc = findNewsLocation(item.title);
+    const mapBtn = loc
+      ? `<button class="gev-news-map-btn" data-lat="${loc.lat}" data-lon="${loc.lon}" data-zoom="${loc.zoom}" title="View on map">📍</button>`
+      : '';
+    const timeStr = item.publishedAt ? ` · ${relativeTime(item.publishedAt)}` : '';
+    return `
+      <div class="gev-news-item" data-url="${escHtml(item.url)}" role="button" tabindex="0">
+        <div class="gev-news-content">
+          <div class="gev-news-title" title="${escHtml(item.title)}">${escHtml(item.title)}</div>
+          <div class="gev-news-meta">${escHtml(item.source)}${escHtml(timeStr)}</div>
+        </div>
+        ${mapBtn}
+      </div>`;
+  }).join('');
+
+  const note = isPlaceholder
+    ? '<div class="gev-news-placeholder-note">Sample headlines — live feed loading…</div>'
+    : '';
+
+  return rows + note;
 }
 
 function renderEventCard(ev: EnergyEvent, isNew = false): string {
@@ -90,6 +151,51 @@ function renderEventCard(ev: EnergyEvent, isNew = false): string {
     </div>`;
 }
 
+// ── RSS parser (browser-side fallback) ────────────────────────────────
+function parseRSS(xml: string, source: string): NewsItem[] {
+  const items: NewsItem[] = [];
+  const itemRe = /<item[^>]*>([\s\S]*?)<\/item>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = itemRe.exec(xml)) !== null) {
+    const content = m[1] ?? '';
+    const titleM = content.match(/<title[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/title>/i)
+      ?? content.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    const linkM = content.match(/<link[^>]*>(https?:\/\/[^\s<]+)<\/link>/i)
+      ?? content.match(/<guid[^>]*isPermaLink="true"[^>]*>(https?:\/\/[^\s<]+)<\/guid>/i)
+      ?? content.match(/<guid[^>]*>(https?:\/\/[^\s<]+)<\/guid>/i);
+    const dateM = content.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i);
+
+    const rawTitle = titleM?.[1]?.trim() ?? '';
+    const title = rawTitle
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+    const url = linkM?.[1]?.trim() ?? '';
+    if (!title || !url) continue;
+
+    let publishedAt: string | null = null;
+    if (dateM?.[1]) {
+      try { publishedAt = new Date(dateM[1].trim()).toISOString(); } catch { /* ignore */ }
+    }
+    items.push({ title, source, url, publishedAt });
+  }
+  return items;
+}
+
+async function fetchRSSDirect(feedUrl: string, source: string): Promise<NewsItem[]> {
+  const res = await fetch(feedUrl, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`RSS HTTP ${res.status}`);
+  const xml = await res.text();
+  return parseRSS(xml, source);
+}
+
+async function fetchRSSViaProxy(feedUrl: string, source: string): Promise<NewsItem[]> {
+  const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`;
+  const res = await fetch(proxy, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`CORS proxy HTTP ${res.status}`);
+  const xml = await res.text();
+  return parseRSS(xml, source);
+}
+
+// ── Drawer class ──────────────────────────────────────────────────────
 export class GevDrawer {
   private el: HTMLElement;
   private _expanded: boolean;
@@ -156,7 +262,7 @@ export class GevDrawer {
           <div class="gev-metrics-col">${tiles}</div>
           <div class="gev-news-col" id="gevNewsCol">
             <div class="gev-news-header">Energy News</div>
-            <div class="gev-news-list" id="gevNewsList">${renderNewsItems(PLACEHOLDER_NEWS)}</div>
+            <div class="gev-news-list" id="gevNewsList">${renderNewsItems(PLACEHOLDER_NEWS, true)}</div>
           </div>
           <div class="gev-news-wrap" id="gevNewsWrap" style="display:none"></div>
         </div>
@@ -164,7 +270,6 @@ export class GevDrawer {
   }
 
   // ── Metric helpers ─────────────────────────────────────────────
-
   private applyMetric(id: string, result: MetricResult): void {
     const cc = result.trend === '+' ? 'up' : result.trend === '-' ? 'down' : 'flat';
     const arrow = result.trend === '+' ? '▲' : result.trend === '-' ? '▼' : '—';
@@ -174,7 +279,7 @@ export class GevDrawer {
     const changeEl = this.el.querySelector<HTMLElement>(`#gevMetricChange-${id}`);
     const sparkEl = this.el.querySelector<SVGElement>(`#gevMetricSpark-${id}`);
 
-    if (valEl) valEl.textContent = result.value > 0 ? result.value.toFixed(result.value >= 100 ? 0 : 1) : '—';
+    if (valEl) valEl.textContent = result.value > 0 ? result.value.toFixed(result.value >= 100 ? 0 : 2) : '—';
     if (changeEl) {
       changeEl.className = `gev-metric-change ${cc}`;
       changeEl.textContent = `${arrow} ${result.changePct}%`;
@@ -208,19 +313,73 @@ export class GevDrawer {
     );
   }
 
+  // ── News loading with fallback chain ──────────────────────────
   private async loadNews(): Promise<void> {
+    const EIA_FEEDS = [
+      { url: 'https://www.eia.gov/todayinenergy/rss.xml', source: 'EIA' },
+      { url: 'https://www.eia.gov/rss/press_room.xml',    source: 'EIA Press' },
+    ];
+
+    const applyItems = (items: NewsItem[], isPlaceholder: boolean) => {
+      const listEl = this.el.querySelector<HTMLElement>('#gevNewsList');
+      if (listEl) listEl.innerHTML = renderNewsItems(items, isPlaceholder);
+    };
+
+    // 1. Try Vercel edge function
     try {
       const res = await fetch('/api/energy-news');
-      if (!res.ok) return;
-      const items = await res.json() as NewsItem[];
-      if (!Array.isArray(items) || items.length === 0) return;
-      const listEl = this.el.querySelector<HTMLElement>('#gevNewsList');
-      if (listEl) listEl.innerHTML = renderNewsItems(items);
-    } catch { /* keep placeholder headlines */ }
+      if (res.ok) {
+        const items = await res.json() as NewsItem[];
+        if (Array.isArray(items) && items.length > 0) {
+          applyItems(items, false);
+          return;
+        }
+      }
+    } catch { /* edge function unavailable locally */ }
+
+    // 2. Fetch RSS directly from the browser (works if EIA allows CORS)
+    try {
+      const results = await Promise.allSettled(
+        EIA_FEEDS.map(f => fetchRSSDirect(f.url, f.source))
+      );
+      const items = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+      if (items.length > 0) {
+        const sorted = items
+          .sort((a, b) => {
+            if (!a.publishedAt) return 1;
+            if (!b.publishedAt) return -1;
+            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+          })
+          .slice(0, 15);
+        applyItems(sorted, false);
+        return;
+      }
+    } catch { /* CORS blocked */ }
+
+    // 3. Fallback: CORS proxy (allorigins.win) — works locally
+    try {
+      const results = await Promise.allSettled(
+        EIA_FEEDS.map(f => fetchRSSViaProxy(f.url, f.source))
+      );
+      const items = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+      if (items.length > 0) {
+        const sorted = items
+          .sort((a, b) => {
+            if (!a.publishedAt) return 1;
+            if (!b.publishedAt) return -1;
+            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+          })
+          .slice(0, 15);
+        applyItems(sorted, false);
+        return;
+      }
+    } catch { /* proxy unavailable */ }
+
+    // 4. All paths failed — show placeholders with note
+    applyItems(PLACEHOLDER_NEWS, true);
   }
 
   // ── Feed helpers ───────────────────────────────────────────────
-
   private renderAllEvents(): void {
     const panel = this.el.querySelector<HTMLElement>('#gevFeedPanel');
     if (!panel) return;
@@ -260,7 +419,6 @@ export class GevDrawer {
   }
 
   // ── Polling ────────────────────────────────────────────────────
-
   private startPolling(): void {
     this.priceInterval = setInterval(() => {
       void Promise.allSettled([
@@ -282,7 +440,6 @@ export class GevDrawer {
   }
 
   // ── Event binding ──────────────────────────────────────────────
-
   private bindEvents(): void {
     this.el.querySelector('#gevDrawerHandle')?.addEventListener('click', () => this.toggle());
 
@@ -291,15 +448,35 @@ export class GevDrawer {
       if (tab === 'feed' || tab === 'metrics') this.switchTab(tab);
     });
 
-    // Map fly-to when user clicks "View on map →"
+    // Event card "View on map →" buttons
     this.el.addEventListener('click', (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLElement>('.gev-event-location');
-      if (!btn || !this.map) return;
-      e.stopPropagation();
-      const lat = parseFloat(btn.dataset['lat'] ?? '');
-      const lon = parseFloat(btn.dataset['lon'] ?? '');
-      const zoom = parseFloat(btn.dataset['zoom'] ?? '5');
-      if (!isNaN(lat) && !isNaN(lon)) this.map.setCenter(lat, lon, zoom);
+      const locBtn = (e.target as HTMLElement).closest<HTMLElement>('.gev-event-location');
+      if (locBtn && this.map) {
+        e.stopPropagation();
+        const lat = parseFloat(locBtn.dataset['lat'] ?? '');
+        const lon = parseFloat(locBtn.dataset['lon'] ?? '');
+        const zoom = parseFloat(locBtn.dataset['zoom'] ?? '5');
+        if (!isNaN(lat) && !isNaN(lon)) this.map.setCenter(lat, lon, zoom);
+        return;
+      }
+
+      // News item map button — fly to location
+      const mapBtn = (e.target as HTMLElement).closest<HTMLElement>('.gev-news-map-btn');
+      if (mapBtn) {
+        e.stopPropagation();
+        const lat = parseFloat(mapBtn.dataset['lat'] ?? '');
+        const lon = parseFloat(mapBtn.dataset['lon'] ?? '');
+        const zoom = parseFloat(mapBtn.dataset['zoom'] ?? '5');
+        if (!isNaN(lat) && !isNaN(lon) && this.map) this.map.setCenter(lat, lon, zoom);
+        return;
+      }
+
+      // News item row click — open article URL
+      const newsItem = (e.target as HTMLElement).closest<HTMLElement>('.gev-news-item');
+      if (newsItem) {
+        const url = newsItem.dataset['url'];
+        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+      }
     });
 
     this.eventHandler = (e: Event) => {
@@ -336,7 +513,6 @@ export class GevDrawer {
   }
 
   // ── Public API ─────────────────────────────────────────────────
-
   setMap(map: MapContainer): void {
     this.map = map;
   }
