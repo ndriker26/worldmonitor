@@ -657,8 +657,8 @@ export default defineConfig(({ mode }) => {
         workbox: {
           globPatterns: ['**/*.{js,css,ico,png,svg,woff2}'],
           globIgnores: ['**/ml*.js', '**/onnx*.wasm', '**/locale-*.js'],
-          // globe.gl + three.js grows main bundle past the 2 MiB default limit
-          maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+          // globe.gl + three.js + GEM static data grows bundle past 8 MiB
+          maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
           navigateFallback: null,
           skipWaiting: true,
           clientsClaim: true,
