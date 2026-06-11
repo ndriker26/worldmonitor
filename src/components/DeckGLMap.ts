@@ -95,10 +95,9 @@ import {
   SANCTIONED_COUNTRIES_ALPHA2,
   US_POWER_PLANTS,
   US_TRANSMISSION_LINES,
-  GLOBAL_PIPELINES,
-  GLOBAL_OILGAS_FIELDS,
 } from '@/config';
 import type { GulfInvestment, UsPowerPlant, UsTransmissionLine, GlobalPipeline, GlobalOilGasField } from '@/types';
+import { loadGemData } from '@/config/gem-data';
 import { resolveTradeRouteSegments, TRADE_ROUTES as TRADE_ROUTES_LIST, type TradeRouteSegment } from '@/config/trade-routes';
 import { getLayersForVariant, resolveLayerLabel, bindLayerSearch, type MapVariant } from '@/config/map-layer-definitions';
 import { getAuthState, subscribeAuthState } from '@/services/auth-state';
@@ -451,6 +450,8 @@ export class DeckGLMap {
   private renewableInstallations: RenewableInstallation[] = [];
   private webcamData: Array<WebcamEntry | WebcamCluster> = [];
   private globalPlantsData: UsPowerPlant[] = US_POWER_PLANTS;
+  private globalPipelinesData: GlobalPipeline[] = [];
+  private globalOilGasFieldsData: GlobalOilGasField[] = [];
   private pipelineDashOffset = 0;
   private pipelineAnimFrame: number | null = null;
   private countriesGeoJsonData: FeatureCollection<Geometry> | null = null;
@@ -606,6 +607,7 @@ export class DeckGLMap {
       this.fetchServerBases();
       if (IS_ENERGY_VIEW) {
         this.loadGlobalPlants();
+        this.loadGemPipelinesAndFields();
         this.startPipelineAnimation();
       }
       this.render();
@@ -2128,6 +2130,15 @@ export class DeckGLMap {
     }
   }
 
+  private async loadGemPipelinesAndFields(): Promise<void> {
+    try {
+      const { pipelines, fields } = await loadGemData();
+      if (pipelines.length > 0) this.globalPipelinesData = pipelines;
+      if (fields.length > 0) this.globalOilGasFieldsData = fields;
+      this.render();
+    } catch { /* silent */ }
+  }
+
   private createOilGasPipelinesLayer(): PathLayer {
     const commodityColors: Record<string, [number, number, number, number]> = {
       crude:      [139, 0,   0,   200],
@@ -2138,7 +2149,7 @@ export class DeckGLMap {
     const inactiveColor: [number, number, number, number] = [100, 100, 100, 100];
     return new PathLayer<GlobalPipeline>({
       id: 'oil-gas-pipelines-layer',
-      data: GLOBAL_PIPELINES,
+      data: this.globalPipelinesData,
       getPath: (d: GlobalPipeline) => d.coordinates,
       getColor: (d: GlobalPipeline) => d.status === 'inactive' ? inactiveColor : (commodityColors[d.commodity] ?? commodityColors['crude']!),
       getWidth: (d: GlobalPipeline) => d.status === 'inactive' ? 1.2 : 2.4,
@@ -2161,7 +2172,7 @@ export class DeckGLMap {
     const terminalColor: [number, number, number, number] = [217, 119, 6, 230]; // amber
     return new ScatterplotLayer<GlobalOilGasField>({
       id: 'oil-gas-fields-layer',
-      data: GLOBAL_OILGAS_FIELDS,
+      data: this.globalOilGasFieldsData,
       getPosition: (d) => [d.lon, d.lat],
       getRadius: 21000,
       getFillColor: (d) => d.type === 'terminal' ? terminalColor : (fieldColors[d.commodity] ?? fieldColors['oil']!),
@@ -2226,7 +2237,7 @@ export class DeckGLMap {
     const terminalGlow: [number, number, number, number] = [217, 119, 6, 52];
     return new ScatterplotLayer<GlobalOilGasField>({
       id: 'oil-gas-fields-glow-layer',
-      data: GLOBAL_OILGAS_FIELDS,
+      data: this.globalOilGasFieldsData,
       getPosition: (d) => [d.lon, d.lat],
       getRadius: 50000,
       getFillColor: (d) => d.type === 'terminal' ? terminalGlow : (glowColors[d.commodity] ?? glowColors['oil']!),

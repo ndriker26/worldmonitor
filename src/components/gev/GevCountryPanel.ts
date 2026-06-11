@@ -1,5 +1,4 @@
-import { GLOBAL_OILGAS_FIELDS } from '@/config/global-oilgas-fields';
-import { GLOBAL_PIPELINES } from '@/config/global-pipelines';
+import { getGemData } from '@/config/gem-data';
 import { US_POWER_PLANTS } from '@/config/us-power-plants';
 import { toFlagEmoji } from '@/utils/country-flag';
 import { fetchEIACountry } from '@/services/eia-live';
@@ -21,12 +20,12 @@ function escHtml(s: string): string {
 
 function getCountryFields(countryName: string) {
   const lc = countryName.toLowerCase();
-  return GLOBAL_OILGAS_FIELDS.filter(f => f.country.toLowerCase().includes(lc) || lc.includes(f.country.toLowerCase().split('/')[0]?.trim() ?? ''));
+  return getGemData().fields.filter(f => f.country.toLowerCase().includes(lc) || lc.includes(f.country.toLowerCase().split('/')[0]?.trim() ?? ''));
 }
 
 function getCountryPipelineCount(countryName: string): number {
   const lc = countryName.toLowerCase();
-  return GLOBAL_PIPELINES.filter(p =>
+  return getGemData().pipelines.filter(p =>
     p.region.toLowerCase().includes(lc) ||
     p.operator.toLowerCase().includes(lc) ||
     p.name.toLowerCase().includes(lc)

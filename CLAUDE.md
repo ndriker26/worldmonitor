@@ -17,6 +17,12 @@ Energy infrastructure dashboard forked from koala73/worldmonitor.
 - Layout in src/app/panel-layout.ts
 - Main entry in src/App.ts
 
+## GEM data pipeline
+- Pipeline and oil/gas field data lives in public/data/gem-pipelines.json and public/data/gem-fields.json
+- Loaded asynchronously at runtime via src/config/gem-data.ts (NOT bundled into JS)
+- To regenerate: node scripts/gen-gem-json.cjs (reads src/config/global-*.ts → public/data/)
+- src/config/global-pipelines.ts and global-oilgas-fields.ts are now stub files (empty arrays)
+
 ## Current state
 - Energy variant working with US power plants and transmission lines
 - Rebranded as Grid's Eye View
