@@ -250,37 +250,21 @@ async function checkGridDemand(): Promise<void> {
   } catch { /* silent */ }
 }
 
-// ── Source 4: Derived events from GEM static data ─────────────
-async function loadDerivedEvents(): Promise<void> {
-  type PipelineData = { GLOBAL_PIPELINES?: { lengthKm?: number }[] };
-  type FieldData = { GLOBAL_OILGAS_FIELDS?: { country?: string }[] };
-
-  const [pMod, fMod] = await Promise.allSettled([
-    import('@/config/global-pipelines') as Promise<PipelineData>,
-    import('@/config/global-oilgas-fields') as Promise<FieldData>,
-  ]);
-
-  if (fMod.status === 'fulfilled') {
-    const fields = fMod.value.GLOBAL_OILGAS_FIELDS ?? [];
-    const countries = new Set(fields.map(f => f.country).filter(Boolean));
-    push({
-      id: 'gem-fields', type: 'milestone', severity: 'info', icon: '🌍',
-      title: `Tracking ${fields.length.toLocaleString()} oil & gas fields across ${countries.size} countries`,
-      description: 'Comprehensive coverage of global upstream oil and gas infrastructure. Source: Global Energy Monitor.',
-      timestamp: new Date(Date.now() - 60_000), source: 'GEM',
-    });
-  }
-
-  if (pMod.status === 'fulfilled') {
-    const pipelines = pMod.value.GLOBAL_PIPELINES ?? [];
-    const totalKm = pipelines.reduce((s, p) => s + (p.lengthKm ?? 0), 0);
-    push({
-      id: 'gem-pipelines', type: 'milestone', severity: 'info', icon: '🔵',
-      title: `Monitoring ${pipelines.length.toLocaleString()} pipelines — ${Math.round(totalKm / 1000)}K km of infrastructure`,
-      description: 'Real-time coverage of global oil & gas pipeline networks via Global Energy Monitor (CC BY 4.0).',
-      timestamp: new Date(Date.now() - 30_000), source: 'GEM',
-    });
-  }
+// ── Source 4: GEM dataset milestone events (counts from gem-pipelines.json / gem-fields.json) ──
+// Hardcoded from the current GEM extract (re-run scripts/gen-gem-json.cjs to refresh).
+function loadDerivedEvents(): void {
+  push({
+    id: 'gem-fields', type: 'milestone', severity: 'info', icon: '🌍',
+    title: 'Tracking 6,257 oil & gas fields across 84 countries',
+    description: 'Comprehensive coverage of global upstream oil and gas infrastructure. Source: Global Energy Monitor.',
+    timestamp: new Date(Date.now() - 60_000), source: 'GEM',
+  });
+  push({
+    id: 'gem-pipelines', type: 'milestone', severity: 'info', icon: '🔵',
+    title: 'Monitoring 5,211 pipelines — 3,230K km of infrastructure',
+    description: 'Real-time coverage of global oil & gas pipeline networks via Global Energy Monitor (CC BY 4.0).',
+    timestamp: new Date(Date.now() - 30_000), source: 'GEM',
+  });
 }
 
 // ── Simulated fallback events (shown when live data isn't ready) ──
@@ -347,7 +331,7 @@ export function getConnectionState(): ConnectionState {
 
 export function startEnergyEventService(): void {
   loadSimulated();
-  void loadDerivedEvents();
+  loadDerivedEvents();
   void checkElectricityPrice();
   void checkNaturalGas();
   void checkGridDemand();

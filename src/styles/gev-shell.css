@@ -673,7 +673,8 @@
   transition: background 0.15s;
 }
 
-.gev-news-item:hover { background: rgba(255,255,255,0.04); }
+.gev-news-item:not(.gev-news-item--static):hover { background: rgba(255,255,255,0.04); }
+.gev-news-item--static { cursor: default; opacity: 0.7; }
 
 .gev-news-content {
   flex: 1;
@@ -1217,7 +1218,7 @@
 [data-theme="light"] .gev-event-card { border-color: rgba(0,0,0,0.08); }
 [data-theme="light"] .gev-tab.active { color: var(--gev-accent); }
 [data-theme="light"] .gev-event-source { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.10); }
-[data-theme="light"] .gev-news-item:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .gev-news-item:not(.gev-news-item--static):hover { background: rgba(0,0,0,0.04); }
 [data-theme="light"] .gev-news-item { border-bottom-color: rgba(0,0,0,0.07); }
 [data-theme="light"] .gev-news-title { color: rgba(0,0,0,0.80); }
 [data-theme="light"] .gev-news-meta { color: rgba(0,0,0,0.40); }

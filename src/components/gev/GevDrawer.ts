@@ -109,14 +109,20 @@ function relativeTime(ts: Date | string | null): string {
 }
 
 function renderNewsItems(items: NewsItem[], isPlaceholder = false): string {
+  const header = isPlaceholder
+    ? '<div class="gev-news-placeholder-note">📡 Live feed connecting…</div>'
+    : '';
+
   const rows = items.map(item => {
-    const loc = findNewsLocation(item.title);
+    const loc = !isPlaceholder ? findNewsLocation(item.title) : null;
     const mapBtn = loc
       ? `<button class="gev-news-map-btn" data-lat="${loc.lat}" data-lon="${loc.lon}" data-zoom="${loc.zoom}" title="View on map">📍</button>`
       : '';
     const timeStr = item.publishedAt ? ` · ${relativeTime(item.publishedAt)}` : '';
+    // Placeholder items are not clickable — they have generic EIA landing-page URLs, not real articles
+    const clickable = !isPlaceholder;
     return `
-      <div class="gev-news-item" data-url="${escHtml(item.url)}" role="button" tabindex="0">
+      <div class="gev-news-item${clickable ? '' : ' gev-news-item--static'}" ${clickable ? `data-url="${escHtml(item.url)}"` : ''} ${clickable ? 'role="button" tabindex="0"' : ''}>
         <div class="gev-news-content">
           <div class="gev-news-title" title="${escHtml(item.title)}">${escHtml(item.title)}</div>
           <div class="gev-news-meta">${escHtml(item.source)}${escHtml(timeStr)}</div>
@@ -125,11 +131,7 @@ function renderNewsItems(items: NewsItem[], isPlaceholder = false): string {
       </div>`;
   }).join('');
 
-  const note = isPlaceholder
-    ? '<div class="gev-news-placeholder-note">Sample headlines — live feed loading…</div>'
-    : '';
-
-  return rows + note;
+  return header + rows;
 }
 
 function renderEventCard(ev: EnergyEvent, isNew = false): string {
@@ -325,57 +327,64 @@ export class GevDrawer {
       if (listEl) listEl.innerHTML = renderNewsItems(items, isPlaceholder);
     };
 
-    // 1. Try Vercel edge function
+    const sortAndSlice = (items: NewsItem[]) =>
+      items
+        .sort((a, b) => {
+          if (!a.publishedAt) return 1;
+          if (!b.publishedAt) return -1;
+          return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+        })
+        .slice(0, 15);
+
+    // 1. Try Vercel edge function (works in production)
     try {
+      console.log('[GEV news] trying /api/energy-news…');
       const res = await fetch('/api/energy-news');
+      console.log('[GEV news] /api/energy-news →', res.status);
       if (res.ok) {
         const items = await res.json() as NewsItem[];
         if (Array.isArray(items) && items.length > 0) {
+          console.log('[GEV news] edge function OK:', items.length, 'items');
           applyItems(items, false);
           return;
         }
       }
-    } catch { /* edge function unavailable locally */ }
+    } catch (e) {
+      console.log('[GEV news] edge function error:', e);
+    }
 
-    // 2. Fetch RSS directly from the browser (works if EIA allows CORS)
-    try {
-      const results = await Promise.allSettled(
-        EIA_FEEDS.map(f => fetchRSSDirect(f.url, f.source))
-      );
-      const items = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
-      if (items.length > 0) {
-        const sorted = items
-          .sort((a, b) => {
-            if (!a.publishedAt) return 1;
-            if (!b.publishedAt) return -1;
-            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-          })
-          .slice(0, 15);
-        applyItems(sorted, false);
-        return;
-      }
-    } catch { /* CORS blocked */ }
+    // 2. Direct RSS fetch (EIA is a .gov site — sometimes CORS-permissive)
+    console.log('[GEV news] trying direct RSS…');
+    const directResults = await Promise.allSettled(
+      EIA_FEEDS.map(f => fetchRSSDirect(f.url, f.source))
+    );
+    directResults.forEach((r, i) => {
+      if (r.status === 'rejected') console.log('[GEV news] direct', EIA_FEEDS[i]?.url, 'failed:', r.reason);
+    });
+    const directItems = directResults.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+    if (directItems.length > 0) {
+      console.log('[GEV news] direct RSS OK:', directItems.length, 'items');
+      applyItems(sortAndSlice(directItems), false);
+      return;
+    }
 
-    // 3. Fallback: CORS proxy (allorigins.win) — works locally
-    try {
-      const results = await Promise.allSettled(
-        EIA_FEEDS.map(f => fetchRSSViaProxy(f.url, f.source))
-      );
-      const items = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
-      if (items.length > 0) {
-        const sorted = items
-          .sort((a, b) => {
-            if (!a.publishedAt) return 1;
-            if (!b.publishedAt) return -1;
-            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-          })
-          .slice(0, 15);
-        applyItems(sorted, false);
-        return;
-      }
-    } catch { /* proxy unavailable */ }
+    // 3. CORS proxy (allorigins.win) — reliable local-dev fallback
+    console.log('[GEV news] trying allorigins.win proxy…');
+    const proxyResults = await Promise.allSettled(
+      EIA_FEEDS.map(f => fetchRSSViaProxy(f.url, f.source))
+    );
+    proxyResults.forEach((r, i) => {
+      if (r.status === 'rejected') console.log('[GEV news] proxy', EIA_FEEDS[i]?.url, 'failed:', r.reason);
+    });
+    const proxyItems = proxyResults.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+    if (proxyItems.length > 0) {
+      console.log('[GEV news] proxy OK:', proxyItems.length, 'items');
+      applyItems(sortAndSlice(proxyItems), false);
+      return;
+    }
 
-    // 4. All paths failed — show placeholders with note
+    // 4. All paths failed — show placeholder with connecting label
+    console.log('[GEV news] all sources failed — showing placeholders');
     applyItems(PLACEHOLDER_NEWS, true);
   }
 
