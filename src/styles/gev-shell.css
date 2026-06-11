@@ -675,6 +675,7 @@
 
 .gev-news-item:not(.gev-news-item--static):hover { background: rgba(255,255,255,0.04); }
 .gev-news-item--static { cursor: default; opacity: 0.7; }
+.gev-news-item--fallback { opacity: 0.5; cursor: default; pointer-events: none; }
 
 .gev-news-content {
   flex: 1;

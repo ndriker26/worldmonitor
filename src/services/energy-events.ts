@@ -67,20 +67,34 @@ function emitStatus(): void {
 
 type EiaRow = Record<string, string | number | null>;
 
-const _EIA_PROXY = '/api/eia';
 const _EIA_DIRECT = 'https://api.eia.gov/v2';
 const _EIA_KEY: string = (import.meta.env.VITE_EIA_API_KEY as string | undefined) ?? '';
 
+// Map EIA path + type param to the individual Vercel proxy endpoint
+function resolveProxyUrl(path: string, params: Record<string, string>): string | null {
+  if (path === 'electricity/retail-sales/data/') return '/api/eia-price';
+  if (path === 'natural-gas/pri/fut/data/') return '/api/eia-gas';
+  if (path === 'electricity/rto/region-data/data/') {
+    const type = params['facets[type][]'];
+    if (type === 'D') return '/api/eia-demand';
+    if (type === 'NG') return '/api/eia-generation';
+  }
+  return null;
+}
+
 async function fetchEia(path: string, params: Record<string, string>): Promise<EiaRow[]> {
   const qs = new URLSearchParams(params).toString();
+  const proxyUrl = resolveProxyUrl(path, params);
 
-  try {
-    const res = await fetch(`${_EIA_PROXY}/${path}?${qs}`);
-    if (res.ok) {
-      const json = await res.json() as { response?: { data?: EiaRow[] } };
-      return json?.response?.data ?? [];
-    }
-  } catch { /* proxy not available locally */ }
+  if (proxyUrl) {
+    try {
+      const res = await fetch(proxyUrl);
+      if (res.ok) {
+        const json = await res.json() as { response?: { data?: EiaRow[] } };
+        return json?.response?.data ?? [];
+      }
+    } catch { /* proxy not available locally */ }
+  }
 
   if (_EIA_KEY) {
     const res = await fetch(`${_EIA_DIRECT}/${path}?api_key=${_EIA_KEY}&${qs}`);

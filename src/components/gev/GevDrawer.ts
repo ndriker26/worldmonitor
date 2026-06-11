@@ -32,6 +32,7 @@ interface NewsItem {
   source: string;
   url: string;
   publishedAt: string | null;
+  isFallback?: boolean;
 }
 
 const PLACEHOLDER_METRICS: MetricTile[] = [
@@ -109,23 +110,26 @@ function relativeTime(ts: Date | string | null): string {
 }
 
 function renderNewsItems(items: NewsItem[], isPlaceholder = false): string {
+  const allFallback = items.length > 0 && items.every(item => item.isFallback);
   const header = isPlaceholder
     ? '<div class="gev-news-placeholder-note">📡 Live feed connecting…</div>'
+    : allFallback
+    ? '<div class="gev-news-placeholder-note">⚠️ Live feed unavailable — showing sample headlines</div>'
     : '';
 
   const rows = items.map(item => {
-    const loc = !isPlaceholder ? findNewsLocation(item.title) : null;
+    const fallback = isPlaceholder || !!item.isFallback;
+    const loc = !fallback ? findNewsLocation(item.title) : null;
     const mapBtn = loc
       ? `<button class="gev-news-map-btn" data-lat="${loc.lat}" data-lon="${loc.lon}" data-zoom="${loc.zoom}" title="View on map">📍</button>`
       : '';
     const timeStr = item.publishedAt ? ` · ${relativeTime(item.publishedAt)}` : '';
-    // Placeholder items are not clickable — they have generic EIA landing-page URLs, not real articles
-    const clickable = !isPlaceholder;
+    const clickable = !fallback;
     return `
-      <div class="gev-news-item${clickable ? '' : ' gev-news-item--static'}" ${clickable ? `data-url="${escHtml(item.url)}"` : ''} ${clickable ? 'role="button" tabindex="0"' : ''}>
+      <div class="gev-news-item${clickable ? '' : ' gev-news-item--static'}${fallback ? ' gev-news-item--fallback' : ''}" ${clickable ? `data-url="${escHtml(item.url)}"` : ''} ${clickable ? 'role="button" tabindex="0"' : ''}>
         <div class="gev-news-content">
           <div class="gev-news-title" title="${escHtml(item.title)}">${escHtml(item.title)}</div>
-          <div class="gev-news-meta">${escHtml(item.source)}${escHtml(timeStr)}</div>
+          <div class="gev-news-meta">${escHtml(item.source)}${item.publishedAt ? escHtml(timeStr) : ''}</div>
         </div>
         ${mapBtn}
       </div>`;
