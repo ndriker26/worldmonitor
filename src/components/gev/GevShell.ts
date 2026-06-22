@@ -8,6 +8,7 @@ import { GevSidebar } from './GevSidebar';
 import { GevDrawer } from './GevDrawer';
 import { GevCountryPanel } from './GevCountryPanel';
 import { GevToast } from './GevToast';
+import { GevSearch } from './GevSearch';
 import { startEnergyEventService } from '@/services/energy-events';
 
 export class GevShell {
@@ -17,6 +18,7 @@ export class GevShell {
   private drawer: GevDrawer;
   private countryPanel: GevCountryPanel;
   private toast: GevToast;
+  private search: GevSearch;
 
   constructor(ctx: AppContext) {
     this.ctx = ctx;
@@ -25,6 +27,7 @@ export class GevShell {
     this.drawer = new GevDrawer();
     this.countryPanel = new GevCountryPanel();
     this.toast = new GevToast();
+    this.search = new GevSearch();
   }
 
   init(): void {
@@ -36,6 +39,7 @@ export class GevShell {
     this.mountNewsPanel();
     this.wireSidebarToggle();
     this.startEventFeed();
+    this.search.init();
     setTimeout(() => this.dismissLoadingScreen(loadingEl), 2800);
   }
 
@@ -125,6 +129,8 @@ export class GevShell {
     this.topBar.setMap(this.ctx.map);
     this.sidebar.setMap(this.ctx.map);
     this.drawer.setMap(this.ctx.map);
+    this.search.setMap(this.ctx.map);
+    this.search.setOnCountrySelect((name) => void this.countryPanel.show(name));
 
     // Register energy-specific country click handler
     this.ctx.map.onCountryClicked((payload) => {
@@ -174,5 +180,6 @@ export class GevShell {
     this.countryPanel.destroy();
     this.drawer.destroy();
     this.toast.destroy();
+    this.search.destroy();
   }
 }

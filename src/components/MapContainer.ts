@@ -381,6 +381,14 @@ export class MapContainer {
     }
   }
 
+  public showEnergyPopup(type: string, data: unknown): void {
+    const x = Math.round(window.innerWidth / 2);
+    const y = Math.round(window.innerHeight / 2);
+    // Access DeckGLMap's internal popup — only called from energy search, not general use
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this.deckGLMap as any)?.popup?.show({ type, data, x, y });
+  }
+
   public getCenter(): { lat: number; lon: number } | null {
     if (this.useGlobe) return this.globeMap?.getCenter() ?? null;
     if (this.useDeckGL) return this.deckGLMap?.getCenter() ?? null;
