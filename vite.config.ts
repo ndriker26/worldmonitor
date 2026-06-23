@@ -106,6 +106,28 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
           .replace(/\/favico\/og-image/g, `/favico/${activeVariant}/og-image`);
       }
 
+      // Energy variant: replace the entire body with a minimal dark preload screen.
+      // The WM skeleton (gray bars, shimmer, teal gradient, panel cards, aside panel)
+      // is stripped entirely so no WM-branded pixel is ever painted.
+      // GevShell.initEarly() removes #gev-preload when the real loading screen takes over.
+      if (activeVariant === 'energy') {
+        result = result.replace(
+          /<body>([\s\S]*?)(?=\s*<!-- Force-clear stale service worker)/,
+          `<body style="margin:0;background:#0a0f1a;">
+    <div id="app"></div>
+    <div id="gev-preload" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0f1a;z-index:99999;">
+      <div style="text-align:center;">
+        <div style="color:#a855f7;font-size:20px;font-weight:700;letter-spacing:0.05em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">GRID'S EYE VIEW</div>
+        <div style="width:200px;height:2px;background:#1e293b;margin:16px auto 0;border-radius:1px;overflow:hidden;">
+          <div style="width:40%;height:100%;background:#a855f7;animation:gevLoad 1.5s ease-in-out infinite;border-radius:1px;"></div>
+        </div>
+      </div>
+    </div>
+    <style>@keyframes gevLoad{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}</style>
+    `
+        );
+      }
+
       return result;
     },
   };

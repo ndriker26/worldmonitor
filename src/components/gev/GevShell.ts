@@ -38,6 +38,8 @@ export class GevShell {
    */
   initEarly(): void {
     this.loadingEl = this.buildLoadingScreen();
+    // Remove the build-time static preload div now that the real loading screen is visible
+    document.getElementById('gev-preload')?.remove();
     this.setupBranding();
     initGevTheme();
     this.buildDOM();
