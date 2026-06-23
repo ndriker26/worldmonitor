@@ -2,6 +2,8 @@
 // Polls EIA data via /api/eia proxy, detects notable threshold crossings,
 // and emits CustomEvents for the live feed UI.
 
+import { formatNumber } from '@/utils';
+
 export const GEV_ENERGY_EVENT = 'gev:energy-event';
 export const GEV_STATUS_EVENT = 'gev:connection-status';
 
@@ -130,8 +132,8 @@ async function checkElectricityPrice(): Promise<void> {
         type: isSpike ? 'price_spike' : 'price_drop',
         severity: latest > 150 ? 'critical' : 'warning',
         icon: isSpike ? '⚡' : '📉',
-        title: `US electricity price ${isSpike ? 'rose to' : 'dropped to'} $${latest.toFixed(0)}/MWh`,
-        description: `${isSpike ? 'Up' : 'Down'} ${Math.abs(pct).toFixed(1)}% from last month. EIA residential retail rate.`,
+        title: `US electricity price ${isSpike ? 'rose to' : 'dropped to'} $${formatNumber(latest, {decimals: 2})}/MWh`,
+        description: `${isSpike ? 'Up' : 'Down'} ${formatNumber(Math.abs(pct), {decimals: 1})}% from last month. EIA residential retail rate.`,
         timestamp: new Date(), source: 'EIA',
       });
     }
@@ -169,7 +171,7 @@ async function checkNaturalGas(): Promise<void> {
           id: uid(), type: 'market_move',
           severity: Math.abs(pct) >= 6 ? 'critical' : 'warning',
           icon: isUp ? '📈' : '🔻',
-          title: `Henry Hub natural gas ${isUp ? 'up' : 'down'} ${Math.abs(pct).toFixed(1)}% to $${latest.toFixed(2)}/MMBtu`,
+          title: `Henry Hub natural gas ${isUp ? 'up' : 'down'} ${formatNumber(Math.abs(pct), {decimals: 1})}% to $${formatNumber(latest, {decimals: 2})}/MMBtu`,
           description: `${isUp ? 'Largest gain' : 'Sharpest drop'} in ${daysBack} session${daysBack > 1 ? 's' : ''}. ${isUp ? 'Warmer' : 'Cooler'}-than-expected weather outlook driving futures.`,
           timestamp: new Date(), source: 'EIA',
         });
@@ -246,13 +248,13 @@ async function checkGridDemand(): Promise<void> {
         const key = `demand-${region}-${sorted[0]![0].slice(0, 10)}`;
         if (!demandFired.has(key)) {
           demandFired.add(key);
-          const pctAbove = ((currentGW / prevPeak - 1) * 100).toFixed(0);
+          const pctAbove = formatNumber((currentGW / prevPeak - 1) * 100, {decimals: 0});
           const hour = new Date().toLocaleTimeString('en-US', { hour: 'numeric', hour12: true });
           push({
             id: uid(), type: 'demand_record',
             severity: currentGW > prevPeak * 1.1 ? 'warning' : 'info',
             icon: '⚡',
-            title: `${region} grid demand hit ${currentGW.toFixed(1)} GW at ${hour}`,
+            title: `${region} grid demand hit ${formatNumber(currentGW, {decimals: 1})} GW at ${hour}`,
             description: `Exceeds previous day's peak by ${pctAbove}%. ${ISO_LOC[region]?.label ?? region} tracking elevated load.`,
             timestamp: new Date(), source: 'EIA',
             location: ISO_LOC[region],

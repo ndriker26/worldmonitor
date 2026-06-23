@@ -1,6 +1,7 @@
 import { getGemData } from '@/config/gem-data';
 import { US_POWER_PLANTS } from '@/config/us-power-plants';
 import { toFlagEmoji } from '@/utils/country-flag';
+import { formatNumber } from '@/utils';
 import { fetchEIACountry } from '@/services/eia-live';
 
 const FUEL_COLORS: Record<string, string> = {
@@ -59,7 +60,7 @@ function buildEnergyMixBar(isUSA: boolean): string {
     `<span class="gev-country-fuel-item"><span class="gev-country-fuel-dot" style="background:${s.color}"></span>${escHtml(s.label)} ${s.pct.toFixed(0)}%</span>`
   ).join('');
 
-  const totalGW = (total / 1000).toFixed(0);
+  const totalGW = formatNumber(total / 1000, {abbreviate: false, decimals: 0});
   const plantCount = US_POWER_PLANTS.length.toLocaleString();
 
   return `

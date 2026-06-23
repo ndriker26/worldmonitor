@@ -32,6 +32,33 @@ export function formatPrice(price: number): string {
   })}`;
 }
 
+export interface FormatNumberOptions {
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  abbreviate?: boolean;
+}
+
+export function formatNumber(value: number, options?: FormatNumberOptions): string {
+  const decimals = options?.decimals ?? 2;
+  const prefix = options?.prefix ?? '';
+  const suffix = options?.suffix ?? '';
+  const abbreviate = options?.abbreviate ?? true;
+
+  if (!isFinite(value)) return `${prefix}—${suffix}`;
+
+  if (abbreviate) {
+    if (Math.abs(value) >= 1_000_000) return `${prefix}${(value / 1_000_000).toFixed(decimals)}M${suffix}`;
+    if (Math.abs(value) >= 1_000) return `${prefix}${(value / 1_000).toFixed(decimals)}k${suffix}`;
+  } else if (decimals === 0) {
+    return `${prefix}${Math.round(value).toLocaleString('en-US')}${suffix}`;
+  } else {
+    return `${prefix}${value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${suffix}`;
+  }
+
+  return `${prefix}${value.toFixed(decimals)}${suffix}`;
+}
+
 export function formatChange(change: number): string {
   const sign = change >= 0 ? '+' : '';
   return `${sign}${change.toFixed(2)}%`;

@@ -8,7 +8,7 @@ import type { StartupHub, Accelerator, TechHQ, CloudRegion } from '@/config/tech
 import type { TechHubActivity } from '@/services/tech-activity';
 import type { GeoHubActivity } from '@/services/geo-activity';
 import { escapeHtml, sanitizeUrl } from '@/utils/sanitize';
-import { isMobileDevice, getCSSColor } from '@/utils';
+import { isMobileDevice, getCSSColor, formatNumber } from '@/utils';
 import { TransitChart } from '@/utils/transit-chart';
 import type { GetChokepointStatusResponse } from '@/services/supply-chain';
 import { t } from '@/services/i18n';
@@ -1614,7 +1614,7 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
           </div>
           <div class="popup-stat">
             <span class="stat-label">Capacity</span>
-            <span class="stat-value">${plant.capacityMW.toLocaleString()} MW</span>
+            <span class="stat-value">${formatNumber(plant.capacityMW, {abbreviate: false})} MW</span>
           </div>
           <div class="popup-stat">
             <span class="stat-label">${t('popups.coordinates')}</span>
@@ -1718,7 +1718,7 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
     const statusBadge = pipeline.status === 'active' ? 'elevated' : 'low';
     const lengthStr = (() => {
       if (!pipeline.lengthKm) return '—';
-      try { const u = localStorage.getItem('gev-distance-unit') ?? 'mi'; return u === 'mi' ? `${Math.round(pipeline.lengthKm * 0.621371).toLocaleString()} mi` : `${pipeline.lengthKm.toLocaleString()} km`; } catch { return `${pipeline.lengthKm.toLocaleString()} km`; }
+      try { const u = localStorage.getItem('gev-distance-unit') ?? 'mi'; return u === 'mi' ? `${formatNumber(pipeline.lengthKm * 0.621371, {decimals: 0, abbreviate: false})} mi` : `${formatNumber(pipeline.lengthKm, {decimals: 0, abbreviate: false})} km`; } catch { return `${formatNumber(pipeline.lengthKm, {decimals: 0, abbreviate: false})} km`; }
     })();
     return `
       <div class="popup-header" style="border-left:3px solid ${color}">

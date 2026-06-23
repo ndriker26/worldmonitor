@@ -13,6 +13,7 @@ import {
   type ConnectionState,
 } from '@/services/energy-events';
 import type { MapContainer } from '@/components';
+import { formatNumber } from '@/utils';
 
 const DRAWER_STATE_KEY = 'gev-drawer-expanded';
 const TAB_STATE_KEY = 'gev-drawer-tab';
@@ -285,7 +286,7 @@ export class GevDrawer {
     const changeEl = this.el.querySelector<HTMLElement>(`#gevMetricChange-${id}`);
     const sparkEl = this.el.querySelector<SVGElement>(`#gevMetricSpark-${id}`);
 
-    if (valEl) valEl.textContent = result.value > 0 ? result.value.toFixed(result.value >= 100 ? 0 : 2) : '—';
+    if (valEl) valEl.textContent = result.value > 0 ? formatNumber(result.value, {decimals: 2}) : '—';
     if (changeEl) {
       changeEl.className = `gev-metric-change ${cc}`;
       changeEl.textContent = `${arrow} ${result.changePct}%`;
