@@ -968,7 +968,10 @@ export class App {
     }
 
     // Phase 4: SearchManager, MapLayerHandlers, CountryIntel
-    this.searchManager.init();
+    // Energy variant uses GevSearch exclusively; skip the WM SearchModal to prevent bleed-through.
+    if (SITE_VARIANT !== 'energy') {
+      this.searchManager.init();
+    }
     this.eventHandlers.setupMapLayerHandlers();
     this.countryIntel.init();
 
