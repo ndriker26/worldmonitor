@@ -766,6 +766,14 @@ export class App {
 
   public async init(): Promise<void> {
     const initStart = performance.now();
+
+    // Energy variant: show GEV loading screen + set up full shell DOM immediately,
+    // before any awaited async work, so the WM skeleton never has a chance to flash.
+    if (SITE_VARIANT === 'energy') {
+      this.gevShell = new GevShell(this.state);
+      this.gevShell.initEarly();
+    }
+
     await initDB();
     await initI18n();
     const aiFlow = getAiFlowSettings();
@@ -891,10 +899,10 @@ export class App {
     const resolvedRegion = await resolveUserRegion();
     this.state.resolvedLocation = resolvedRegion;
 
-    // Phase 1: Layout (creates map + panels — they'll find hydrated data)
+    // Phase 1: Layout
+    // Energy: gevShell was already initialized early; just start the loading screen dismiss timer.
     if (SITE_VARIANT === 'energy') {
-      this.gevShell = new GevShell(this.state);
-      this.gevShell.init();
+      this.gevShell!.scheduleDismiss();
     } else {
       this.panelLayout.init();
     }

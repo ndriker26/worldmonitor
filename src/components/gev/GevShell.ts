@@ -19,6 +19,7 @@ export class GevShell {
   private countryPanel: GevCountryPanel;
   private toast: GevToast;
   private search: GevSearch;
+  private loadingEl: HTMLElement | null = null;
 
   constructor(ctx: AppContext) {
     this.ctx = ctx;
@@ -30,8 +31,13 @@ export class GevShell {
     this.search = new GevSearch();
   }
 
-  init(): void {
-    const loadingEl = this.buildLoadingScreen();
+  /**
+   * Show the GEV loading screen and fully set up the shell DOM + map immediately.
+   * Call this as early as possible (before any awaited async work in App.init) so
+   * there is never a blank or WM-branded frame visible.
+   */
+  initEarly(): void {
+    this.loadingEl = this.buildLoadingScreen();
     this.setupBranding();
     initGevTheme();
     this.buildDOM();
@@ -40,7 +46,16 @@ export class GevShell {
     this.wireSidebarToggle();
     this.startEventFeed();
     this.search.init();
-    setTimeout(() => this.dismissLoadingScreen(loadingEl), 2800);
+  }
+
+  /** Start the dismiss timer for the loading screen (call after async init is done). */
+  scheduleDismiss(): void {
+    setTimeout(() => this.dismissLoadingScreen(this.loadingEl!), 2800);
+  }
+
+  init(): void {
+    this.initEarly();
+    this.scheduleDismiss();
   }
 
   private setupBranding(): void {

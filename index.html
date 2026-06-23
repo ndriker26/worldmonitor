@@ -190,8 +190,9 @@
       [data-variant="happy"][data-theme="dark"] .skeleton-panel-header{border-bottom-color:#283545}
       [data-variant="happy"][data-theme="dark"] .skeleton-line{background:linear-gradient(90deg,rgba(139,175,122,.05) 25%,rgba(139,175,122,.10) 50%,rgba(139,175,122,.05) 75%);background-size:200% 100%;animation:skel-shimmer 1.5s infinite}
 
-      /* ---------- energy variant: GevShell provides its own loading screen ---------- */
-      [data-variant="energy"] .skeleton-shell{display:none}
+      /* ---------- energy variant: dark background + hide WM skeleton from first paint ---------- */
+      [data-variant="energy"] body,[data-variant="energy"] html{background:#0a0f1a}
+      [data-variant="energy"] .skeleton-shell{display:none!important}
     </style>
 
     <!-- Preconnect: map tiles + assets -->
