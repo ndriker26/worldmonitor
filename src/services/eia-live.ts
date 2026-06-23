@@ -1,8 +1,9 @@
 // EIA metrics via individual Vercel edge functions (key injected server-side).
 // On local dev the proxies return 404, so we fall back to the direct EIA API
-// using VITE_EIA_API_KEY (a free public key — safe to expose in dev).
+// using VITE_EIA_API_KEY. The DEV_KEY is intentionally empty in production so
+// the direct-API path never executes and the key is never bundled into prod JS.
 const DIRECT_BASE = 'https://api.eia.gov/v2';
-const DEV_KEY: string = (import.meta.env.VITE_EIA_API_KEY as string | undefined) ?? '';
+const DEV_KEY: string = import.meta.env.DEV ? ((import.meta.env.VITE_EIA_API_KEY as string | undefined) ?? '') : '';
 const CACHE_TTL_MS = 15 * 60 * 1000;
 
 interface CacheEntry<T> { data: T; ts: number }

@@ -106,14 +106,32 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
           .replace(/\/favico\/og-image/g, `/favico/${activeVariant}/og-image`);
       }
 
-      // Energy variant: replace the entire body with a minimal dark preload screen.
-      // The WM skeleton (gray bars, shimmer, teal gradient, panel cards, aside panel)
-      // is stripped entirely so no WM-branded pixel is ever painted.
-      // GevShell.initEarly() removes #gev-preload when the real loading screen takes over.
+      // Energy variant: additional head + body cleanup.
       if (activeVariant === 'energy') {
-        result = result.replace(
-          /<body>([\s\S]*?)(?=\s*<!-- Force-clear stale service worker)/,
-          `<body style="margin:0;background:#0a0f1a;">
+        const gevOgImage = `${activeMeta.url}favico/og-image.png`;
+        result = result
+          // Strip all WM hreflang alternate links (they point to worldmonitor.app subdomains)
+          .replace(/<link rel="alternate" hreflang=[^>]+>\n?/g, '')
+          // og:image — no energy subdirectory exists; use the root og-image at the GEV URL
+          .replace(/<meta property="og:image" content="[^"]*"[^>]*\/>/, `<meta property="og:image" content="${gevOgImage}" />`)
+          // og:image:alt — strip WM brand text
+          .replace(/<meta property="og:image:alt" content="[^"]*"[^>]*\/>/, `<meta property="og:image:alt" content="Grid's Eye View — real-time US energy infrastructure map" />`)
+          // twitter:image — fix to GEV URL
+          .replace(/<meta name="twitter:image" content="[^"]*"[^>]*\/>/, `<meta name="twitter:image" content="${gevOgImage}" />`)
+          // twitter:site / twitter:creator — switch to GEV author
+          .replace(/<meta name="twitter:site" content="[^"]*"[^>]*\/>/, '<meta name="twitter:site" content="@natantheskier" />')
+          .replace(/<meta name="twitter:creator" content="[^"]*"[^>]*\/>/, '<meta name="twitter:creator" content="@natantheskier" />')
+          // JSON-LD: replace the entire structured data block with clean GEV schema
+          .replace(
+            /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
+            `<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Grid's Eye View","url":"${activeMeta.url}","description":"${activeMeta.description}","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Natan Driker","url":"https://github.com/ndriker26"},"featureList":${JSON.stringify(activeMeta.features)}}</script>`
+          )
+          // Replace the entire body with a minimal dark preload screen.
+          // The WM skeleton is stripped entirely so no WM-branded pixel is ever painted.
+          // GevShell.initEarly() removes #gev-preload when the real loading screen takes over.
+          .replace(
+            /<body>([\s\S]*?)(?=\s*<!-- Force-clear stale service worker)/,
+            `<body style="margin:0;background:#0a0f1a;">
     <div id="app"></div>
     <div id="gev-preload" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0f1a;z-index:99999;">
       <div style="text-align:center;">
@@ -125,7 +143,7 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
     </div>
     <style>@keyframes gevLoad{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}</style>
     `
-        );
+          );
       }
 
       return result;

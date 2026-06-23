@@ -115,7 +115,7 @@ export const VARIANT_META: { full: VariantMeta; [k: string]: VariantMeta } = {
     description: 'Real-time US energy infrastructure intelligence — every power plant, transmission line, and grid event on one map.',
     socialDescription: 'Track every US power plant, transmission line, price spike, and grid outage in real time. Built for energy professionals and infrastructure analysts.',
     keywords: 'US energy dashboard, power plants, transmission lines, grid monitoring, grid intelligence, electricity prices, Henry Hub natural gas, grid demand, power outages, ISO, PJM, ERCOT, MISO, CAISO, FERC, EIA, utility dive, energy news, nuclear power, renewables, energy infrastructure',
-    url: 'https://energy.worldmonitor.app/',
+    url: 'https://gridseyeview.vercel.app/',
     siteName: "Grid's Eye View",
     shortName: "Grid's Eye View",
     subject: 'US Energy Infrastructure and Grid Intelligence',

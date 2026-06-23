@@ -342,53 +342,37 @@ export class GevDrawer {
 
     // 1. Try Vercel edge function (works in production)
     try {
-      console.log('[GEV news] trying /api/energy-news…');
       const res = await fetch('/api/energy-news');
-      console.log('[GEV news] /api/energy-news →', res.status);
       if (res.ok) {
         const items = await res.json() as NewsItem[];
         if (Array.isArray(items) && items.length > 0) {
-          console.log('[GEV news] edge function OK:', items.length, 'items');
           applyItems(items, false);
           return;
         }
       }
-    } catch (e) {
-      console.log('[GEV news] edge function error:', e);
-    }
+    } catch { /* proxy unavailable in local dev */ }
 
     // 2. Direct RSS fetch (EIA is a .gov site — sometimes CORS-permissive)
-    console.log('[GEV news] trying direct RSS…');
     const directResults = await Promise.allSettled(
       EIA_FEEDS.map(f => fetchRSSDirect(f.url, f.source))
     );
-    directResults.forEach((r, i) => {
-      if (r.status === 'rejected') console.log('[GEV news] direct', EIA_FEEDS[i]?.url, 'failed:', r.reason);
-    });
     const directItems = directResults.flatMap(r => r.status === 'fulfilled' ? r.value : []);
     if (directItems.length > 0) {
-      console.log('[GEV news] direct RSS OK:', directItems.length, 'items');
       applyItems(sortAndSlice(directItems), false);
       return;
     }
 
     // 3. CORS proxy (allorigins.win) — reliable local-dev fallback
-    console.log('[GEV news] trying allorigins.win proxy…');
     const proxyResults = await Promise.allSettled(
       EIA_FEEDS.map(f => fetchRSSViaProxy(f.url, f.source))
     );
-    proxyResults.forEach((r, i) => {
-      if (r.status === 'rejected') console.log('[GEV news] proxy', EIA_FEEDS[i]?.url, 'failed:', r.reason);
-    });
     const proxyItems = proxyResults.flatMap(r => r.status === 'fulfilled' ? r.value : []);
     if (proxyItems.length > 0) {
-      console.log('[GEV news] proxy OK:', proxyItems.length, 'items');
       applyItems(sortAndSlice(proxyItems), false);
       return;
     }
 
-    // 4. All paths failed — show placeholder with connecting label
-    console.log('[GEV news] all sources failed — showing placeholders');
+    // 4. All paths failed — show placeholders
     applyItems(PLACEHOLDER_NEWS, true);
   }
 
