@@ -49,7 +49,7 @@ export class GevShell {
     const link = existing ?? document.createElement('link');
     link.rel = 'icon';
     link.type = 'image/svg+xml';
-    (link as HTMLLinkElement).href = '/favicon-gev.svg';
+    (link as HTMLLinkElement).href = '/favicon.svg';
     if (!existing) document.head.appendChild(link);
   }
 
@@ -59,15 +59,34 @@ export class GevShell {
     el.id = 'gevLoading';
     el.innerHTML = `
       <div class="gev-loading-logo">
-        <svg width="52" height="52" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1,16 C6,7 12,4 16,4 C20,4 26,7 31,16 C26,25 20,28 16,28 C12,28 6,25 1,16 Z"
-                fill="rgba(59,130,246,0.08)" stroke="#3b82f6" stroke-width="2"/>
-          <circle cx="16" cy="16" r="7" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
-          <line x1="9" y1="16" x2="23" y2="16" stroke="#3b82f6" stroke-width="0.7" opacity="0.6"/>
-          <line x1="16" y1="9" x2="16" y2="23" stroke="#3b82f6" stroke-width="0.7" opacity="0.6"/>
-          <circle cx="16" cy="16" r="3" fill="#3b82f6"/>
-          <circle cx="3.5" cy="16" r="1.5" fill="#3b82f6" opacity="0.8"/>
-          <circle cx="28.5" cy="16" r="1.5" fill="#3b82f6" opacity="0.8"/>
+        <svg width="48" height="48" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gevLoadingGlow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="gevLoadingHalo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#c084fc" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <path d="M 4,32 C 16,16 48,16 60,32 C 48,48 16,48 4,32 Z"
+                fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="12" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.5"/>
+          <line x1="32" y1="22" x2="32" y2="42" stroke="#a855f7" stroke-width="1.5" opacity="0.65"/>
+          <line x1="22" y1="32" x2="42" y2="32" stroke="#a855f7" stroke-width="1.5" opacity="0.65"/>
+          <line x1="32" y1="22" x2="26" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+          <line x1="32" y1="22" x2="38" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+          <line x1="22" y1="32" x2="26" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+          <line x1="42" y1="32" x2="38" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+          <circle cx="32" cy="22" r="2.2" fill="#a855f7"/>
+          <circle cx="32" cy="42" r="2.2" fill="#a855f7"/>
+          <circle cx="22" cy="32" r="2.2" fill="#a855f7"/>
+          <circle cx="42" cy="32" r="2.2" fill="#a855f7"/>
+          <circle cx="26" cy="27" r="1.8" fill="#a855f7" opacity="0.9"/>
+          <circle cx="38" cy="27" r="1.8" fill="#a855f7" opacity="0.9"/>
+          <circle cx="32" cy="32" r="9" fill="url(#gevLoadingHalo)"/>
+          <circle cx="32" cy="32" r="3.5" fill="#c084fc" filter="url(#gevLoadingGlow)"/>
         </svg>
       </div>
       <div class="gev-loading-brand">GRID'S EYE VIEW</div>

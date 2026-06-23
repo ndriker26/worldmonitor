@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Eye outline — almond shape -->
+  <path d="M 4,32 C 16,16 48,16 60,32 C 48,48 16,48 4,32 Z"
+        fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <!-- Iris ring -->
+  <circle cx="32" cy="32" r="12" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Grid cross lines through center -->
+  <line x1="32" y1="22" x2="32" y2="42" stroke="#a855f7" stroke-width="1.5" opacity="0.65"/>
+  <line x1="22" y1="32" x2="42" y2="32" stroke="#a855f7" stroke-width="1.5" opacity="0.65"/>
+
+  <!-- Diagonal grid lines to junction nodes -->
+  <line x1="32" y1="22" x2="26" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+  <line x1="32" y1="22" x2="38" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+  <line x1="22" y1="32" x2="26" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+  <line x1="42" y1="32" x2="38" y2="27" stroke="#a855f7" stroke-width="1" opacity="0.5"/>
+
+  <!-- Cardinal nodes -->
+  <circle cx="32" cy="22" r="2.2" fill="#a855f7"/>
+  <circle cx="32" cy="42" r="2.2" fill="#a855f7"/>
+  <circle cx="22" cy="32" r="2.2" fill="#a855f7"/>
+  <circle cx="42" cy="32" r="2.2" fill="#a855f7"/>
+
+  <!-- Junction nodes -->
+  <circle cx="26" cy="27" r="1.8" fill="#a855f7" opacity="0.9"/>
+  <circle cx="38" cy="27" r="1.8" fill="#a855f7" opacity="0.9"/>
+
+  <!-- Center glow halo -->
+  <circle cx="32" cy="32" r="9" fill="url(#halo)"/>
+
+  <!-- Center node (pupil) with glow -->
+  <circle cx="32" cy="32" r="3.5" fill="#c084fc" filter="url(#glow)"/>
+</svg>
