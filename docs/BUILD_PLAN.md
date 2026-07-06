@@ -79,7 +79,23 @@ Note discovered during build: ERCOT has exactly 8 load zones (plus 7 hubs), so
 "top 20 load zones by volume" from the prompt isn't satisfiable as written —
 we track all 15 hub+zone settlement points instead.
 
-## Phase 2 — The analyst [~ builder only this session]
+## Phase 2 — The analyst [~ session DoD met; live runs blocked on API key]
+
+Done 2026-07-06 (27 tests passing):
+
+- [x] ContextPacket builder — TOC-first, stable-prefix-cacheable, 300k-600k
+  budget with trim/shortfall warnings. **Assembled from real backfilled data:
+  250k est. tokens, 9 sections** (under the 300k floor exactly because SPPs
+  are pending — warning surfaced, not silent).
+- [x] Output contract: JSON schema + local validator (+ server-side
+  `output_config.format`), retry-once -> Sonnet fallback with `degraded` flag
+- [x] `model_router.py` — routing table as data (haiku/sonnet/fable per spec)
+- [x] `costs.py` — $8 hard-budget abort using real `count_tokens` projections;
+  run log to `analyst_runs` table
+- [x] `notes.py` — 20k cap, compression preserves falsified hypotheses
+- [x] `runner.py` — grade-prior -> assemble -> call -> validate loop;
+  code-complete, untested live [! ANTHROPIC_API_KEY: Natan]
+- [ ] First live daily brief + scorecard burn-in [! key]
 
 New dir `analyst/` (Python, same venv):
 

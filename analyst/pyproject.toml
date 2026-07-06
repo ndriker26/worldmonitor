@@ -1,0 +1,24 @@
+[project]
+name = "gridanalyst"
+version = "0.1.0"
+description = "Grid's Eye View analyst: Fable-powered market analysis over the ingestion store"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.82",
+    "jsonschema>=4.23",
+    "sqlalchemy>=2.0",
+    "pydantic-settings>=2.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["gridanalyst*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
