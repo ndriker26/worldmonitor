@@ -65,15 +65,19 @@ Core semantics:
 
 Checklist:
 
-- [ ] Skeleton + models + dialect-aware upsert
-- [ ] timeutil + DST tests (write tests first)
-- [ ] EIA adapter (key works today) + ERCOT-via-EIA hourly demand/gen backfill 90d — real data on day one
-- [ ] ERCOT adapter (SPPs) — code complete against documented API, runs the moment the key lands [! key: Natan]
-- [ ] NOAA adapter (TX load zone centroids)
-- [ ] PJM/MISO stubs
-- [ ] Chaos tests passing
-- [ ] Heartbeats + schema-drift handling
-- [ ] 90-day ERCOT SPP backfill executed [! blocked on ERCOT key]
+- [x] Skeleton + models + dialect-aware upsert (2026-07-06)
+- [x] timeutil + DST tests — 17 tests incl. spring-forward 2026-03-08, fall-back 2025-11-02
+- [x] EIA adapter + 90-day backfill executed: **19,328 real observations** (hourly ERCO demand 2,160 rows + 8 fuel-mix series x 2,146)
+- [x] ERCOT adapter (DAM + RTM SPPs) — code complete, B2C auth + pagination + DST flags; runs the moment the key lands [! key: Natan]
+- [x] NOAA adapter — live-verified, 2,496 forecast rows (temp+wind, 8 zones)
+- [x] PJM/MISO stubs
+- [x] Chaos tests passing (34 tests total): network kill mid-fetch w/ backoff recovery, corrupt payloads (4 shapes), clock across fall-back boundary, spring-forward gap rejected
+- [x] Heartbeats + schema-drift handling (drift diffs to docs/PIPELINE_LOG.md, alias-based parser adaptation)
+- [ ] 90-day ERCOT SPP backfill executed [! blocked on ERCOT key — one command once set: `python -m gridsight.backfill`]
+
+Note discovered during build: ERCOT has exactly 8 load zones (plus 7 hubs), so
+"top 20 load zones by volume" from the prompt isn't satisfiable as written —
+we track all 15 hub+zone settlement points instead.
 
 ## Phase 2 — The analyst [~ builder only this session]
 
