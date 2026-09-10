@@ -1,0 +1,37 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="38%" r="55%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0a0f1a"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Eye / network mark -->
+  <g transform="translate(600 176)" stroke="#a855f7" fill="none" stroke-linejoin="round">
+    <path d="M -56 0 C -28 -32 28 -32 56 0 C 28 32 -28 32 -56 0 Z" stroke-width="3"/>
+    <circle cx="0" cy="0" r="20" stroke-width="2" opacity="0.55"/>
+    <line x1="0" y1="-18" x2="0" y2="18" stroke-width="2" opacity="0.65"/>
+    <line x1="-18" y1="0" x2="18" y2="0" stroke-width="2" opacity="0.65"/>
+    <circle cx="0" cy="-18" r="3.5" fill="#a855f7" stroke="none"/>
+    <circle cx="0" cy="18" r="3.5" fill="#a855f7" stroke="none"/>
+    <circle cx="-18" cy="0" r="3.5" fill="#a855f7" stroke="none"/>
+    <circle cx="18" cy="0" r="3.5" fill="#a855f7" stroke="none"/>
+    <circle cx="0" cy="0" r="5" fill="#c084fc" stroke="none"/>
+  </g>
+
+  <text x="600" y="330" text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700"
+    letter-spacing="2.4" fill="#ffffff">GRID'S EYE VIEW</text>
+
+  <text x="600" y="374" text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#94a3b8">Real-time global energy infrastructure intelligence</text>
+
+  <text x="600" y="414" text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="600" fill="#a855f7">35,000+ plants &#183; 5,200+ pipelines &#183; 6,700+ fields</text>
+
+  <text x="1160" y="600" text-anchor="end"
+    font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#64748b">gridseyeview.com</text>
+</svg>

@@ -109,11 +109,12 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
 
       // Energy variant: additional head + body cleanup.
       if (activeVariant === 'energy') {
-        const gevOgImage = `${activeMeta.url}favico/og-image.png`;
+        // GEV-specific social card (public/og-image.png, rendered from og-image.svg).
+        const gevOgImage = `${activeMeta.url}og-image.png`;
         result = result
           // Strip all WM hreflang alternate links (they point to worldmonitor.app subdomains)
           .replace(/<link rel="alternate" hreflang=[^>]+>\n?/g, '')
-          // og:image — no energy subdirectory exists; use the root og-image at the GEV URL
+          // og:image — GEV card at the site root
           .replace(/<meta property="og:image" content="[^"]*"[^>]*\/>/, `<meta property="og:image" content="${gevOgImage}" />`)
           // og:image:alt — strip WM brand text
           .replace(/<meta property="og:image:alt" content="[^"]*"[^>]*\/>/, `<meta property="og:image:alt" content="Grid's Eye View — real-time US energy infrastructure map" />`)
