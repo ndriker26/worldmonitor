@@ -128,6 +128,10 @@
     <!-- Theme: apply stored preference before first paint to prevent FOUC -->
     <script>(function(){try{var h=location.hostname;var v;if(h.startsWith('happy.'))v='happy';else if(h.startsWith('tech.'))v='tech';else if(h.startsWith('finance.'))v='finance';else if(h.startsWith('energy.')||h.includes('gridseyeview'))v='energy';if(!v&&(h==='localhost'||h==='127.0.0.1'||'__TAURI_INTERNALS__' in window))v=localStorage.getItem('worldmonitor-variant');if(v)document.documentElement.dataset.variant=v;else document.documentElement.removeAttribute('data-variant');var t=localStorage.getItem('worldmonitor-theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t;}else if(v==='happy'){document.documentElement.dataset.theme='light';}}catch(e){}document.documentElement.classList.add('no-transition');})()</script>
 
+    <!-- Grid's Eye View: client-side access gate (energy variant only). Not real
+         auth — keeps casual visitors out while paid features are in testing. -->
+    <script>(function(){try{var h=location.hostname;var isEnergy=document.documentElement.dataset.variant==='energy'||h.indexOf('gridseyeview')!==-1||h.indexOf('energy.')===0;if(!isEnergy)return;var p=location.pathname;if(p==='/login.html'||p==='/login')return;if(localStorage.getItem('gev_loggedin'))return;window.location.replace('/login.html');}catch(e){}})()</script>
+
     <!-- Critical CSS: inline skeleton visible before JS boots -->
     <style>
       /* ---------- skeleton shell (dark default) ---------- */
