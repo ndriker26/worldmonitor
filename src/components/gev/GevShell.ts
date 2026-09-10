@@ -20,6 +20,8 @@ export class GevShell {
   private toast: GevToast;
   private search: GevSearch;
   private loadingEl: HTMLElement | null = null;
+  private loadingShownAt = 0;
+  private dismissed = false;
 
   constructor(ctx: AppContext) {
     this.ctx = ctx;
@@ -37,6 +39,7 @@ export class GevShell {
    * there is never a blank or WM-branded frame visible.
    */
   initEarly(): void {
+    this.loadingShownAt = performance.now();
     this.loadingEl = this.buildLoadingScreen();
     // Remove the build-time static preload div now that the real loading screen is visible
     document.getElementById('gev-preload')?.remove();
@@ -50,9 +53,32 @@ export class GevShell {
     this.search.init();
   }
 
-  /** Start the dismiss timer for the loading screen (call after async init is done). */
+  /**
+   * Dismiss the loading screen once the map has actually painted (its canvas
+   * exists), or after a hard 4s cap — whichever comes first. Layers then stream
+   * in on top of a visible map instead of behind a fixed-length splash.
+   */
   scheduleDismiss(): void {
-    setTimeout(() => this.dismissLoadingScreen(this.loadingEl!), 2800);
+    const HARD_CAP_MS = 4000;
+    const SETTLE_MS = 300;
+
+    const done = () => {
+      if (this.dismissed || !this.loadingEl) return;
+      this.dismissed = true;
+      this.dismissLoadingScreen(this.loadingEl);
+    };
+
+    const mapPainted = () =>
+      !!this.ctx.container.querySelector('#mapContainer canvas');
+
+    const poll = () => {
+      if (this.dismissed) return;
+      const elapsed = performance.now() - this.loadingShownAt;
+      if (mapPainted()) { setTimeout(done, SETTLE_MS); return; }
+      if (elapsed >= HARD_CAP_MS) { done(); return; }
+      setTimeout(poll, 120);
+    };
+    poll();
   }
 
   init(): void {

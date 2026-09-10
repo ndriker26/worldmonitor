@@ -2,8 +2,13 @@ import type { MapLayers } from '@/types';
 import { getLayersForVariant } from '@/config/map-layer-definitions';
 import { saveToStorage } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
+import { US_POWER_PLANTS } from '@/config/us-power-plants';
+import { US_TRANSMISSION_LINES } from '@/config/us-transmission-lines';
+import { loadGemData } from '@/config/gem-data';
 import type { MapContainer } from '@/components';
 import { getDistanceUnit, setDistanceUnit, type DistanceUnit } from '@/utils/unit-pref';
+
+const fmtCount = (n: number): string => n.toLocaleString('en-US');
 
 export class GevSidebar {
   private el: HTMLElement;
@@ -21,11 +26,14 @@ export class GevSidebar {
 
   private render(): void {
     const layerDefs = getLayersForVariant('energy', 'flat');
+    // Real counts. Bundled datasets are exact immediately; the GEM (pipelines /
+    // fields) and global-plants counts are filled in by refreshCounts() once
+    // their JSON loads. Live overlays show a status word, not a number.
     const LAYER_COUNTS: Partial<Record<string, string>> = {
-      usPlants: '13k',
-      usTransmission: '10k',
-      oilGasPipelines: '4k',
-      oilGasFields: '6.7k',
+      usPlants: fmtCount(US_POWER_PLANTS.length),
+      usTransmission: fmtCount(US_TRANSMISSION_LINES.length),
+      oilGasPipelines: '…',
+      oilGasFields: '…',
       weather: 'live',
       waterways: 'static',
       natural: 'live',
@@ -40,7 +48,7 @@ export class GevSidebar {
         <div class="gev-layer-item ${active}" data-layer="${key}" role="button" tabindex="0" aria-pressed="${this.layers[key] ? 'true' : 'false'}">
           <span class="gev-layer-icon">${def.icon}</span>
           <span class="gev-layer-label">${def.fallbackLabel}${key === 'usTransmission' ? ' <span class="gev-layer-region">(US)</span>' : ''}</span>
-          ${count ? `<span class="gev-layer-count">${count}</span>` : ''}
+          ${count ? `<span class="gev-layer-count" data-count="${key}">${count}</span>` : ''}
         </div>`;
     }).join('');
 
@@ -119,6 +127,30 @@ export class GevSidebar {
 
   mount(container: HTMLElement): void {
     container.appendChild(this.el);
+    void this.refreshCounts();
+  }
+
+  /** Fill in the counts that depend on async JSON (GEM + global plants). */
+  private async refreshCounts(): Promise<void> {
+    const set = (key: string, val: string) => {
+      const el = this.el.querySelector<HTMLElement>(`.gev-layer-count[data-count="${key}"]`);
+      if (el) el.textContent = val;
+    };
+
+    try {
+      const { pipelines, fields } = await loadGemData();
+      if (pipelines.length) set('oilGasPipelines', fmtCount(pipelines.length));
+      if (fields.length) set('oilGasFields', fmtCount(fields.length));
+    } catch { /* leave the placeholder */ }
+
+    try {
+      // Same URL the map layer loads — normally served from cache.
+      const res = await fetch('/data/global-plants.json');
+      if (res.ok) {
+        const plants = await res.json() as unknown[];
+        if (Array.isArray(plants) && plants.length) set('usPlants', fmtCount(plants.length));
+      }
+    } catch { /* keep the bundled US-plant count */ }
   }
 
   setMap(map: MapContainer): void {

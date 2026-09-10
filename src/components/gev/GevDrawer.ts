@@ -36,20 +36,15 @@ interface NewsItem {
   isFallback?: boolean;
 }
 
-const PLACEHOLDER_METRICS: MetricTile[] = [
-  { id: 'elec-price', label: 'Avg Electricity Price', value: '—', sub: '$/MWh',      sparkline: '0,14 8,12 16,15 24,10 32,13 40,9 48,11 56,8 60,10', trend: '', change: '…' },
-  { id: 'natgas',     label: 'Nat. Gas (Henry Hub)',   value: '—', sub: '$/MMBtu',    sparkline: '0,16 8,14 16,11 24,13 32,9 40,12 48,7 56,10 60,8',  trend: '', change: '…' },
-  { id: 'demand',     label: 'Grid Demand',            value: '—', sub: 'GW demand',  sparkline: '0,13 8,11 16,14 24,10 32,12 40,9 48,11 56,9 60,11',  trend: '', change: '…' },
-  { id: 'gen',        label: 'US Generation',          value: '—', sub: 'GW gen.',    sparkline: '0,10 8,12 16,11 24,13 32,10 40,14 48,12 56,11 60,13', trend: '', change: '…' },
-];
-
-const PLACEHOLDER_NEWS: NewsItem[] = [
-  { title: 'EIA: US renewable generation surpasses coal for third consecutive month', source: 'EIA', url: 'https://www.eia.gov/todayinenergy/', publishedAt: null },
-  { title: 'Henry Hub natural gas futures rise on summer cooling demand outlook', source: 'EIA', url: 'https://www.eia.gov/naturalgas/', publishedAt: null },
-  { title: 'PJM Interconnection approves $3.2B grid expansion plan', source: 'EIA', url: 'https://www.eia.gov/electricity/', publishedAt: null },
-  { title: 'Tengiz oil field reaches record output after expansion completion', source: 'EIA', url: 'https://www.eia.gov/petroleum/', publishedAt: null },
-  { title: 'ERCOT calls for conservation as Texas temperatures exceed 105°F', source: 'EIA', url: 'https://www.eia.gov/electricity/', publishedAt: null },
-  { title: 'Permian Basin production exceeds 6 million barrels per day milestone', source: 'EIA', url: 'https://www.eia.gov/petroleum/', publishedAt: null },
+// Metric tiles. `value`/`change`/`trend`/`sparkline` are filled in live from EIA
+// (see loadAllMetrics); the strings below are the pre-load "—" state only.
+// `sub` states the real unit, frequency, and source so nothing is implied that
+// the data doesn't support (e.g. this is EIA *retail* price, not a wholesale/LMP feed).
+const METRIC_TILES: MetricTile[] = [
+  { id: 'elec-price', label: 'US Retail Electricity', value: '—', sub: '$/MWh · monthly avg · EIA',   sparkline: '0,14 8,12 16,15 24,10 32,13 40,9 48,11 56,8 60,10', trend: '', change: '…' },
+  { id: 'natgas',     label: 'Nat. Gas (Henry Hub)', value: '—', sub: '$/MMBtu · daily spot · EIA',    sparkline: '0,16 8,14 16,11 24,13 32,9 40,12 48,7 56,10 60,8',  trend: '', change: '…' },
+  { id: 'demand',     label: 'Grid Demand',          value: '—', sub: 'GW · hourly · 7 major RTOs',    sparkline: '0,13 8,11 16,14 24,10 32,12 40,9 48,11 56,9 60,11',  trend: '', change: '…' },
+  { id: 'gen',        label: 'US Generation',        value: '—', sub: 'GW · hourly · net generation',  sparkline: '0,10 8,12 16,11 24,13 32,10 40,14 48,12 56,11 60,13', trend: '', change: '…' },
 ];
 
 // ── Geographic keyword → map location ─────────────────────────────────
@@ -110,24 +105,22 @@ function relativeTime(ts: Date | string | null): string {
   } catch { return ''; }
 }
 
-function renderNewsItems(items: NewsItem[], isPlaceholder = false): string {
-  const allFallback = items.length > 0 && items.every(item => item.isFallback);
-  const header = isPlaceholder
-    ? '<div class="gev-news-placeholder-note">📡 Live feed connecting…</div>'
-    : allFallback
-    ? '<div class="gev-news-placeholder-note">⚠️ Live feed unavailable — showing sample headlines</div>'
-    : '';
+// A short status line shown in place of the news list (loading / unavailable).
+// Never renders headlines — real articles only, or an honest message.
+function renderNewsMessage(text: string): string {
+  return `<div class="gev-news-placeholder-note">${escHtml(text)}</div>`;
+}
 
-  const rows = items.map(item => {
-    const fallback = isPlaceholder || !!item.isFallback;
-    const loc = !fallback ? findNewsLocation(item.title) : null;
+function renderNewsItems(items: NewsItem[]): string {
+  if (items.length === 0) return renderNewsMessage('Energy news feed unavailable. Retrying shortly.');
+  return items.map(item => {
+    const loc = findNewsLocation(item.title);
     const mapBtn = loc
       ? `<button class="gev-news-map-btn" data-lat="${loc.lat}" data-lon="${loc.lon}" data-zoom="${loc.zoom}" title="View on map">📍</button>`
       : '';
     const timeStr = item.publishedAt ? ` · ${relativeTime(item.publishedAt)}` : '';
-    const clickable = !fallback;
     return `
-      <div class="gev-news-item${clickable ? '' : ' gev-news-item--static'}${fallback ? ' gev-news-item--fallback' : ''}" ${clickable ? `data-url="${escHtml(item.url)}"` : ''} ${clickable ? 'role="button" tabindex="0"' : ''}>
+      <div class="gev-news-item" data-url="${escHtml(item.url)}" role="button" tabindex="0">
         <div class="gev-news-content">
           <div class="gev-news-title" title="${escHtml(item.title)}">${escHtml(item.title)}</div>
           <div class="gev-news-meta">${escHtml(item.source)}${item.publishedAt ? escHtml(timeStr) : ''}</div>
@@ -135,8 +128,6 @@ function renderNewsItems(items: NewsItem[], isPlaceholder = false): string {
         ${mapBtn}
       </div>`;
   }).join('');
-
-  return header + rows;
 }
 
 function renderEventCard(ev: EnergyEvent, isNew = false): string {
@@ -229,7 +220,7 @@ export class GevDrawer {
   }
 
   private buildHTML(): string {
-    const tiles = PLACEHOLDER_METRICS.map(m => {
+    const tiles = METRIC_TILES.map(m => {
       const cc = m.trend === '+' ? 'up' : m.trend === '-' ? 'down' : 'flat';
       const arrow = m.trend === '+' ? '▲' : m.trend === '-' ? '▼' : '—';
       const stroke = m.trend === '+' ? '#22c55e' : m.trend === '-' ? '#ef4444' : '#888';
@@ -269,7 +260,7 @@ export class GevDrawer {
           <div class="gev-metrics-col">${tiles}</div>
           <div class="gev-news-col" id="gevNewsCol">
             <div class="gev-news-header">Energy News</div>
-            <div class="gev-news-list" id="gevNewsList">${renderNewsItems(PLACEHOLDER_NEWS, true)}</div>
+            <div class="gev-news-list" id="gevNewsList">${renderNewsMessage('Loading energy news…')}</div>
           </div>
           <div class="gev-news-wrap" id="gevNewsWrap" style="display:none"></div>
         </div>
@@ -327,9 +318,13 @@ export class GevDrawer {
       { url: 'https://www.eia.gov/rss/press_room.xml',    source: 'EIA Press' },
     ];
 
-    const applyItems = (items: NewsItem[], isPlaceholder: boolean) => {
+    const applyItems = (items: NewsItem[]) => {
       const listEl = this.el.querySelector<HTMLElement>('#gevNewsList');
-      if (listEl) listEl.innerHTML = renderNewsItems(items, isPlaceholder);
+      if (listEl) listEl.innerHTML = renderNewsItems(items);
+    };
+    const applyMessage = (text: string) => {
+      const listEl = this.el.querySelector<HTMLElement>('#gevNewsList');
+      if (listEl) listEl.innerHTML = renderNewsMessage(text);
     };
 
     const sortAndSlice = (items: NewsItem[]) =>
@@ -341,13 +336,15 @@ export class GevDrawer {
         })
         .slice(0, 15);
 
-    // 1. Try Vercel edge function (works in production)
+    // 1. Our own edge function (works in production). Ignore its `isFallback`
+    //    sample rows — we only want real articles here, never canned headlines.
     try {
       const res = await fetch('/api/energy-news');
       if (res.ok) {
         const items = await res.json() as NewsItem[];
-        if (Array.isArray(items) && items.length > 0) {
-          applyItems(items, false);
+        const real = Array.isArray(items) ? items.filter(i => !i.isFallback && i.url && i.title) : [];
+        if (real.length > 0) {
+          applyItems(real);
           return;
         }
       }
@@ -359,36 +356,44 @@ export class GevDrawer {
     );
     const directItems = directResults.flatMap(r => r.status === 'fulfilled' ? r.value : []);
     if (directItems.length > 0) {
-      applyItems(sortAndSlice(directItems), false);
+      applyItems(sortAndSlice(directItems));
       return;
     }
 
-    // 3. CORS proxy (allorigins.win) — reliable local-dev fallback
+    // 3. Third-party CORS proxy (allorigins.win) — last-resort backup only
     const proxyResults = await Promise.allSettled(
       EIA_FEEDS.map(f => fetchRSSViaProxy(f.url, f.source))
     );
     const proxyItems = proxyResults.flatMap(r => r.status === 'fulfilled' ? r.value : []);
     if (proxyItems.length > 0) {
-      applyItems(sortAndSlice(proxyItems), false);
+      applyItems(sortAndSlice(proxyItems));
       return;
     }
 
-    // 4. All paths failed — show placeholders
-    applyItems(PLACEHOLDER_NEWS, true);
+    // 4. Every path failed — say so honestly. Never show sample headlines.
+    applyMessage('Energy news feed unavailable. Retrying shortly.');
   }
 
   // ── Feed helpers ───────────────────────────────────────────────
+  private static readonly FEED_EMPTY_HTML =
+    '<div class="gev-feed-empty">No notable grid events detected in the last 24 hours.' +
+    '<br><span class="gev-feed-empty-sub">Monitoring US electricity prices, natural gas, and grid demand.</span></div>';
+
   private renderAllEvents(): void {
     const panel = this.el.querySelector<HTMLElement>('#gevFeedPanel');
     if (!panel) return;
     const events = getStoredEvents();
-    panel.innerHTML = events.map(ev => renderEventCard(ev)).join('');
+    panel.innerHTML = events.length
+      ? events.map(ev => renderEventCard(ev)).join('')
+      : GevDrawer.FEED_EMPTY_HTML;
     this.updatePeekTicker(events.slice(0, 3));
   }
 
   private prependEvent(ev: EnergyEvent): void {
     const panel = this.el.querySelector<HTMLElement>('#gevFeedPanel');
     if (!panel) return;
+    // Clear the empty-state placeholder before the first real card lands.
+    if (!panel.querySelector('.gev-event-card')) panel.innerHTML = '';
     panel.insertAdjacentHTML('afterbegin', renderEventCard(ev, true));
     const cards = panel.querySelectorAll('.gev-event-card');
     if (cards.length > 50) cards[cards.length - 1]?.remove();

@@ -1,4 +1,5 @@
 {
+  "buildCommand": "npm run build:energy",
   "crons": [],
   "redirects": [
     { "source": "/docs", "destination": "/docs/documentation", "permanent": false }

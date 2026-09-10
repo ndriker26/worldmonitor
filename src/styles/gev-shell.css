@@ -506,6 +506,21 @@
   scrollbar-color: rgba(255,255,255,0.12) transparent;
 }
 
+/* Honest empty state — shown when there are no real detections to display */
+.gev-feed-empty {
+  margin: auto;
+  padding: 28px 20px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  max-width: 320px;
+}
+.gev-feed-empty-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 /* ── Event cards ─────────────────────────────────────────────── */
 .gev-event-card {
   background: var(--gev-tile-bg);

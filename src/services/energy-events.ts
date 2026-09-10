@@ -1,8 +1,15 @@
 // Energy event detection service for Grid's Eye View.
 // Polls EIA data via /api/eia proxy, detects notable threshold crossings,
 // and emits CustomEvents for the live feed UI.
+//
+// This service emits ONLY real, source-attributed events:
+//   - EIA threshold crossings (price / natural gas / grid demand)
+//   - GEM dataset-coverage facts (counts read from the loaded JSON)
+// There are no simulated or placeholder events. If nothing notable has
+// happened, the feed is honestly empty — see GevDrawer's empty state.
 
 import { formatNumber } from '@/utils';
+import { loadGemData } from '@/config/gem-data';
 
 export const GEV_ENERGY_EVENT = 'gev:energy-event';
 export const GEV_STATUS_EVENT = 'gev:connection-status';
@@ -266,70 +273,39 @@ async function checkGridDemand(): Promise<void> {
   } catch { /* silent */ }
 }
 
-// ── Source 4: GEM dataset milestone events (counts from gem-pipelines.json / gem-fields.json) ──
-// Hardcoded from the current GEM extract (re-run scripts/gen-gem-json.cjs to refresh).
-function loadDerivedEvents(): void {
-  push({
-    id: 'gem-fields', type: 'milestone', severity: 'info', icon: '🌍',
-    title: 'Tracking 6,257 oil & gas fields across 84 countries',
-    description: 'Comprehensive coverage of global upstream oil and gas infrastructure. Source: Global Energy Monitor.',
-    timestamp: new Date(Date.now() - 60_000), source: 'GEM',
-  });
-  push({
-    id: 'gem-pipelines', type: 'milestone', severity: 'info', icon: '🔵',
-    title: 'Monitoring 5,211 pipelines — 3,230K km of infrastructure',
-    description: 'Real-time coverage of global oil & gas pipeline networks via Global Energy Monitor (CC BY 4.0).',
-    timestamp: new Date(Date.now() - 30_000), source: 'GEM',
-  });
-}
+// ── Source 4: GEM dataset-coverage facts (counts read from the loaded JSON) ──
+// Not detections — a factual statement of what the map currently covers. Counts
+// come straight from gem-fields.json / gem-pipelines.json so they can never drift
+// from the data on screen. Re-run scripts/gen-gem-json.cjs to refresh the extract.
+let derivedEventsLoaded = false;
 
-// ── Simulated fallback events (shown when live data isn't ready) ──
-const SIM: Omit<EnergyEvent, 'id' | 'timestamp'>[] = [
-  { type: 'price_spike', severity: 'critical', icon: '⚡', source: 'Simulated',
-    title: 'ERCOT wholesale prices spiked 280%',
-    description: 'West Texas under extreme heat advisory. Spot prices reached $285/MWh during afternoon peak demand.',
-    location: { lat: 31.5, lon: -99.0, zoom: 5, label: 'ERCOT (Texas)' } },
-  { type: 'market_move', severity: 'warning', icon: '📈', source: 'Simulated',
-    title: 'Henry Hub natural gas up 4.1% today on warmer-than-expected forecast',
-    description: 'Futures at $3.82/MMBtu. 15-day outlook shifted warmer across the demand corridor.' },
-  { type: 'milestone', severity: 'info', icon: '🟢', source: 'Simulated',
-    title: 'US solar generation hit 24% of total electricity mix',
-    description: 'Solar exceeded coal-fired generation for a new monthly record. Wind added another 18%.' },
-  { type: 'production_change', severity: 'info', icon: '🏭', source: 'Simulated',
-    title: 'Kashagan field resumed full output after 2-week maintenance window',
-    description: "Kazakhstan's Kashagan field back to 370,000 bpd following scheduled maintenance.",
-    location: { lat: 45.4, lon: 53.0, zoom: 6, label: 'Kashagan, Kazakhstan' } },
-  { type: 'outage', severity: 'warning', icon: '🔴', source: 'Simulated',
-    title: '12,400 customers without power in Southeast US after overnight storms',
-    description: 'Distribution infrastructure damaged across Georgia and the Carolinas. Crews deployed.',
-    location: { lat: 33.5, lon: -84.0, zoom: 5, label: 'Southeast US' } },
-  { type: 'market_move', severity: 'info', icon: '🌊', source: 'Simulated',
-    title: 'Brent crude crosses $82/bbl — Caspian export volumes steady',
-    description: 'Markets reacted positively to stable Caspian supply data at 1.2M bpd.' },
-  { type: 'milestone', severity: 'info', icon: '⚡', source: 'Simulated',
-    title: 'European gas storage reaches 71% — ahead of 5-year average',
-    description: 'Mild weather and steady LNG imports credited for strong injection pace.' },
-  { type: 'production_change', severity: 'info', icon: '📊', source: 'Simulated',
-    title: 'PJM approved $2.8B grid modernization plan for mid-Atlantic region',
-    description: 'Investment covers 1,400 miles of transmission upgrades through 2028.',
-    location: { lat: 39.5, lon: -77.5, zoom: 5, label: 'PJM (Mid-Atlantic)' } },
-  { type: 'production_change', severity: 'info', icon: '🏭', source: 'Simulated',
-    title: 'Permian Basin production exceeds 6.3M bpd — new all-time record',
-    description: 'Permian now accounts for 45% of total US crude output. Basin-wide activity at record levels.',
-    location: { lat: 31.8, lon: -102.5, zoom: 6, label: 'Permian Basin, TX' } },
-  { type: 'production_change', severity: 'info', icon: '🔵', source: 'Simulated',
-    title: 'Colonial Pipeline reports record summer throughput — 2.48M bpd',
-    description: 'Record refined products movement from Gulf Coast to Northeast markets.',
-    location: { lat: 33.0, lon: -84.5, zoom: 5, label: 'Colonial Pipeline (midpoint)' } },
-];
+async function loadDerivedEvents(): Promise<void> {
+  if (derivedEventsLoaded) return;
+  const { fields, pipelines } = await loadGemData();
+  if (fields.length === 0 && pipelines.length === 0) return;
+  derivedEventsLoaded = true;
 
-const SIM_OFFSETS_H = [3, 5, 8, 12, 14, 18, 24, 25, 48, 50];
+  if (fields.length > 0) {
+    const countries = new Set(
+      fields.map(f => (f.country ?? '').split('/')[0]?.trim()).filter(Boolean)
+    ).size;
+    push({
+      id: 'gem-fields', type: 'milestone', severity: 'info', icon: '🌍',
+      title: `Tracking ${formatNumber(fields.length, { abbreviate: false, decimals: 0 })} oil & gas fields across ${countries} countries`,
+      description: 'Global upstream oil & gas infrastructure. Source: Global Energy Monitor (CC BY 4.0).',
+      timestamp: new Date(), source: 'GEM',
+    });
+  }
 
-function loadSimulated(): void {
-  SIM.forEach((ev, i) => {
-    push({ ...ev, id: `sim-${i}`,
-      timestamp: new Date(Date.now() - (SIM_OFFSETS_H[i] ?? i * 3) * 3_600_000) });
-  });
+  if (pipelines.length > 0) {
+    const totalKm = pipelines.reduce((sum, p) => sum + (Number(p.lengthKm) || 0), 0);
+    push({
+      id: 'gem-pipelines', type: 'milestone', severity: 'info', icon: '🔵',
+      title: `Tracking ${formatNumber(pipelines.length, { abbreviate: false, decimals: 0 })} pipelines — ${formatNumber(totalKm, { decimals: 1 })} km of infrastructure`,
+      description: 'Global oil & gas pipeline networks via Global Energy Monitor (CC BY 4.0).',
+      timestamp: new Date(), source: 'GEM',
+    });
+  }
 }
 
 // ── Public API ─────────────────────────────────────────────────
@@ -346,8 +322,7 @@ export function getConnectionState(): ConnectionState {
 }
 
 export function startEnergyEventService(): void {
-  loadSimulated();
-  loadDerivedEvents();
+  void loadDerivedEvents();
   void checkElectricityPrice();
   void checkNaturalGas();
   void checkGridDemand();

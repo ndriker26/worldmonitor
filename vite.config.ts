@@ -97,8 +97,9 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
       }
 
       // Desktop builds: replace favicon paths with variant-specific subdirectory.
-      // Web builds use 'full' favicons in HTML; runtime JS swaps them per hostname.
-      if (activeVariant !== 'full') {
+      // Web builds keep the root /favico/* assets (runtime JS swaps per hostname);
+      // pointing them at /favico/<variant>/ 404s for variants with no such dir (e.g. energy).
+      if (activeVariant !== 'full' && isDesktopBuild) {
         result = result
           .replace(/\/favico\/favicon/g, `/favico/${activeVariant}/favicon`)
           .replace(/\/favico\/apple-touch-icon/g, `/favico/${activeVariant}/apple-touch-icon`)
@@ -121,6 +122,9 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
           // twitter:site / twitter:creator — switch to GEV author
           .replace(/<meta name="twitter:site" content="[^"]*"[^>]*\/>/, '<meta name="twitter:site" content="@natantheskier" />')
           .replace(/<meta name="twitter:creator" content="[^"]*"[^>]*\/>/, '<meta name="twitter:creator" content="@natantheskier" />')
+          // Drop the World Monitor Umami tag — it's keyed to worldmonitor.app
+          // domains and would send GEV traffic to WM's analytics instance.
+          .replace(/\s*<!-- Umami Analytics -->\s*<script defer src="https:\/\/abacus\.worldmonitor\.app[^>]*><\/script>/, '')
           // JSON-LD: replace the entire structured data block with clean GEV schema
           .replace(
             /<script type="application\/ld\+json">[\s\S]*?<\/script>/,

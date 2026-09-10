@@ -1,0 +1,2866 @@
+{
+  "generated_at": "2026-07-22T05:01:52.517440+00:00",
+  "attribution": "Source: Ember (ember-energy.org), CC-BY-4.0",
+  "metric": "generation",
+  "unit_note": "mix values are each fuel's share of total generation for the period",
+  "country_count": 212,
+  "unmatched_iso3": [],
+  "countries": {
+    "AW": {
+      "iso3": "ABW",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.0,
+      "mix": {
+        "other_fossil": 0.83,
+        "wind": 0.14,
+        "solar": 0.03
+      }
+    },
+    "AF": {
+      "iso3": "AFG",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.99,
+      "mix": {
+        "hydro": 0.7576,
+        "solar": 0.1111,
+        "other_fossil": 0.101,
+        "coal": 0.0303
+      }
+    },
+    "AO": {
+      "iso3": "AGO",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 15.59,
+      "mix": {
+        "hydro": 0.7056,
+        "other_fossil": 0.1732,
+        "gas": 0.0898,
+        "solar": 0.0282,
+        "bioenergy": 0.0032
+      }
+    },
+    "AE": {
+      "iso3": "ARE",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 177.26,
+      "mix": {
+        "gas": 0.6827,
+        "nuclear": 0.2292,
+        "solar": 0.0858,
+        "bioenergy": 0.0012,
+        "wind": 0.0011
+      }
+    },
+    "AR": {
+      "iso3": "ARG",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 11.85,
+      "mix": {
+        "gas": 0.4979,
+        "hydro": 0.2523,
+        "wind": 0.1224,
+        "nuclear": 0.0658,
+        "solar": 0.0354,
+        "other_fossil": 0.0143,
+        "bioenergy": 0.0093,
+        "coal": 0.0025
+      }
+    },
+    "AM": {
+      "iso3": "ARM",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 0.94,
+      "mix": {
+        "gas": 0.4149,
+        "nuclear": 0.3191,
+        "hydro": 0.1809,
+        "solar": 0.0851
+      }
+    },
+    "AS": {
+      "iso3": "ASM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.18,
+      "mix": {
+        "other_fossil": 0.9444,
+        "solar": 0.0556
+      }
+    },
+    "AG": {
+      "iso3": "ATG",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.37,
+      "mix": {
+        "other_fossil": 0.9189,
+        "solar": 0.0811
+      }
+    },
+    "AU": {
+      "iso3": "AUS",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 20.22,
+      "mix": {
+        "coal": 0.5193,
+        "wind": 0.179,
+        "solar": 0.1316,
+        "gas": 0.0905,
+        "hydro": 0.0762,
+        "bioenergy": 0.0035
+      }
+    },
+    "AT": {
+      "iso3": "AUT",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 5.69,
+      "mix": {
+        "hydro": 0.6011,
+        "solar": 0.2654,
+        "wind": 0.0861,
+        "bioenergy": 0.0228,
+        "other_fossil": 0.0158,
+        "gas": 0.0088
+      }
+    },
+    "AZ": {
+      "iso3": "AZE",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 2.29,
+      "mix": {
+        "gas": 0.8035,
+        "hydro": 0.1266,
+        "wind": 0.0524,
+        "solar": 0.0131,
+        "other_fossil": 0.0044
+      }
+    },
+    "BI": {
+      "iso3": "BDI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.49,
+      "mix": {
+        "hydro": 0.7347,
+        "other_fossil": 0.2449,
+        "bioenergy": 0.0204
+      }
+    },
+    "BE": {
+      "iso3": "BEL",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 4.32,
+      "mix": {
+        "solar": 0.3472,
+        "gas": 0.3079,
+        "wind": 0.2292,
+        "other_fossil": 0.0833,
+        "bioenergy": 0.0301,
+        "hydro": 0.0023
+      }
+    },
+    "BJ": {
+      "iso3": "BEN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.01,
+      "mix": {
+        "gas": 0.7228,
+        "other_fossil": 0.2376,
+        "solar": 0.0396
+      }
+    },
+    "BF": {
+      "iso3": "BFA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.69,
+      "mix": {
+        "other_fossil": 0.8284,
+        "solar": 0.0651,
+        "bioenergy": 0.0533,
+        "hydro": 0.0533
+      }
+    },
+    "BD": {
+      "iso3": "BGD",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 7.9,
+      "mix": {
+        "gas": 0.4987,
+        "coal": 0.4013,
+        "other_fossil": 0.0785,
+        "solar": 0.0152,
+        "hydro": 0.0051,
+        "wind": 0.0013
+      }
+    },
+    "BG": {
+      "iso3": "BGR",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 2.96,
+      "mix": {
+        "nuclear": 0.3412,
+        "solar": 0.3142,
+        "hydro": 0.1791,
+        "coal": 0.1115,
+        "gas": 0.0338,
+        "wind": 0.0169,
+        "bioenergy": 0.0034
+      }
+    },
+    "BH": {
+      "iso3": "BHR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 37.95,
+      "mix": {
+        "gas": 0.9974,
+        "solar": 0.0026
+      }
+    },
+    "BS": {
+      "iso3": "BHS",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 2.25,
+      "mix": {
+        "other_fossil": 0.9911,
+        "solar": 0.0089
+      }
+    },
+    "BA": {
+      "iso3": "BIH",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.79,
+      "mix": {
+        "coal": 0.5696,
+        "hydro": 0.3418,
+        "solar": 0.0886
+      }
+    },
+    "BY": {
+      "iso3": "BLR",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 3.92,
+      "mix": {
+        "gas": 0.5791,
+        "nuclear": 0.2781,
+        "other_fossil": 0.0969,
+        "hydro": 0.0179,
+        "bioenergy": 0.0128,
+        "wind": 0.0102,
+        "solar": 0.0051
+      }
+    },
+    "BZ": {
+      "iso3": "BLZ",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.47,
+      "mix": {
+        "hydro": 0.5106,
+        "bioenergy": 0.3404,
+        "other_fossil": 0.1277,
+        "solar": 0.0213
+      }
+    },
+    "BM": {
+      "iso3": "BMU",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.61,
+      "mix": {
+        "other_fossil": 0.9836,
+        "bioenergy": 0.0164
+      }
+    },
+    "BO": {
+      "iso3": "BOL",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 0.94,
+      "mix": {
+        "gas": 0.6702,
+        "hydro": 0.266,
+        "solar": 0.0319,
+        "wind": 0.0319
+      }
+    },
+    "BR": {
+      "iso3": "BRA",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 63.6,
+      "mix": {
+        "hydro": 0.5899,
+        "solar": 0.1388,
+        "wind": 0.1176,
+        "gas": 0.0619,
+        "bioenergy": 0.0553,
+        "nuclear": 0.022,
+        "coal": 0.0086,
+        "other_fossil": 0.0057
+      }
+    },
+    "BB": {
+      "iso3": "BRB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.11,
+      "mix": {
+        "other_fossil": 0.8829,
+        "solar": 0.0901,
+        "gas": 0.027
+      }
+    },
+    "BN": {
+      "iso3": "BRN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 5.56,
+      "mix": {
+        "gas": 0.7914,
+        "coal": 0.1978,
+        "other_fossil": 0.009,
+        "solar": 0.0018
+      }
+    },
+    "BT": {
+      "iso3": "BTN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 11.0,
+      "mix": {
+        "hydro": 1.0
+      }
+    },
+    "BW": {
+      "iso3": "BWA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 3.43,
+      "mix": {
+        "coal": 0.9825,
+        "other_fossil": 0.0146,
+        "solar": 0.0029
+      }
+    },
+    "CF": {
+      "iso3": "CAF",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.14,
+      "mix": {
+        "hydro": 1.0
+      }
+    },
+    "CA": {
+      "iso3": "CAN",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 50.16,
+      "mix": {
+        "hydro": 0.5702,
+        "gas": 0.1589,
+        "nuclear": 0.1258,
+        "wind": 0.0895,
+        "coal": 0.0207,
+        "bioenergy": 0.0146,
+        "solar": 0.012,
+        "other_fossil": 0.0078,
+        "other_renewables": 0.0006
+      }
+    },
+    "CH": {
+      "iso3": "CHE",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 5.7,
+      "mix": {
+        "hydro": 0.5211,
+        "solar": 0.2351,
+        "nuclear": 0.2,
+        "other_fossil": 0.0421,
+        "wind": 0.0018
+      }
+    },
+    "CL": {
+      "iso3": "CHL",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 6.94,
+      "mix": {
+        "solar": 0.2608,
+        "coal": 0.1844,
+        "gas": 0.1772,
+        "hydro": 0.1744,
+        "wind": 0.1571,
+        "bioenergy": 0.0259,
+        "other_fossil": 0.0187,
+        "other_renewables": 0.0014
+      }
+    },
+    "CN": {
+      "iso3": "CHN",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 864.44,
+      "mix": {
+        "coal": 0.5038,
+        "solar": 0.1553,
+        "hydro": 0.13,
+        "wind": 0.1194,
+        "nuclear": 0.0468,
+        "gas": 0.0258,
+        "bioenergy": 0.0175,
+        "other_fossil": 0.0014
+      }
+    },
+    "CI": {
+      "iso3": "CIV",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 10.79,
+      "mix": {
+        "gas": 0.709,
+        "hydro": 0.278,
+        "bioenergy": 0.0093,
+        "other_fossil": 0.0019,
+        "solar": 0.0019
+      }
+    },
+    "CM": {
+      "iso3": "CMR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 7.26,
+      "mix": {
+        "hydro": 0.7204,
+        "gas": 0.2204,
+        "other_fossil": 0.0482,
+        "bioenergy": 0.0055,
+        "solar": 0.0055
+      }
+    },
+    "CD": {
+      "iso3": "COD",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 15.92,
+      "mix": {
+        "hydro": 0.8417,
+        "solar": 0.1577,
+        "bioenergy": 0.0006
+      }
+    },
+    "CG": {
+      "iso3": "COG",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 5.46,
+      "mix": {
+        "gas": 0.7381,
+        "hydro": 0.2015,
+        "other_fossil": 0.0531,
+        "bioenergy": 0.0055,
+        "solar": 0.0018
+      }
+    },
+    "CK": {
+      "iso3": "COK",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.04,
+      "mix": {
+        "other_fossil": 0.5,
+        "solar": 0.5
+      }
+    },
+    "CO": {
+      "iso3": "COL",
+      "cadence": "monthly",
+      "period": "2025-12",
+      "period_label": "Dec 2025",
+      "total_twh": 7.38,
+      "mix": {
+        "hydro": 0.7981,
+        "gas": 0.065,
+        "solar": 0.0623,
+        "coal": 0.0528,
+        "bioenergy": 0.0136,
+        "other_fossil": 0.0054,
+        "wind": 0.0027
+      }
+    },
+    "KM": {
+      "iso3": "COM",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.14,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "CV": {
+      "iso3": "CPV",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.52,
+      "mix": {
+        "other_fossil": 0.6923,
+        "solar": 0.1538,
+        "wind": 0.1538
+      }
+    },
+    "CR": {
+      "iso3": "CRI",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 1.12,
+      "mix": {
+        "hydro": 0.75,
+        "other_renewables": 0.0982,
+        "wind": 0.0982,
+        "other_fossil": 0.0536
+      }
+    },
+    "CU": {
+      "iso3": "CUB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 19.43,
+      "mix": {
+        "other_fossil": 0.8235,
+        "gas": 0.1364,
+        "bioenergy": 0.018,
+        "solar": 0.0124,
+        "hydro": 0.0062,
+        "wind": 0.0036
+      }
+    },
+    "KY": {
+      "iso3": "CYM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.71,
+      "mix": {
+        "other_fossil": 0.9577,
+        "solar": 0.0423
+      }
+    },
+    "CY": {
+      "iso3": "CYP",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 0.51,
+      "mix": {
+        "other_fossil": 0.6471,
+        "solar": 0.3137,
+        "wind": 0.0392
+      }
+    },
+    "CZ": {
+      "iso3": "CZE",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 5.58,
+      "mix": {
+        "nuclear": 0.4516,
+        "coal": 0.2616,
+        "solar": 0.1219,
+        "gas": 0.0538,
+        "bioenergy": 0.0376,
+        "other_renewables": 0.0341,
+        "hydro": 0.0179,
+        "other_fossil": 0.0143,
+        "wind": 0.0072
+      }
+    },
+    "DE": {
+      "iso3": "DEU",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 38.31,
+      "mix": {
+        "solar": 0.3553,
+        "wind": 0.2031,
+        "coal": 0.1506,
+        "gas": 0.1222,
+        "bioenergy": 0.0796,
+        "hydro": 0.047,
+        "other_fossil": 0.0347,
+        "other_renewables": 0.0076
+      }
+    },
+    "DJ": {
+      "iso3": "DJI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.2,
+      "mix": {
+        "other_fossil": 0.65,
+        "wind": 0.35
+      }
+    },
+    "DM": {
+      "iso3": "DMA",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.15,
+      "mix": {
+        "other_fossil": 0.8667,
+        "hydro": 0.1333
+      }
+    },
+    "DK": {
+      "iso3": "DNK",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 2.37,
+      "mix": {
+        "wind": 0.4768,
+        "solar": 0.3249,
+        "bioenergy": 0.1181,
+        "other_fossil": 0.0591,
+        "gas": 0.0211
+      }
+    },
+    "DO": {
+      "iso3": "DOM",
+      "cadence": "monthly",
+      "period": "2026-01",
+      "period_label": "Jan 2026",
+      "total_twh": 1.8,
+      "mix": {
+        "gas": 0.35,
+        "coal": 0.3056,
+        "other_fossil": 0.1222,
+        "solar": 0.0889,
+        "hydro": 0.0667,
+        "wind": 0.0556,
+        "bioenergy": 0.0111
+      }
+    },
+    "DZ": {
+      "iso3": "DZA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 96.36,
+      "mix": {
+        "gas": 0.9859,
+        "solar": 0.0103,
+        "other_fossil": 0.0034,
+        "hydro": 0.0002,
+        "wind": 0.0002
+      }
+    },
+    "EC": {
+      "iso3": "ECU",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 3.45,
+      "mix": {
+        "hydro": 0.6638,
+        "other_fossil": 0.3014,
+        "gas": 0.0319,
+        "wind": 0.0029
+      }
+    },
+    "EG": {
+      "iso3": "EGY",
+      "cadence": "monthly",
+      "period": "2025-12",
+      "period_label": "Dec 2025",
+      "total_twh": 18.6,
+      "mix": {
+        "gas": 0.8054,
+        "other_fossil": 0.0742,
+        "hydro": 0.0683,
+        "wind": 0.0301,
+        "solar": 0.0215,
+        "bioenergy": 0.0005
+      }
+    },
+    "ER": {
+      "iso3": "ERI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.45,
+      "mix": {
+        "other_fossil": 0.8889,
+        "solar": 0.1111
+      }
+    },
+    "EH": {
+      "iso3": "ESH",
+      "cadence": "yearly",
+      "period": "2009-01",
+      "period_label": "2009",
+      "total_twh": 0.09,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "ES": {
+      "iso3": "ESP",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 22.19,
+      "mix": {
+        "solar": 0.3434,
+        "nuclear": 0.2005,
+        "gas": 0.1884,
+        "wind": 0.1577,
+        "hydro": 0.0838,
+        "bioenergy": 0.0149,
+        "other_fossil": 0.0086,
+        "other_renewables": 0.0023,
+        "coal": 0.0005
+      }
+    },
+    "EE": {
+      "iso3": "EST",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.32,
+      "mix": {
+        "solar": 0.4688,
+        "other_fossil": 0.25,
+        "wind": 0.1875,
+        "bioenergy": 0.0938
+      }
+    },
+    "ET": {
+      "iso3": "ETH",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 33.37,
+      "mix": {
+        "hydro": 0.9646,
+        "wind": 0.033,
+        "solar": 0.0012,
+        "other_renewables": 0.0009,
+        "bioenergy": 0.0003
+      }
+    },
+    "FI": {
+      "iso3": "FIN",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 5.57,
+      "mix": {
+        "nuclear": 0.4704,
+        "wind": 0.2352,
+        "hydro": 0.1329,
+        "bioenergy": 0.1077,
+        "solar": 0.0341,
+        "other_fossil": 0.0162,
+        "other_renewables": 0.0036
+      }
+    },
+    "FJ": {
+      "iso3": "FJI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.15,
+      "mix": {
+        "hydro": 0.5217,
+        "other_fossil": 0.3652,
+        "bioenergy": 0.1043,
+        "solar": 0.0087
+      }
+    },
+    "FK": {
+      "iso3": "FLK",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.01,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "FR": {
+      "iso3": "FRA",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 40.17,
+      "mix": {
+        "nuclear": 0.6911,
+        "solar": 0.109,
+        "hydro": 0.0886,
+        "wind": 0.0739,
+        "gas": 0.0236,
+        "other_fossil": 0.0082,
+        "bioenergy": 0.0055
+      }
+    },
+    "FO": {
+      "iso3": "FRO",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.49,
+      "mix": {
+        "other_fossil": 0.5306,
+        "hydro": 0.2653,
+        "wind": 0.1837,
+        "bioenergy": 0.0204
+      }
+    },
+    "GA": {
+      "iso3": "GAB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 2.6,
+      "mix": {
+        "gas": 0.4423,
+        "hydro": 0.35,
+        "other_fossil": 0.2038,
+        "bioenergy": 0.0038
+      }
+    },
+    "GB": {
+      "iso3": "GBR",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 18.45,
+      "mix": {
+        "wind": 0.3187,
+        "gas": 0.3165,
+        "solar": 0.1463,
+        "nuclear": 0.1149,
+        "bioenergy": 0.064,
+        "other_fossil": 0.0282,
+        "hydro": 0.0114
+      }
+    },
+    "GE": {
+      "iso3": "GEO",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 1.19,
+      "mix": {
+        "hydro": 0.9916,
+        "wind": 0.0084
+      }
+    },
+    "GH": {
+      "iso3": "GHA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 24.27,
+      "mix": {
+        "gas": 0.6143,
+        "hydro": 0.3543,
+        "other_fossil": 0.0235,
+        "solar": 0.007,
+        "bioenergy": 0.0008
+      }
+    },
+    "GI": {
+      "iso3": "GIB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.22,
+      "mix": {
+        "gas": 0.8182,
+        "other_fossil": 0.1818
+      }
+    },
+    "GN": {
+      "iso3": "GIN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 4.03,
+      "mix": {
+        "hydro": 0.7444,
+        "other_fossil": 0.2481,
+        "solar": 0.0074
+      }
+    },
+    "GP": {
+      "iso3": "GLP",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 1.67,
+      "mix": {
+        "other_fossil": 0.515,
+        "bioenergy": 0.1557,
+        "coal": 0.1317,
+        "other_renewables": 0.0659,
+        "solar": 0.0659,
+        "wind": 0.0599,
+        "hydro": 0.006
+      }
+    },
+    "GM": {
+      "iso3": "GMB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.51,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "GW": {
+      "iso3": "GNB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.08,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "GQ": {
+      "iso3": "GNQ",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.49,
+      "mix": {
+        "gas": 0.7248,
+        "hydro": 0.2685,
+        "other_fossil": 0.0067
+      }
+    },
+    "GR": {
+      "iso3": "GRC",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 4.73,
+      "mix": {
+        "gas": 0.3869,
+        "solar": 0.3192,
+        "wind": 0.1966,
+        "hydro": 0.0698,
+        "coal": 0.0275
+      }
+    },
+    "GD": {
+      "iso3": "GRD",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.24,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "GL": {
+      "iso3": "GRL",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.6,
+      "mix": {
+        "hydro": 0.7833,
+        "other_fossil": 0.1667,
+        "bioenergy": 0.05
+      }
+    },
+    "GT": {
+      "iso3": "GTM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 15.79,
+      "mix": {
+        "hydro": 0.399,
+        "bioenergy": 0.2217,
+        "coal": 0.1583,
+        "other_fossil": 0.1583,
+        "wind": 0.0234,
+        "other_renewables": 0.0215,
+        "solar": 0.0177
+      }
+    },
+    "GF": {
+      "iso3": "GUF",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.98,
+      "mix": {
+        "hydro": 0.5306,
+        "other_fossil": 0.3469,
+        "bioenergy": 0.0612,
+        "solar": 0.0612
+      }
+    },
+    "GU": {
+      "iso3": "GUM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.86,
+      "mix": {
+        "other_fossil": 0.914,
+        "solar": 0.086
+      }
+    },
+    "GY": {
+      "iso3": "GUY",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.38,
+      "mix": {
+        "other_fossil": 0.9638,
+        "bioenergy": 0.0145,
+        "solar": 0.0145,
+        "gas": 0.0072
+      }
+    },
+    "HK": {
+      "iso3": "HKG",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 37.44,
+      "mix": {
+        "gas": 0.641,
+        "coal": 0.3365,
+        "other_fossil": 0.012,
+        "solar": 0.0061,
+        "bioenergy": 0.0043
+      }
+    },
+    "HN": {
+      "iso3": "HND",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 12.48,
+      "mix": {
+        "other_fossil": 0.4407,
+        "hydro": 0.3045,
+        "solar": 0.0946,
+        "bioenergy": 0.0673,
+        "wind": 0.0601,
+        "other_renewables": 0.028,
+        "coal": 0.0048
+      }
+    },
+    "HR": {
+      "iso3": "HRV",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.69,
+      "mix": {
+        "hydro": 0.3768,
+        "wind": 0.2174,
+        "solar": 0.1594,
+        "gas": 0.1014,
+        "bioenergy": 0.0725,
+        "coal": 0.0435,
+        "other_renewables": 0.029
+      }
+    },
+    "HT": {
+      "iso3": "HTI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.86,
+      "mix": {
+        "other_fossil": 0.814,
+        "hydro": 0.186
+      }
+    },
+    "HU": {
+      "iso3": "HUN",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 3.74,
+      "mix": {
+        "solar": 0.4599,
+        "nuclear": 0.3316,
+        "gas": 0.1257,
+        "bioenergy": 0.0294,
+        "coal": 0.0267,
+        "other_fossil": 0.0134,
+        "wind": 0.008,
+        "hydro": 0.0027,
+        "other_renewables": 0.0027
+      }
+    },
+    "ID": {
+      "iso3": "IDN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 371.54,
+      "mix": {
+        "coal": 0.6148,
+        "gas": 0.1851,
+        "hydro": 0.0735,
+        "bioenergy": 0.0574,
+        "other_renewables": 0.0451,
+        "other_fossil": 0.0192,
+        "solar": 0.0036,
+        "wind": 0.0013
+      }
+    },
+    "IN": {
+      "iso3": "IND",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 181.38,
+      "mix": {
+        "coal": 0.672,
+        "solar": 0.1425,
+        "hydro": 0.0737,
+        "wind": 0.0632,
+        "nuclear": 0.0315,
+        "gas": 0.012,
+        "bioenergy": 0.0035,
+        "other_renewables": 0.0014,
+        "other_fossil": 0.0002
+      }
+    },
+    "IE": {
+      "iso3": "IRL",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 2.21,
+      "mix": {
+        "gas": 0.5113,
+        "wind": 0.3529,
+        "solar": 0.0995,
+        "bioenergy": 0.0226,
+        "hydro": 0.009,
+        "other_fossil": 0.0045
+      }
+    },
+    "IR": {
+      "iso3": "IRN",
+      "cadence": "monthly",
+      "period": "2025-04",
+      "period_label": "Apr 2025",
+      "total_twh": 30.25,
+      "mix": {
+        "gas": 0.8512,
+        "other_fossil": 0.114,
+        "hydro": 0.0347
+      }
+    },
+    "IQ": {
+      "iso3": "IRQ",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 149.73,
+      "mix": {
+        "gas": 0.5296,
+        "other_fossil": 0.4542,
+        "hydro": 0.0134,
+        "solar": 0.0029
+      }
+    },
+    "IS": {
+      "iso3": "ISL",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 19.05,
+      "mix": {
+        "hydro": 0.7066,
+        "other_renewables": 0.2924,
+        "solar": 0.0005,
+        "wind": 0.0005
+      }
+    },
+    "IL": {
+      "iso3": "ISR",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 82.1,
+      "mix": {
+        "gas": 0.7966,
+        "solar": 0.1618,
+        "coal": 0.0341,
+        "wind": 0.0056,
+        "bioenergy": 0.0019
+      }
+    },
+    "IT": {
+      "iso3": "ITA",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 23.59,
+      "mix": {
+        "gas": 0.3883,
+        "solar": 0.2777,
+        "hydro": 0.1916,
+        "bioenergy": 0.0509,
+        "wind": 0.0504,
+        "other_renewables": 0.0178,
+        "other_fossil": 0.0165,
+        "coal": 0.0068
+      }
+    },
+    "JM": {
+      "iso3": "JAM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 4.92,
+      "mix": {
+        "gas": 0.5691,
+        "other_fossil": 0.3049,
+        "wind": 0.0589,
+        "solar": 0.0305,
+        "hydro": 0.0244,
+        "bioenergy": 0.0122
+      }
+    },
+    "JO": {
+      "iso3": "JOR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 23.67,
+      "mix": {
+        "gas": 0.6198,
+        "solar": 0.166,
+        "other_fossil": 0.1394,
+        "wind": 0.0739,
+        "hydro": 0.0008
+      }
+    },
+    "JP": {
+      "iso3": "JPN",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 77.98,
+      "mix": {
+        "coal": 0.2925,
+        "gas": 0.2776,
+        "solar": 0.1298,
+        "nuclear": 0.093,
+        "bioenergy": 0.0772,
+        "hydro": 0.0595,
+        "other_fossil": 0.0348,
+        "wind": 0.0249,
+        "other_renewables": 0.0108
+      }
+    },
+    "KZ": {
+      "iso3": "KAZ",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 11.3,
+      "mix": {
+        "coal": 0.554,
+        "gas": 0.3,
+        "wind": 0.0566,
+        "hydro": 0.0558,
+        "solar": 0.0186,
+        "other_fossil": 0.015
+      }
+    },
+    "KE": {
+      "iso3": "KEN",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 1.13,
+      "mix": {
+        "other_renewables": 0.4867,
+        "hydro": 0.2566,
+        "wind": 0.1327,
+        "other_fossil": 0.0708,
+        "solar": 0.0354,
+        "bioenergy": 0.0177
+      }
+    },
+    "KG": {
+      "iso3": "KGZ",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 15.7,
+      "mix": {
+        "hydro": 0.8516,
+        "coal": 0.1242,
+        "gas": 0.0178,
+        "other_fossil": 0.0064
+      }
+    },
+    "KH": {
+      "iso3": "KHM",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 17.76,
+      "mix": {
+        "coal": 0.5659,
+        "hydro": 0.299,
+        "solar": 0.1064,
+        "other_fossil": 0.0253,
+        "bioenergy": 0.0034
+      }
+    },
+    "KI": {
+      "iso3": "KIR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.04,
+      "mix": {
+        "other_fossil": 0.75,
+        "solar": 0.25
+      }
+    },
+    "KN": {
+      "iso3": "KNA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.23,
+      "mix": {
+        "other_fossil": 0.913,
+        "solar": 0.0435,
+        "wind": 0.0435
+      }
+    },
+    "KR": {
+      "iso3": "KOR",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 44.12,
+      "mix": {
+        "nuclear": 0.3085,
+        "gas": 0.3051,
+        "coal": 0.2505,
+        "solar": 0.0929,
+        "bioenergy": 0.0211,
+        "other_fossil": 0.0086,
+        "wind": 0.0063,
+        "hydro": 0.0054,
+        "other_renewables": 0.0016
+      }
+    },
+    "KW": {
+      "iso3": "KWT",
+      "cadence": "monthly",
+      "period": "2025-11",
+      "period_label": "Nov 2025",
+      "total_twh": 5.19,
+      "mix": {
+        "gas": 0.5819,
+        "other_fossil": 0.4181
+      }
+    },
+    "LA": {
+      "iso3": "LAO",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 52.31,
+      "mix": {
+        "hydro": 0.7647,
+        "coal": 0.2328,
+        "solar": 0.0017,
+        "bioenergy": 0.0008
+      }
+    },
+    "LB": {
+      "iso3": "LBN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 5.34,
+      "mix": {
+        "other_fossil": 0.5618,
+        "solar": 0.2996,
+        "hydro": 0.1311,
+        "bioenergy": 0.0056,
+        "wind": 0.0019
+      }
+    },
+    "LR": {
+      "iso3": "LBR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.57,
+      "mix": {
+        "hydro": 0.5263,
+        "other_fossil": 0.4561,
+        "solar": 0.0175
+      }
+    },
+    "LY": {
+      "iso3": "LBY",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 34.59,
+      "mix": {
+        "gas": 0.7453,
+        "other_fossil": 0.2544,
+        "solar": 0.0003
+      }
+    },
+    "LC": {
+      "iso3": "LCA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.4,
+      "mix": {
+        "other_fossil": 0.975,
+        "solar": 0.025
+      }
+    },
+    "LK": {
+      "iso3": "LKA",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 17.25,
+      "mix": {
+        "hydro": 0.382,
+        "coal": 0.2678,
+        "solar": 0.1757,
+        "other_fossil": 0.1049,
+        "wind": 0.0539,
+        "bioenergy": 0.0133,
+        "other_renewables": 0.0023
+      }
+    },
+    "LT": {
+      "iso3": "LTU",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.83,
+      "mix": {
+        "solar": 0.506,
+        "wind": 0.3012,
+        "other_fossil": 0.1084,
+        "gas": 0.0482,
+        "hydro": 0.0241,
+        "bioenergy": 0.012
+      }
+    },
+    "LU": {
+      "iso3": "LUX",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.12,
+      "mix": {
+        "solar": 0.5833,
+        "wind": 0.25,
+        "bioenergy": 0.0833,
+        "other_fossil": 0.0833
+      }
+    },
+    "LV": {
+      "iso3": "LVA",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.45,
+      "mix": {
+        "solar": 0.5333,
+        "hydro": 0.3333,
+        "bioenergy": 0.0444,
+        "wind": 0.0444,
+        "gas": 0.0222,
+        "other_fossil": 0.0222
+      }
+    },
+    "MO": {
+      "iso3": "MAC",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.78,
+      "mix": {
+        "gas": 0.6282,
+        "bioenergy": 0.3077,
+        "other_fossil": 0.0641
+      }
+    },
+    "MA": {
+      "iso3": "MAR",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 3.39,
+      "mix": {
+        "coal": 0.5428,
+        "wind": 0.2832,
+        "gas": 0.0678,
+        "solar": 0.0501,
+        "hydro": 0.0472,
+        "other_fossil": 0.0088
+      }
+    },
+    "MD": {
+      "iso3": "MDA",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 0.17,
+      "mix": {
+        "gas": 0.6471,
+        "solar": 0.1765,
+        "hydro": 0.1176,
+        "wind": 0.0588
+      }
+    },
+    "MG": {
+      "iso3": "MDG",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 2.43,
+      "mix": {
+        "hydro": 0.3704,
+        "other_fossil": 0.3704,
+        "coal": 0.2058,
+        "solar": 0.0412,
+        "bioenergy": 0.0123
+      }
+    },
+    "MV": {
+      "iso3": "MDV",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.85,
+      "mix": {
+        "other_fossil": 0.9294,
+        "solar": 0.0706
+      }
+    },
+    "MX": {
+      "iso3": "MEX",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 33.46,
+      "mix": {
+        "gas": 0.6351,
+        "other_fossil": 0.0816,
+        "hydro": 0.0792,
+        "solar": 0.0574,
+        "coal": 0.0571,
+        "wind": 0.0475,
+        "nuclear": 0.0335,
+        "other_renewables": 0.0084,
+        "bioenergy": 0.0003
+      }
+    },
+    "MK": {
+      "iso3": "MKD",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 0.58,
+      "mix": {
+        "hydro": 0.3621,
+        "coal": 0.2931,
+        "solar": 0.2759,
+        "wind": 0.069
+      }
+    },
+    "ML": {
+      "iso3": "MLI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 5.96,
+      "mix": {
+        "other_fossil": 0.8054,
+        "hydro": 0.1544,
+        "solar": 0.0285,
+        "bioenergy": 0.0117
+      }
+    },
+    "MT": {
+      "iso3": "MLT",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 0.27,
+      "mix": {
+        "gas": 0.7407,
+        "solar": 0.2593
+      }
+    },
+    "MM": {
+      "iso3": "MMR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 21.71,
+      "mix": {
+        "gas": 0.4606,
+        "hydro": 0.4606,
+        "coal": 0.0553,
+        "bioenergy": 0.0124,
+        "other_fossil": 0.0055,
+        "solar": 0.0055
+      }
+    },
+    "ME": {
+      "iso3": "MNE",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 0.23,
+      "mix": {
+        "coal": 0.6087,
+        "hydro": 0.2174,
+        "solar": 0.087,
+        "wind": 0.087
+      }
+    },
+    "MN": {
+      "iso3": "MNG",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 0.76,
+      "mix": {
+        "coal": 0.8947,
+        "wind": 0.1053
+      }
+    },
+    "MZ": {
+      "iso3": "MOZ",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 19.79,
+      "mix": {
+        "hydro": 0.8236,
+        "gas": 0.1582,
+        "other_fossil": 0.0076,
+        "bioenergy": 0.0066,
+        "solar": 0.004
+      }
+    },
+    "MR": {
+      "iso3": "MRT",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 2.07,
+      "mix": {
+        "other_fossil": 0.7729,
+        "hydro": 0.1014,
+        "solar": 0.0773,
+        "wind": 0.0483
+      }
+    },
+    "MS": {
+      "iso3": "MSR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.01,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "MQ": {
+      "iso3": "MTQ",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 1.51,
+      "mix": {
+        "other_fossil": 0.7417,
+        "bioenergy": 0.1589,
+        "solar": 0.0728,
+        "wind": 0.0199,
+        "other_renewables": 0.0066
+      }
+    },
+    "MU": {
+      "iso3": "MUS",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 3.41,
+      "mix": {
+        "other_fossil": 0.4282,
+        "coal": 0.393,
+        "bioenergy": 0.0938,
+        "solar": 0.0499,
+        "hydro": 0.0323,
+        "wind": 0.0029
+      }
+    },
+    "MW": {
+      "iso3": "MWI",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.83,
+      "mix": {
+        "hydro": 0.9235,
+        "other_fossil": 0.0437,
+        "bioenergy": 0.0273,
+        "solar": 0.0055
+      }
+    },
+    "MY": {
+      "iso3": "MYS",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 17.11,
+      "mix": {
+        "coal": 0.4103,
+        "gas": 0.3828,
+        "hydro": 0.1572,
+        "bioenergy": 0.0269,
+        "solar": 0.0181,
+        "other_fossil": 0.0047
+      }
+    },
+    "NA": {
+      "iso3": "NAM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.64,
+      "mix": {
+        "hydro": 0.6098,
+        "solar": 0.3537,
+        "coal": 0.0244,
+        "wind": 0.0122
+      }
+    },
+    "NC": {
+      "iso3": "NCL",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 3.12,
+      "mix": {
+        "coal": 0.3654,
+        "other_fossil": 0.3654,
+        "hydro": 0.1731,
+        "solar": 0.0833,
+        "wind": 0.0128
+      }
+    },
+    "NE": {
+      "iso3": "NER",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.95,
+      "mix": {
+        "other_fossil": 0.7368,
+        "coal": 0.1789,
+        "gas": 0.0526,
+        "solar": 0.0316
+      }
+    },
+    "NG": {
+      "iso3": "NGA",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 2.52,
+      "mix": {
+        "gas": 0.6032,
+        "hydro": 0.3968
+      }
+    },
+    "NI": {
+      "iso3": "NIC",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 4.52,
+      "mix": {
+        "other_fossil": 0.3761,
+        "bioenergy": 0.1969,
+        "other_renewables": 0.1527,
+        "hydro": 0.1438,
+        "wind": 0.1239,
+        "solar": 0.0066
+      }
+    },
+    "NL": {
+      "iso3": "NLD",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 11.18,
+      "mix": {
+        "solar": 0.3426,
+        "gas": 0.2898,
+        "wind": 0.2147,
+        "coal": 0.059,
+        "bioenergy": 0.0358,
+        "nuclear": 0.0259,
+        "other_fossil": 0.0206,
+        "other_renewables": 0.0116
+      }
+    },
+    "NO": {
+      "iso3": "NOR",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 11.03,
+      "mix": {
+        "hydro": 0.9075,
+        "wind": 0.0789,
+        "gas": 0.0082,
+        "other_renewables": 0.0036,
+        "other_fossil": 0.0018
+      }
+    },
+    "NP": {
+      "iso3": "NPL",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 11.13,
+      "mix": {
+        "hydro": 0.9883,
+        "solar": 0.0108,
+        "wind": 0.0009
+      }
+    },
+    "NR": {
+      "iso3": "NRU",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.05,
+      "mix": {
+        "other_fossil": 0.8,
+        "solar": 0.2
+      }
+    },
+    "NZ": {
+      "iso3": "NZL",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 3.44,
+      "mix": {
+        "hydro": 0.6105,
+        "other_renewables": 0.2297,
+        "gas": 0.0785,
+        "wind": 0.0756,
+        "coal": 0.0058
+      }
+    },
+    "OM": {
+      "iso3": "OMN",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 5.27,
+      "mix": {
+        "gas": 1.0
+      }
+    },
+    "PK": {
+      "iso3": "PAK",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 13.18,
+      "mix": {
+        "solar": 0.3323,
+        "coal": 0.2071,
+        "hydro": 0.1601,
+        "nuclear": 0.1487,
+        "gas": 0.1153,
+        "wind": 0.0235,
+        "other_fossil": 0.0068,
+        "bioenergy": 0.0061
+      }
+    },
+    "PA": {
+      "iso3": "PAN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 13.43,
+      "mix": {
+        "hydro": 0.5309,
+        "gas": 0.2085,
+        "other_fossil": 0.0745,
+        "solar": 0.0737,
+        "wind": 0.0715,
+        "coal": 0.0372,
+        "bioenergy": 0.0037
+      }
+    },
+    "PE": {
+      "iso3": "PER",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 5.36,
+      "mix": {
+        "hydro": 0.5373,
+        "gas": 0.3507,
+        "wind": 0.0541,
+        "solar": 0.0448,
+        "bioenergy": 0.0075,
+        "other_fossil": 0.0056
+      }
+    },
+    "PH": {
+      "iso3": "PHL",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 9.9,
+      "mix": {
+        "coal": 0.6,
+        "gas": 0.1667,
+        "other_renewables": 0.0788,
+        "hydro": 0.0707,
+        "solar": 0.0535,
+        "other_fossil": 0.0192,
+        "bioenergy": 0.0061,
+        "wind": 0.0051
+      }
+    },
+    "PG": {
+      "iso3": "PNG",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 4.73,
+      "mix": {
+        "other_fossil": 0.5708,
+        "hydro": 0.2114,
+        "gas": 0.1924,
+        "other_renewables": 0.0211,
+        "bioenergy": 0.0021,
+        "solar": 0.0021
+      }
+    },
+    "PL": {
+      "iso3": "POL",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 12.86,
+      "mix": {
+        "coal": 0.5132,
+        "solar": 0.2426,
+        "gas": 0.098,
+        "wind": 0.077,
+        "other_fossil": 0.0435,
+        "bioenergy": 0.0156,
+        "hydro": 0.007,
+        "other_renewables": 0.0031
+      }
+    },
+    "PR": {
+      "iso3": "PRI",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 1.26,
+      "mix": {
+        "gas": 0.4921,
+        "other_fossil": 0.246,
+        "coal": 0.2381,
+        "solar": 0.0159,
+        "wind": 0.0079
+      }
+    },
+    "KP": {
+      "iso3": "PRK",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 27.1,
+      "mix": {
+        "hydro": 0.6273,
+        "coal": 0.3406,
+        "other_fossil": 0.0258,
+        "solar": 0.0063
+      }
+    },
+    "PT": {
+      "iso3": "PRT",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 3.13,
+      "mix": {
+        "solar": 0.3706,
+        "wind": 0.2812,
+        "gas": 0.1565,
+        "hydro": 0.1246,
+        "bioenergy": 0.0607,
+        "other_fossil": 0.0064
+      }
+    },
+    "PY": {
+      "iso3": "PRY",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 45.35,
+      "mix": {
+        "hydro": 0.9947,
+        "bioenergy": 0.0053
+      }
+    },
+    "PS": {
+      "iso3": "PSE",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.99,
+      "mix": {
+        "other_fossil": 0.6061,
+        "solar": 0.3939
+      }
+    },
+    "PF": {
+      "iso3": "PYF",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.72,
+      "mix": {
+        "other_fossil": 0.6528,
+        "hydro": 0.2639,
+        "solar": 0.0833
+      }
+    },
+    "QA": {
+      "iso3": "QAT",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 56.18,
+      "mix": {
+        "gas": 0.9594,
+        "solar": 0.0383,
+        "bioenergy": 0.0023
+      }
+    },
+    "RE": {
+      "iso3": "REU",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 3.07,
+      "mix": {
+        "bioenergy": 0.3388,
+        "other_fossil": 0.3029,
+        "coal": 0.1303,
+        "hydro": 0.127,
+        "solar": 0.0945,
+        "wind": 0.0065
+      }
+    },
+    "RO": {
+      "iso3": "ROU",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 3.3,
+      "mix": {
+        "hydro": 0.3303,
+        "solar": 0.1758,
+        "gas": 0.1485,
+        "nuclear": 0.1364,
+        "coal": 0.1273,
+        "wind": 0.0727,
+        "bioenergy": 0.0091
+      }
+    },
+    "RU": {
+      "iso3": "RUS",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 86.38,
+      "mix": {
+        "gas": 0.3984,
+        "hydro": 0.2163,
+        "nuclear": 0.2076,
+        "coal": 0.1584,
+        "other_fossil": 0.0123,
+        "solar": 0.0034,
+        "wind": 0.0032,
+        "bioenergy": 0.0006
+      }
+    },
+    "RW": {
+      "iso3": "RWA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.13,
+      "mix": {
+        "hydro": 0.4602,
+        "gas": 0.2655,
+        "coal": 0.1504,
+        "other_fossil": 0.0885,
+        "solar": 0.0354
+      }
+    },
+    "SA": {
+      "iso3": "SAU",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 454.64,
+      "mix": {
+        "gas": 0.6334,
+        "other_fossil": 0.345,
+        "solar": 0.0181,
+        "wind": 0.0035
+      }
+    },
+    "SD": {
+      "iso3": "SDN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 14.77,
+      "mix": {
+        "hydro": 0.7786,
+        "other_fossil": 0.2031,
+        "solar": 0.0108,
+        "bioenergy": 0.0074
+      }
+    },
+    "SN": {
+      "iso3": "SEN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 7.63,
+      "mix": {
+        "other_fossil": 0.7864,
+        "solar": 0.0891,
+        "wind": 0.0537,
+        "hydro": 0.0406,
+        "bioenergy": 0.0144,
+        "coal": 0.0131,
+        "gas": 0.0026
+      }
+    },
+    "SG": {
+      "iso3": "SGP",
+      "cadence": "monthly",
+      "period": "2026-02",
+      "period_label": "Feb 2026",
+      "total_twh": 4.59,
+      "mix": {
+        "gas": 0.9368,
+        "solar": 0.0349,
+        "other_fossil": 0.0283
+      }
+    },
+    "SH": {
+      "iso3": "SHN",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.01,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "SB": {
+      "iso3": "SLB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.11,
+      "mix": {
+        "other_fossil": 0.9091,
+        "solar": 0.0909
+      }
+    },
+    "SL": {
+      "iso3": "SLE",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.21,
+      "mix": {
+        "hydro": 0.8571,
+        "solar": 0.0952,
+        "other_fossil": 0.0476
+      }
+    },
+    "SV": {
+      "iso3": "SLV",
+      "cadence": "monthly",
+      "period": "2025-12",
+      "period_label": "Dec 2025",
+      "total_twh": 0.72,
+      "mix": {
+        "gas": 0.2361,
+        "hydro": 0.1806,
+        "other_renewables": 0.1806,
+        "solar": 0.1806,
+        "bioenergy": 0.1528,
+        "wind": 0.0417,
+        "other_fossil": 0.0278
+      }
+    },
+    "SO": {
+      "iso3": "SOM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.43,
+      "mix": {
+        "other_fossil": 0.7907,
+        "solar": 0.186,
+        "wind": 0.0233
+      }
+    },
+    "PM": {
+      "iso3": "SPM",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.05,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "RS": {
+      "iso3": "SRB",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 2.07,
+      "mix": {
+        "coal": 0.6667,
+        "hydro": 0.2754,
+        "wind": 0.0242,
+        "bioenergy": 0.0145,
+        "gas": 0.0097,
+        "other_fossil": 0.0097
+      }
+    },
+    "SS": {
+      "iso3": "SSD",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.56,
+      "mix": {
+        "other_fossil": 0.9821,
+        "solar": 0.0179
+      }
+    },
+    "ST": {
+      "iso3": "STP",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.09,
+      "mix": {
+        "other_fossil": 0.8889,
+        "hydro": 0.1111
+      }
+    },
+    "SR": {
+      "iso3": "SUR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 1.74,
+      "mix": {
+        "hydro": 0.5172,
+        "other_fossil": 0.4598,
+        "gas": 0.0115,
+        "bioenergy": 0.0057,
+        "solar": 0.0057
+      }
+    },
+    "SK": {
+      "iso3": "SVK",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 2.2,
+      "mix": {
+        "nuclear": 0.7045,
+        "hydro": 0.1045,
+        "gas": 0.0682,
+        "bioenergy": 0.0364,
+        "solar": 0.0364,
+        "other_fossil": 0.0318,
+        "other_renewables": 0.0182
+      }
+    },
+    "SI": {
+      "iso3": "SVN",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 1.14,
+      "mix": {
+        "nuclear": 0.4386,
+        "hydro": 0.2895,
+        "solar": 0.2193,
+        "gas": 0.0351,
+        "bioenergy": 0.0088,
+        "other_renewables": 0.0088
+      }
+    },
+    "SE": {
+      "iso3": "SWE",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 9.99,
+      "mix": {
+        "hydro": 0.4484,
+        "wind": 0.2412,
+        "nuclear": 0.2002,
+        "solar": 0.0761,
+        "bioenergy": 0.033,
+        "gas": 0.001
+      }
+    },
+    "SZ": {
+      "iso3": "SWZ",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.61,
+      "mix": {
+        "hydro": 0.5738,
+        "bioenergy": 0.3443,
+        "solar": 0.0492,
+        "coal": 0.0328
+      }
+    },
+    "SC": {
+      "iso3": "SYC",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.63,
+      "mix": {
+        "other_fossil": 0.8413,
+        "solar": 0.1429,
+        "wind": 0.0159
+      }
+    },
+    "SY": {
+      "iso3": "SYR",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 24.88,
+      "mix": {
+        "gas": 0.5225,
+        "other_fossil": 0.4421,
+        "hydro": 0.0301,
+        "solar": 0.004,
+        "bioenergy": 0.0012
+      }
+    },
+    "TC": {
+      "iso3": "TCA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.27,
+      "mix": {
+        "other_fossil": 0.963,
+        "solar": 0.037
+      }
+    },
+    "TD": {
+      "iso3": "TCD",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.37,
+      "mix": {
+        "other_fossil": 0.9459,
+        "bioenergy": 0.027,
+        "wind": 0.027
+      }
+    },
+    "TG": {
+      "iso3": "TGO",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.71,
+      "mix": {
+        "gas": 0.7042,
+        "solar": 0.1831,
+        "hydro": 0.1127
+      }
+    },
+    "TH": {
+      "iso3": "THA",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 18.51,
+      "mix": {
+        "gas": 0.712,
+        "coal": 0.1216,
+        "solar": 0.0594,
+        "hydro": 0.0519,
+        "bioenergy": 0.0416,
+        "wind": 0.0135
+      }
+    },
+    "TJ": {
+      "iso3": "TJK",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 1.98,
+      "mix": {
+        "hydro": 0.8636,
+        "coal": 0.1111,
+        "gas": 0.0253
+      }
+    },
+    "TM": {
+      "iso3": "TKM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 33.01,
+      "mix": {
+        "gas": 0.9997,
+        "hydro": 0.0003
+      }
+    },
+    "TL": {
+      "iso3": "TLS",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.51,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "TO": {
+      "iso3": "TON",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.07,
+      "mix": {
+        "other_fossil": 0.8571,
+        "solar": 0.1429
+      }
+    },
+    "TT": {
+      "iso3": "TTO",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 9.55,
+      "mix": {
+        "gas": 0.9948,
+        "other_fossil": 0.0042,
+        "solar": 0.001
+      }
+    },
+    "TN": {
+      "iso3": "TUN",
+      "cadence": "monthly",
+      "period": "2025-12",
+      "period_label": "Dec 2025",
+      "total_twh": 1.5,
+      "mix": {
+        "gas": 0.9867,
+        "wind": 0.0133
+      }
+    },
+    "TR": {
+      "iso3": "TUR",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 26.45,
+      "mix": {
+        "hydro": 0.4416,
+        "coal": 0.166,
+        "solar": 0.1388,
+        "gas": 0.1013,
+        "wind": 0.09,
+        "other_renewables": 0.0344,
+        "bioenergy": 0.0238,
+        "other_fossil": 0.0042
+      }
+    },
+    "TW": {
+      "iso3": "TWN",
+      "cadence": "monthly",
+      "period": "2026-05",
+      "period_label": "May 2026",
+      "total_twh": 25.03,
+      "mix": {
+        "gas": 0.4958,
+        "coal": 0.3588,
+        "solar": 0.0719,
+        "wind": 0.0344,
+        "other_fossil": 0.0272,
+        "hydro": 0.0108,
+        "bioenergy": 0.0012
+      }
+    },
+    "TZ": {
+      "iso3": "TZA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 8.84,
+      "mix": {
+        "gas": 0.6278,
+        "hydro": 0.3167,
+        "other_fossil": 0.043,
+        "bioenergy": 0.0079,
+        "solar": 0.0045
+      }
+    },
+    "UG": {
+      "iso3": "UGA",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 5.81,
+      "mix": {
+        "hydro": 0.8606,
+        "bioenergy": 0.0809,
+        "other_fossil": 0.0293,
+        "solar": 0.0293
+      }
+    },
+    "UA": {
+      "iso3": "UKR",
+      "cadence": "monthly",
+      "period": "2022-09",
+      "period_label": "Sep 2022",
+      "total_twh": 7.61,
+      "mix": {
+        "nuclear": 0.5716,
+        "coal": 0.2694,
+        "wind": 0.0631,
+        "hydro": 0.0618,
+        "gas": 0.0342
+      }
+    },
+    "UY": {
+      "iso3": "URY",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 1.1,
+      "mix": {
+        "hydro": 0.4727,
+        "wind": 0.2364,
+        "bioenergy": 0.1455,
+        "other_fossil": 0.1273,
+        "solar": 0.0182
+      }
+    },
+    "US": {
+      "iso3": "USA",
+      "cadence": "monthly",
+      "period": "2026-06",
+      "period_label": "Jun 2026",
+      "total_twh": 412.84,
+      "mix": {
+        "gas": 0.3926,
+        "nuclear": 0.17,
+        "coal": 0.1388,
+        "solar": 0.1238,
+        "wind": 0.1029,
+        "hydro": 0.0555,
+        "bioenergy": 0.0088,
+        "other_fossil": 0.004,
+        "other_renewables": 0.0034
+      }
+    },
+    "UZ": {
+      "iso3": "UZB",
+      "cadence": "yearly",
+      "period": "2025-01",
+      "period_label": "2025",
+      "total_twh": 86.7,
+      "mix": {
+        "gas": 0.7232,
+        "solar": 0.075,
+        "hydro": 0.0727,
+        "coal": 0.0657,
+        "wind": 0.0461,
+        "other_fossil": 0.0173
+      }
+    },
+    "VC": {
+      "iso3": "VCT",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.15,
+      "mix": {
+        "other_fossil": 0.8667,
+        "hydro": 0.1333
+      }
+    },
+    "VE": {
+      "iso3": "VEN",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 80.13,
+      "mix": {
+        "hydro": 0.911,
+        "gas": 0.0449,
+        "other_fossil": 0.0437,
+        "wind": 0.0002,
+        "solar": 0.0001
+      }
+    },
+    "VG": {
+      "iso3": "VGB",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.17,
+      "mix": {
+        "other_fossil": 1.0
+      }
+    },
+    "VI": {
+      "iso3": "VIR",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.68,
+      "mix": {
+        "other_fossil": 0.9706,
+        "solar": 0.0294
+      }
+    },
+    "VN": {
+      "iso3": "VNM",
+      "cadence": "monthly",
+      "period": "2025-10",
+      "period_label": "Oct 2025",
+      "total_twh": 26.19,
+      "mix": {
+        "hydro": 0.5067,
+        "coal": 0.3582,
+        "gas": 0.0573,
+        "solar": 0.0458,
+        "wind": 0.0321
+      }
+    },
+    "VU": {
+      "iso3": "VUT",
+      "cadence": "yearly",
+      "period": "2023-01",
+      "period_label": "2023",
+      "total_twh": 0.08,
+      "mix": {
+        "other_fossil": 0.75,
+        "hydro": 0.125,
+        "solar": 0.125
+      }
+    },
+    "WS": {
+      "iso3": "WSM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 0.16,
+      "mix": {
+        "other_fossil": 0.5625,
+        "hydro": 0.1875,
+        "solar": 0.1875,
+        "bioenergy": 0.0625
+      }
+    },
+    "XK": {
+      "iso3": "XKX",
+      "cadence": "monthly",
+      "period": "2026-04",
+      "period_label": "Apr 2026",
+      "total_twh": 0.44,
+      "mix": {
+        "coal": 0.8182,
+        "hydro": 0.1136,
+        "wind": 0.0682
+      }
+    },
+    "YE": {
+      "iso3": "YEM",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 5.25,
+      "mix": {
+        "other_fossil": 0.8762,
+        "solar": 0.1124,
+        "gas": 0.0114
+      }
+    },
+    "ZA": {
+      "iso3": "ZAF",
+      "cadence": "monthly",
+      "period": "2026-03",
+      "period_label": "Mar 2026",
+      "total_twh": 18.03,
+      "mix": {
+        "coal": 0.7571,
+        "solar": 0.0876,
+        "nuclear": 0.0771,
+        "wind": 0.0477,
+        "hydro": 0.0233,
+        "other_fossil": 0.0055,
+        "other_renewables": 0.0017
+      }
+    },
+    "ZM": {
+      "iso3": "ZMB",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 19.72,
+      "mix": {
+        "hydro": 0.8621,
+        "coal": 0.108,
+        "other_fossil": 0.0172,
+        "solar": 0.0086,
+        "bioenergy": 0.0041
+      }
+    },
+    "ZW": {
+      "iso3": "ZWE",
+      "cadence": "yearly",
+      "period": "2024-01",
+      "period_label": "2024",
+      "total_twh": 10.26,
+      "mix": {
+        "hydro": 0.5556,
+        "coal": 0.4288,
+        "bioenergy": 0.0117,
+        "solar": 0.0039
+      }
+    }
+  }
+}
