@@ -57,25 +57,6 @@
           [-97.45, 27.78]
         ]]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "fujairah",
-        "name": "Fujairah (terminals + offshore anchorage)",
-        "country": "United Arab Emirates",
-        "verified": false
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [56.30, 25.05],
-          [56.75, 25.05],
-          [56.75, 25.45],
-          [56.30, 25.45],
-          [56.30, 25.05]
-        ]]
-      }
     }
   ]
 }
