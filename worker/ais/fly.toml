@@ -1,0 +1,19 @@
+# Not deployed by this change — committed for review only. Deploying is a
+# separate, explicit step (`fly launch` / `fly deploy`) the user runs themselves,
+# after `fly secrets set AISSTREAM_API_KEY=... SUPABASE_URL=... SUPABASE_SECRET_KEY=...`.
+
+app = "gev-ais-worker"
+primary_region = "iad"
+
+[build]
+
+[processes]
+  app = "node dist/runner.js"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+  processes = ["app"]
+
+[[restart]]
+  policy = "always"
