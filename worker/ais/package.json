@@ -1,0 +1,26 @@
+{
+  "name": "gev-ais-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Long-lived AIS worker for Grid's Eye View tanker-activity layer. Not part of the Vite/Vercel build — deployed separately to Fly.io.",
+  "scripts": {
+    "dev": "node --env-file=../../.env --import tsx src/runner.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "record": "node --env-file=../../.env --import tsx src/runner.ts --record",
+    "replay": "node --import tsx src/runner.ts --replay"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.0"
+  }
+}
