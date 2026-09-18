@@ -1,10 +1,18 @@
 import type { AisFrame } from './ais-types.js';
-import { checkStale, processPosition, type VesselState } from './state-machine.js';
+import { checkStale, isTankerType, processPosition, type VesselPosition, type VesselState } from './state-machine.js';
 import { findTerminalForPosition, type Terminal } from './geo.js';
 import type { ShipTypeRegistry } from './static-registry.js';
 import type { DbWriter } from './db-writer.js';
 
 const SNAPSHOT_MIN_INTERVAL_MS = 30_000; // at most one upsert per terminal per 30s
+
+/** Bound on in-memory pending positions for vessels whose ship type isn't known yet. */
+const MAX_PENDING_POSITIONS = 5000;
+
+interface PendingPosition {
+  pos: VesselPosition;
+  terminal: Terminal;
+}
 
 export interface TerminalStats {
   terminalId: string;
@@ -25,6 +33,8 @@ export class Pipeline {
   private readonly vesselStates = new Map<string, VesselState>(); // key: `${terminalId}:${mmsi}`
   private readonly lastSnapshotAt = new Map<string, number>();
   private readonly stats = new Map<string, TerminalStats>();
+  /** Latest position per MMSI while its ship type is still unknown — resolved (or dropped) once ShipStaticData arrives. */
+  private readonly pendingPositions = new Map<number, PendingPosition>();
 
   constructor(
     private readonly terminals: Terminal[],
@@ -46,7 +56,20 @@ export class Pipeline {
   async handleFrame(frame: AisFrame, now: number): Promise<void> {
     const staticData = frame.Message.ShipStaticData;
     if (staticData) {
-      this.registry.observe(staticData.UserID, staticData.Type);
+      const mmsi = staticData.UserID;
+      this.registry.observe(mmsi, staticData.Type);
+
+      const pending = this.pendingPositions.get(mmsi);
+      if (pending) {
+        this.pendingPositions.delete(mmsi);
+        // Drop it for non-tankers; a tanker's last-known position is processed
+        // now, through the exact same path a live position takes. Since this
+        // vessel has no prior VesselState, this is necessarily a cold start —
+        // it seeds state without emitting a false arrival.
+        if (isTankerType(staticData.Type)) {
+          await this.processTankerPosition(pending.terminal, pending.pos, staticData.Type);
+        }
+      }
       return;
     }
 
@@ -56,31 +79,47 @@ export class Pipeline {
     const terminal = findTerminalForPosition({ lat: pr.Latitude, lon: pr.Longitude }, this.terminals);
     if (!terminal) return;
 
-    const stats = this.stats.get(terminal.id)!;
-    stats.totalPositionReports += 1;
+    this.stats.get(terminal.id)!.totalPositionReports += 1;
+
+    const pos: VesselPosition = {
+      mmsi: pr.UserID,
+      lat: pr.Latitude,
+      lon: pr.Longitude,
+      sog: pr.Sog,
+      navigationalStatus: pr.NavigationalStatus,
+      timestamp: now,
+    };
 
     const shipType = this.registry.get(pr.UserID);
-    if (shipType != null) stats.tankerPositionReports += 1;
+    if (shipType == null) {
+      this.bufferPending(pr.UserID, pos, terminal);
+      return;
+    }
 
-    const key = `${terminal.id}:${pr.UserID}`;
+    await this.processTankerPosition(terminal, pos, shipType);
+  }
+
+  /** Bounded MMSI -> latest-position cache for vessels with no known ship type yet. */
+  private bufferPending(mmsi: number, pos: VesselPosition, terminal: Terminal): void {
+    if (!this.pendingPositions.has(mmsi) && this.pendingPositions.size >= MAX_PENDING_POSITIONS) {
+      const oldest = this.pendingPositions.keys().next().value;
+      if (oldest !== undefined) this.pendingPositions.delete(oldest);
+    }
+    this.pendingPositions.set(mmsi, { pos, terminal });
+  }
+
+  /** The common path for a position known (or just resolved) to belong to a tanker. */
+  private async processTankerPosition(terminal: Terminal, pos: VesselPosition, shipType: number): Promise<void> {
+    const stats = this.stats.get(terminal.id)!;
+    stats.tankerPositionReports += 1;
+
+    const key = `${terminal.id}:${pos.mmsi}`;
     const prev = this.vesselStates.get(key) ?? null;
-    const { state, event } = processPosition(
-      prev,
-      {
-        mmsi: pr.UserID,
-        lat: pr.Latitude,
-        lon: pr.Longitude,
-        sog: pr.Sog,
-        navigationalStatus: pr.NavigationalStatus,
-        timestamp: now,
-      },
-      shipType,
-      terminal,
-    );
+    const { state, event } = processPosition(prev, pos, shipType, terminal);
 
     if (state) {
       this.vesselStates.set(key, state);
-      stats.tankerMmsiSeen.add(pr.UserID);
+      stats.tankerMmsiSeen.add(pos.mmsi);
     }
 
     if (event) {
@@ -89,7 +128,7 @@ export class Pipeline {
       await this.dbWriter.insertEvent(event);
     }
 
-    await this.maybeFlushSnapshot(terminal.id, now);
+    await this.maybeFlushSnapshot(terminal.id, pos.timestamp);
   }
 
   /** Periodic timeout sweep — call roughly every minute in live mode. Never itself the source of an event. */
