@@ -6,6 +6,7 @@
 import { isMobileDevice } from '@/utils';
 import { MapComponent } from './Map';
 import { DeckGLMap, type DeckMapView, type CountryClickPayload } from './DeckGLMap';
+import type maplibregl from 'maplibre-gl';
 import { GlobeMap } from './GlobeMap';
 import type {
   MapLayers,
@@ -92,6 +93,7 @@ export class MapContainer {
   private useGlobe: boolean;
   private isResizingInternal = false;
   private resizeObserver: ResizeObserver | null = null;
+  private layerChangeListeners: Array<(layers: MapLayers) => void> = [];
 
   // ─── Callback cache (survives map mode switches) ───────────────────────────
   private cachedOnStateChanged: ((state: MapContainerState) => void) | null = null;
@@ -408,8 +410,17 @@ export class MapContainer {
 
   public setLayers(layers: MapLayers): void {
     const sanitized = !this.useDeckGL && layers.resilienceScore ? { ...layers, resilienceScore: false } : layers;
-    if (this.useGlobe) { this.globeMap?.setLayers(sanitized); return; }
-    if (this.useDeckGL) { this.deckGLMap?.setLayers(sanitized); } else { this.svgMap?.setLayers(sanitized); }
+    if (this.useGlobe) { this.globeMap?.setLayers(sanitized); } else if (this.useDeckGL) { this.deckGLMap?.setLayers(sanitized); } else { this.svgMap?.setLayers(sanitized); }
+    this.layerChangeListeners.forEach((cb) => cb(sanitized));
+  }
+
+  /**
+   * Generic hook for layers that live outside the deck.gl/globe/SVG renderers
+   * (e.g. TankerLayer, a plain MapLibre layer). Fires on every setLayers call
+   * with the full, current MapLayers state.
+   */
+  public onLayersChanged(callback: (layers: MapLayers) => void): void {
+    this.layerChangeListeners.push(callback);
   }
 
   public getState(): MapContainerState {
@@ -778,6 +789,11 @@ export class MapContainer {
     if (this.useDeckGL) return this.deckGLMap?.getBbox() ?? null;
     if (this.useGlobe) return this.globeMap?.getBbox() ?? null;
     return null;
+  }
+
+  /** null on globe/mobile-SVG mode — only the deck.gl/MapLibre renderer exposes a native map instance. */
+  public getMaplibreMap(): maplibregl.Map | null {
+    return this.useDeckGL ? (this.deckGLMap?.getMaplibreMap() ?? null) : null;
   }
 
   public onStateChanged(callback: (state: MapContainerState) => void): void {

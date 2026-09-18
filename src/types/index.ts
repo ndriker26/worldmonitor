@@ -757,6 +757,7 @@ export interface MapLayers {
   usTransmission: boolean;
   oilGasPipelines: boolean;
   oilGasFields: boolean;
+  tankerActivity: boolean;
 }
 
 export interface AIDataCenter {

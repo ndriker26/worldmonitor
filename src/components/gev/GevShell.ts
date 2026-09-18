@@ -9,6 +9,7 @@ import { GevDrawer } from './GevDrawer';
 import { GevCountryPanel } from './GevCountryPanel';
 import { GevToast } from './GevToast';
 import { GevSearch } from './GevSearch';
+import { TankerLayer } from './TankerLayer';
 import { startEnergyEventService } from '@/services/energy-events';
 
 export class GevShell {
@@ -19,6 +20,7 @@ export class GevShell {
   private countryPanel: GevCountryPanel;
   private toast: GevToast;
   private search: GevSearch;
+  private tankerLayer: TankerLayer | null = null;
   private loadingEl: HTMLElement | null = null;
   private loadingShownAt = 0;
   private dismissed = false;
@@ -188,6 +190,9 @@ export class GevShell {
     this.ctx.map.initEscalationGetters?.();
     this.ctx.currentTimeRange = this.ctx.map.getTimeRange?.() ?? '7d';
 
+    this.tankerLayer = new TankerLayer(this.ctx.map, this.ctx.mapLayers);
+    this.tankerLayer.mount();
+
     this.topBar.setMap(this.ctx.map);
     this.sidebar.setMap(this.ctx.map);
     this.drawer.setMap(this.ctx.map);
@@ -238,6 +243,7 @@ export class GevShell {
   }
 
   destroy(): void {
+    this.tankerLayer?.destroy();
     this.topBar.destroy();
     this.countryPanel.destroy();
     this.drawer.destroy();

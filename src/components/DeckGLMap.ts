@@ -5076,6 +5076,10 @@ export class DeckGLMap {
     return `${b.getWest().toFixed(4)},${b.getSouth().toFixed(4)},${b.getEast().toFixed(4)},${b.getNorth().toFixed(4)}`;
   }
 
+  public getMaplibreMap(): maplibregl.Map | null {
+    return this.maplibreMap;
+  }
+
   public setTimeRange(range: TimeRange): void {
     this.state.timeRange = range;
     this.rebuildProtestSupercluster();

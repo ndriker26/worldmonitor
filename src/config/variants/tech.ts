@@ -275,6 +275,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 // Mobile defaults for tech variant
@@ -341,6 +342,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 export const VARIANT_CONFIG: VariantConfig = {

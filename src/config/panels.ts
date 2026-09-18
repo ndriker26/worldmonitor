@@ -168,6 +168,7 @@ const FULL_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const FULL_MOBILE_MAP_LAYERS: MapLayers = {
@@ -235,6 +236,7 @@ const FULL_MOBILE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 // ============================================
@@ -346,6 +348,7 @@ const TECH_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const TECH_MOBILE_MAP_LAYERS: MapLayers = {
@@ -412,6 +415,7 @@ const TECH_MOBILE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 // ============================================
@@ -536,6 +540,7 @@ const FINANCE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
@@ -602,6 +607,7 @@ const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 // ============================================
@@ -684,6 +690,7 @@ const HAPPY_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -750,6 +757,7 @@ const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 // ============================================
@@ -849,6 +857,7 @@ const COMMODITY_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -915,6 +924,7 @@ const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 // ============================================
@@ -949,6 +959,7 @@ const ENERGY_MAP_LAYERS: MapLayers = {
   usTransmission: true,
   oilGasPipelines: true,
   oilGasFields: true,
+  tankerActivity: true,
   pipelines: true,
   weather: true,
   waterways: true,
@@ -1009,6 +1020,7 @@ const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
   pipelines: false,
   natural: true,
   fires: true,

@@ -34,6 +34,7 @@ export class GevSidebar {
       usTransmission: fmtCount(US_TRANSMISSION_LINES.length),
       oilGasPipelines: '…',
       oilGasFields: '…',
+      tankerActivity: 'live',
       weather: 'live',
       waterways: 'static',
       natural: 'live',

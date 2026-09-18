@@ -87,6 +87,7 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   usTransmission:           def('usTransmission',           '&#128268;', 'usTransmissionLines',      'Transmission Lines'),
   oilGasPipelines:          def('oilGasPipelines',          '&#128699;', 'oilGasPipelines',          'Oil & Gas Pipelines'),
   oilGasFields:             def('oilGasFields',             '&#128202;', 'oilGasFields',             'Oil & Gas Fields'),
+  tankerActivity:           def('tankerActivity',           '&#128674;', 'tankerActivity',           'Tanker Activity', ['flat']),
 };
 
 const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
@@ -123,7 +124,7 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'resilienceScore', 'natural', 'weather', 'outages', 'sanctions', 'dayNight',
   ],
   energy: [
-    'usPlants', 'usTransmission', 'oilGasPipelines', 'oilGasFields',
+    'usPlants', 'usTransmission', 'oilGasPipelines', 'oilGasFields', 'tankerActivity',
     'weather', 'natural', 'fires', 'waterways',
   ],
 };
@@ -158,6 +159,8 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   notam: ['flights'],
   ship: ['ais', 'tradeRoutes'],
   vessel: ['ais'],
+  tanker: ['tankerActivity'],
+  tankers: ['tankerActivity'],
   maritime: ['ais', 'waterways', 'tradeRoutes'],
   sea: ['ais', 'waterways', 'cables'],
   ocean: ['cables', 'waterways'],

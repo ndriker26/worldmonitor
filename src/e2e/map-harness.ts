@@ -194,6 +194,7 @@ const allLayersEnabled: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const allLayersDisabled: MapLayers = {
@@ -255,6 +256,7 @@ const allLayersDisabled: MapLayers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 const SEEDED_NEWS_LOCATIONS: Array<{

@@ -143,6 +143,7 @@ const layers = {
   usTransmission: false,
   oilGasPipelines: false,
   oilGasFields: false,
+  tankerActivity: false,
 };
 
 await initI18n();

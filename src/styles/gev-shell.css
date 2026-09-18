@@ -751,6 +751,50 @@
   z-index: 200 !important;
 }
 
+/* ── Tanker Activity popup ───────────────────────────────────── */
+.gev-tanker-popup .maplibregl-popup-content {
+  background: var(--gev-glass);
+  border: 1px solid var(--gev-glass-border);
+  border-radius: var(--gev-radius);
+  box-shadow: var(--gev-shadow);
+  padding: 10px 12px;
+}
+.gev-tanker-popup .maplibregl-popup-tip {
+  border-top-color: var(--gev-glass-border);
+}
+.gev-tanker-popup-body {
+  font-size: 12px;
+  min-width: 170px;
+}
+.gev-tanker-popup-title {
+  font-weight: 600;
+  color: var(--gev-accent);
+  margin-bottom: 6px;
+}
+.gev-tanker-popup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 0;
+  color: var(--text-secondary);
+}
+.gev-tanker-popup-row strong {
+  color: var(--text-primary, #fff);
+}
+.gev-tanker-popup-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 4px 0;
+}
+.gev-tanker-popup-spark {
+  margin: 6px 0 2px;
+}
+.gev-tanker-popup-updated {
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
 /* ── Mobile adjustments ──────────────────────────────────────── */
 @media (max-width: 640px) {
   :root {
