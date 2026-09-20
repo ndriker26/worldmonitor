@@ -147,8 +147,22 @@ export class Pipeline {
     await this.dbWriter.upsertSnapshot({ terminalId, dockedCount: docked, staleCount: stale, updatedAt: now });
   }
 
+  /** Force-writes a row for every terminal regardless of the 30s throttle. Call once at startup and at replay end, so a terminal with zero tanker traffic still gets a row. */
   async flushAllSnapshots(now: number): Promise<void> {
     for (const t of this.terminals) await this.maybeFlushSnapshot(t.id, now, true);
+  }
+
+  /**
+   * Periodic heartbeat — call every 60s in live mode. Unlike flushAllSnapshots
+   * this is NOT forced: it reuses the same 30s throttle as the event-driven
+   * path, so a terminal that just wrote (e.g. from a real arrival/departure)
+   * won't double-write. But because this runs every 60s and the throttle is
+   * only 30s, every terminal — including ones with no tanker traffic at all —
+   * gets a fresh row at least once per sweep, so updated_at never goes stale
+   * past the frontend's 30-minute threshold just because a terminal is quiet.
+   */
+  async sweepSnapshots(now: number): Promise<void> {
+    for (const t of this.terminals) await this.maybeFlushSnapshot(t.id, now);
   }
 
   getCurrentDockedAndStale(terminalId: string): { docked: number; stale: number } {

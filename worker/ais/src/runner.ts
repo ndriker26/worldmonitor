@@ -10,6 +10,7 @@ import { ShipTypeRegistry } from './static-registry.js';
 import { createSupabaseDbWriter } from './supabase-writer.js';
 
 const STALE_SWEEP_INTERVAL_MS = 60_000;
+const SNAPSHOT_SWEEP_INTERVAL_MS = 60_000;
 
 function defaultRecordPath(): string {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -105,6 +106,11 @@ function runLive(recordPath: string | null): void {
 
   const pipeline = new Pipeline(terminals, registry, dbWriter);
 
+  // Every terminal gets a row immediately, even one with zero tankers —
+  // otherwise a quiet terminal never gets a snapshot row at all, since
+  // writes are otherwise only triggered by actual tanker position reports.
+  void pipeline.flushAllSnapshots(Date.now());
+
   let recordStream: ReturnType<typeof createWriteStream> | null = null;
   if (recordPath) {
     mkdirSync(dirname(recordPath), { recursive: true });
@@ -123,10 +129,16 @@ function runLive(recordPath: string | null): void {
   });
 
   const sweepInterval = setInterval(() => pipeline.sweepStale(Date.now()), STALE_SWEEP_INTERVAL_MS);
+  // Heartbeat: at least every 60s per terminal, even with zero tanker
+  // activity, so updated_at never goes stale past the frontend's 30-minute
+  // threshold just because a terminal is quiet. Reuses the same 30s
+  // per-terminal throttle as event-driven writes — see Pipeline.sweepSnapshots.
+  const snapshotSweepInterval = setInterval(() => { void pipeline.sweepSnapshots(Date.now()); }, SNAPSHOT_SWEEP_INTERVAL_MS);
 
   const shutdown = () => {
     console.log('[runner] shutting down');
     clearInterval(sweepInterval);
+    clearInterval(snapshotSweepInterval);
     handle.close();
     recordStream?.end();
     setTimeout(() => process.exit(0), 200); // let the record stream flush

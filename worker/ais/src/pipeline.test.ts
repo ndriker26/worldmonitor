@@ -19,6 +19,19 @@ const TERMINAL: Terminal = {
   bbox: { sw: [-0.1, -0.1], ne: [1.1, 1.1] },
 };
 
+const QUIET_TERMINAL: Terminal = {
+  id: 'quiet-terminal',
+  name: 'Quiet Terminal',
+  country: 'Testland',
+  polygon: [
+    { lat: 10, lon: 10 },
+    { lat: 10, lon: 11 },
+    { lat: 11, lon: 11 },
+    { lat: 11, lon: 10 },
+  ],
+  bbox: { sw: [9.9, 9.9], ne: [11.1, 11.1] },
+};
+
 const INSIDE = { lat: 0.5, lon: 0.5 };
 
 function positionFrame(mmsi: number, overrides: Partial<{ sog: number; navigationalStatus: number }> = {}): AisFrame {
@@ -114,6 +127,59 @@ describe('static-data buffering', () => {
     const stats = pipeline.getStats()[0]!;
     expect(stats.tankerPositionReports).toBe(1);
     expect(pipeline.getCurrentDockedAndStale(TERMINAL.id)).toEqual({ docked: 1, stale: 0 });
+  });
+});
+
+describe('snapshot coverage for quiet terminals', () => {
+  it('flushAllSnapshots writes a row for every terminal, including one with zero tanker traffic', async () => {
+    const { writer, snapshots } = recordingWriter();
+    const pipeline = new Pipeline([TERMINAL, QUIET_TERMINAL], new ShipTypeRegistry(), writer);
+
+    // Only TERMINAL ever sees a tanker; QUIET_TERMINAL never gets a position at all.
+    await pipeline.handleFrame(staticFrame(555, 84), 1000);
+    await pipeline.handleFrame(positionFrame(555, { sog: 0.1, navigationalStatus: 5 }), 1000);
+
+    await pipeline.flushAllSnapshots(2000);
+
+    const quiet = snapshots.filter((s) => s.terminalId === QUIET_TERMINAL.id);
+    expect(quiet).toHaveLength(1);
+    expect(quiet[0]).toMatchObject({ terminalId: QUIET_TERMINAL.id, dockedCount: 0, staleCount: 0, updatedAt: 2000 });
+
+    const active = snapshots.filter((s) => s.terminalId === TERMINAL.id);
+    expect(active.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('sweepSnapshots refreshes a quiet terminal at least every 60s even with no activity', async () => {
+    const { writer, snapshots } = recordingWriter();
+    const pipeline = new Pipeline([QUIET_TERMINAL], new ShipTypeRegistry(), writer);
+
+    await pipeline.flushAllSnapshots(0); // startup write
+    expect(snapshots).toHaveLength(1);
+
+    // Too soon — within the 30s throttle, no new row.
+    await pipeline.sweepSnapshots(10_000);
+    expect(snapshots).toHaveLength(1);
+
+    // 60s later — heartbeat writes again even though nothing changed.
+    await pipeline.sweepSnapshots(60_000);
+    expect(snapshots).toHaveLength(2);
+    expect(snapshots[1]).toMatchObject({ terminalId: QUIET_TERMINAL.id, dockedCount: 0, staleCount: 0, updatedAt: 60_000 });
+  });
+
+  it('sweepSnapshots does not double-write a terminal that just wrote from a real event', async () => {
+    const { writer, snapshots } = recordingWriter();
+    const pipeline = new Pipeline([TERMINAL], new ShipTypeRegistry(), writer);
+
+    await pipeline.flushAllSnapshots(0); // startup write, as runner.ts does
+    expect(snapshots).toHaveLength(1);
+
+    // A real tanker event well past the 30s throttle window — triggers its own write.
+    await pipeline.handleFrame(staticFrame(777, 84), 40_000);
+    await pipeline.handleFrame(positionFrame(777, { sog: 0.1, navigationalStatus: 5 }), 40_000);
+    expect(snapshots).toHaveLength(2); // the event-driven write
+
+    await pipeline.sweepSnapshots(40_000 + 1_000); // 1s later — well within the 30s throttle
+    expect(snapshots).toHaveLength(2);
   });
 });
 
