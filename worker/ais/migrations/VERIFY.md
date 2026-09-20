@@ -25,26 +25,47 @@ written a snapshot yet.
 
 ## 2. Publishable key is rejected on insert
 
+PowerShell 5.1's argument parsing mangles inline JSON passed to `curl.exe`
+via `-d '...'` — the outer quoting gets lost by the time curl sees it, and
+PostgREST rejects the resulting malformed body with `PGRST102` (a parsing
+error, not the RLS rejection this test is actually checking for). Writing
+the JSON to a file first sidesteps PowerShell's quoting entirely:
+
 ```powershell
+$body = '{"terminal_id":"verify_test","docked_count":0,"stale_count":0}'
+$bodyFile = Join-Path $env:TEMP 'tanker-verify-body.json'
+Set-Content -Path $bodyFile -Value $body -Encoding ascii -NoNewline
+
 curl.exe -s -o - -w "`nHTTP %{http_code}`n" -X POST "$url/rest/v1/terminal_snapshot" `
   -H "apikey: $publishable" `
   -H "Authorization: Bearer $publishable" `
   -H "Content-Type: application/json" `
-  -d '{"terminal_id":"verify_test","docked_count":0,"stale_count":0}'
+  --data-binary "@$bodyFile"
+
+Remove-Item $bodyFile
 ```
 Expect **HTTP 401 or 403**, with a body mentioning row-level security (exact
 code depends on your PostgREST version — either is correct here; a 200/201
-means the RLS policy isn't doing its job).
+means the RLS policy isn't doing its job; `PGRST102` means the body didn't
+make it through intact — re-check the file, not the policy).
 
 ## 3. Secret key can insert
 
+Same file-based approach as step 2, so PowerShell can't mangle the body:
+
 ```powershell
+$body = '{"terminal_id":"verify_test","docked_count":0,"stale_count":0}'
+$bodyFile = Join-Path $env:TEMP 'tanker-verify-body.json'
+Set-Content -Path $bodyFile -Value $body -Encoding ascii -NoNewline
+
 curl.exe -s -o - -w "`nHTTP %{http_code}`n" -X POST "$url/rest/v1/terminal_snapshot" `
   -H "apikey: $secret" `
   -H "Authorization: Bearer $secret" `
   -H "Content-Type: application/json" `
   -H "Prefer: return=representation" `
-  -d '{"terminal_id":"verify_test","docked_count":0,"stale_count":0}'
+  --data-binary "@$bodyFile"
+
+Remove-Item $bodyFile
 ```
 Expect **HTTP 201** and the inserted row echoed back.
 
