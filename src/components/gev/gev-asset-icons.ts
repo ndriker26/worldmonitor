@@ -259,24 +259,32 @@ export function gevAssetSvg(key: string, size = 28): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 128 128" aria-hidden="true">${cellSvg(key)}</svg>`;
 }
 
+/** Atlas layout shared by the runtime and scripts/gen-gev-icon-atlas.ts. */
+export function gevAtlasLayout(): { svg: string; width: number; height: number } {
+  const rows = Math.ceil(KEYS.length / COLS);
+  const width = COLS * CELL;
+  const height = rows * CELL;
+  const cells = KEYS.map((key, i) =>
+    `<g transform="translate(${(i % COLS) * CELL} ${Math.floor(i / COLS) * CELL})">${cellSvg(key)}</g>`).join('');
+  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${cells}</svg>`, width, height };
+}
+
+// deck.gl can't decode SVG atlases (createImageBitmap rejects SVG), so the
+// atlas ships as a PNG rendered from this file. Regenerate after editing art:
+//   bun scripts/gen-gev-icon-atlas.ts
+const ATLAS_PNG = '/gev-icons.png';
+
 let atlasUrl: string | null = null;
 let atlasMapping: Record<string, { x: number; y: number; width: number; height: number; anchorY: number; mask: boolean }> | null = null;
 
 function buildAtlas(): void {
   if (atlasUrl && atlasMapping) return;
-  const rows = Math.ceil(KEYS.length / COLS);
-  const w = COLS * CELL;
-  const h = rows * CELL;
   const mapping: NonNullable<typeof atlasMapping> = {};
-  const cells = KEYS.map((key, i) => {
-    const x = (i % COLS) * CELL;
-    const y = Math.floor(i / COLS) * CELL;
+  KEYS.forEach((key, i) => {
     // anchorY near the plot's base so the building sits on the location.
-    mapping[key] = { x, y, width: CELL, height: CELL, anchorY: 98, mask: false };
-    return `<g transform="translate(${x} ${y})">${cellSvg(key)}</g>`;
-  }).join('');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${cells}</svg>`;
-  atlasUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    mapping[key] = { x: (i % COLS) * CELL, y: Math.floor(i / COLS) * CELL, width: CELL, height: CELL, anchorY: 98, mask: false };
+  });
+  atlasUrl = ATLAS_PNG;
   atlasMapping = mapping;
 }
 
