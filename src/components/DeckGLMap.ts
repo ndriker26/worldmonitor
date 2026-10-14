@@ -7,6 +7,7 @@ import { MapboxOverlay } from '@deck.gl/mapbox';
 import type { Layer, LayersList, PickingInfo } from '@deck.gl/core';
 import { GeoJsonLayer, ScatterplotLayer, PathLayer, IconLayer, TextLayer, PolygonLayer } from '@deck.gl/layers';
 import maplibregl from 'maplibre-gl';
+import { createGevPlantIconLayer, createGevFieldIconLayer } from './gev/gev-asset-icons';
 import { registerPMTilesProtocol, FALLBACK_DARK_STYLE, FALLBACK_LIGHT_STYLE, getMapProvider, getMapTheme, getStyleForProvider, isLightMapTheme } from '@/config/basemap';
 import Supercluster from 'supercluster';
 import type {
@@ -1521,7 +1522,7 @@ export class DeckGLMap {
 
     // US power plants layer (energy variant) — glow halo first, then icon on top
     if (mapLayers.usPlants && this.isLayerVisible('usPlants')) {
-      layers.push(this.createUsPlantsGlowLayer());
+      if (!IS_ENERGY_VIEW) layers.push(this.createUsPlantsGlowLayer());
       layers.push(this.createUsPlantsLayer());
     }
     layers.push(this.createEmptyGhost('us-plants-layer'));
@@ -1534,7 +1535,7 @@ export class DeckGLMap {
 
     // Global oil & gas fields + terminals layer — glow halo first, then dot on top
     if (mapLayers.oilGasFields && this.isLayerVisible('oilGasFields')) {
-      layers.push(this.createOilGasFieldsGlowLayer());
+      if (!IS_ENERGY_VIEW) layers.push(this.createOilGasFieldsGlowLayer());
       layers.push(this.createOilGasFieldsLayer());
     }
     layers.push(this.createEmptyGhost('oil-gas-fields-layer'));
@@ -2077,6 +2078,8 @@ export class DeckGLMap {
   }
 
   private createUsPlantsLayer(): IconLayer {
+    // GEV: per-fuel building icons (art lives in gev/gev-asset-icons.ts)
+    if (IS_ENERGY_VIEW) return createGevPlantIconLayer(this.globalPlantsData, this.maplibreMap?.getZoom() ?? 2);
     return new IconLayer<UsPowerPlant>({
       id: 'us-plants-layer',
       data: this.globalPlantsData,
@@ -2162,7 +2165,8 @@ export class DeckGLMap {
     });
   }
 
-  private createOilGasFieldsLayer(): ScatterplotLayer {
+  private createOilGasFieldsLayer(): ScatterplotLayer | IconLayer {
+    if (IS_ENERGY_VIEW) return createGevFieldIconLayer(this.globalOilGasFieldsData, this.maplibreMap?.getZoom() ?? 2);
     const fieldColors: Record<string, [number, number, number, number]> = {
       oil:      [139, 69,  19,  230],   // brown
       gas:      [30,  64,  175, 230],   // dark blue

@@ -7,6 +7,7 @@ import { US_TRANSMISSION_LINES } from '@/config/us-transmission-lines';
 import { loadGemData } from '@/config/gem-data';
 import type { MapContainer } from '@/components';
 import { getDistanceUnit, setDistanceUnit, type DistanceUnit } from '@/utils/unit-pref';
+import { gevAssetSvg, GEV_PLANT_LEGEND, GEV_FIELD_LEGEND } from './gev-asset-icons';
 
 const fmtCount = (n: number): string => n.toLocaleString('en-US');
 
@@ -52,14 +53,11 @@ export class GevSidebar {
         </div>`;
     }).join('');
 
-    const fuelLegend = [
-      ['#ff8c00', 'Nat. Gas'], ['#3c3c3c', 'Coal'],
-      ['#ffdc00', 'Nuclear'],  ['#64b4ff', 'Wind'],
-      ['#ffe632', 'Solar'],    ['#3282dc', 'Hydro'],
-      ['#c83232', 'Oil'],      ['#64b450', 'Biomass'],
-      ['#b450c8', 'Geo.'],     ['#969696', 'Other'],
-    ].map(([color, label]) =>
-      `<span class="gev-legend-dot" style="background:${color}"></span><span class="gev-legend-label">${label}</span>`
+    const fuelLegend = GEV_PLANT_LEGEND.map(([key, label]) =>
+      `<span class="gev-legend-icon">${gevAssetSvg(key, 26)}</span><span class="gev-legend-label">${label}</span>`
+    ).join('');
+    const fieldLegend = GEV_FIELD_LEGEND.map(([key, label]) =>
+      `<span class="gev-legend-icon">${gevAssetSvg(key, 26)}</span><span class="gev-legend-label">${label}</span>`
     ).join('');
 
     const pipeLegend = [
@@ -70,20 +68,24 @@ export class GevSidebar {
     ].map(([color, label]) =>
       `<div class="gev-legend-pipe"><div class="gev-legend-pipe-line" style="background:${color}"></div><span class="gev-legend-label">${label}</span></div>`
     ).join('') +
-    `<div class="gev-legend-pipe"><div class="gev-legend-pipe-dot" style="background:#d97706"></div><span class="gev-legend-label">LNG Terminal</span></div>`;
+    '';
 
     const unit = getDistanceUnit();
 
     this.el.innerHTML = `
-      <div class="gev-sidebar-header">Map Layers</div>
+      <div class="gev-sidebar-header">Layers</div>
       <div class="gev-layer-list" id="gevLayerList">
         ${items}
       </div>
       <div class="gev-sidebar-divider"></div>
       <div class="gev-sidebar-scroll">
         <div class="gev-sidebar-section">
-          <div class="gev-sidebar-section-title">Plant Fuel Types</div>
+          <div class="gev-sidebar-section-title">Power Plants</div>
           <div class="gev-legend-grid">${fuelLegend}</div>
+        </div>
+        <div class="gev-sidebar-section">
+          <div class="gev-sidebar-section-title">Oil &amp; Gas Sites</div>
+          <div class="gev-legend-grid">${fieldLegend}</div>
         </div>
         <div class="gev-sidebar-section">
           <div class="gev-sidebar-section-title">Pipeline Types</div>
