@@ -10,6 +10,8 @@ import { GevCountryPanel } from './GevCountryPanel';
 import { GevToast } from './GevToast';
 import { GevSearch } from './GevSearch';
 import { startEnergyEventService } from '@/services/energy-events';
+import { GevStoryPlayer } from './GevStory';
+import { CASPIAN_STORY } from '@/config/gev-stories';
 
 export class GevShell {
   private ctx: AppContext;
@@ -19,6 +21,7 @@ export class GevShell {
   private countryPanel: GevCountryPanel;
   private toast: GevToast;
   private search: GevSearch;
+  private story: GevStoryPlayer;
   private loadingEl: HTMLElement | null = null;
   private loadingShownAt = 0;
   private dismissed = false;
@@ -31,6 +34,7 @@ export class GevShell {
     this.countryPanel = new GevCountryPanel();
     this.toast = new GevToast();
     this.search = new GevSearch();
+    this.story = new GevStoryPlayer(CASPIAN_STORY);
   }
 
   /**
@@ -66,6 +70,7 @@ export class GevShell {
       if (this.dismissed || !this.loadingEl) return;
       this.dismissed = true;
       this.dismissLoadingScreen(this.loadingEl);
+      if (GevStoryPlayer.shouldAutoplay()) setTimeout(() => this.story.start(), 450);
     };
 
     const mapPainted = () =>
@@ -94,6 +99,20 @@ export class GevShell {
     link.type = 'image/svg+xml';
     (link as HTMLLinkElement).href = '/favicon.svg';
     if (!existing) document.head.appendChild(link);
+
+    // Editorial type: Instrument Serif for headlines, Inter for UI, JetBrains Mono for numbers.
+    if (!document.getElementById('gevFonts')) {
+      const pre = document.createElement('link');
+      pre.rel = 'preconnect';
+      pre.href = 'https://fonts.gstatic.com';
+      pre.crossOrigin = '';
+      document.head.appendChild(pre);
+      const fonts = document.createElement('link');
+      fonts.id = 'gevFonts';
+      fonts.rel = 'stylesheet';
+      fonts.href = 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&display=swap';
+      document.head.appendChild(fonts);
+    }
   }
 
   private buildLoadingScreen(): HTMLElement {
@@ -132,8 +151,8 @@ export class GevShell {
           <circle cx="32" cy="32" r="3.5" fill="#c084fc" filter="url(#gevLoadingGlow)"/>
         </svg>
       </div>
-      <div class="gev-loading-brand">GRID'S EYE VIEW</div>
-      <div class="gev-loading-sub">Energy Infrastructure Monitor</div>
+      <div class="gev-loading-brand">Grid’s Eye View</div>
+      <div class="gev-loading-sub">Where the world’s energy moves</div>
       <div class="gev-loading-bar-wrap">
         <div class="gev-loading-bar"></div>
       </div>
@@ -160,6 +179,18 @@ export class GevShell {
     this.topBar.mount(this.ctx.container);
     this.sidebar.mount(this.ctx.container);
     this.drawer.mount(this.ctx.container);
+    this.story.mount(this.ctx.container);
+    this.story.setHandlers(
+      () => {
+        this.ctx.container.classList.add('gev-story-active');
+        this.sidebar.collapse();
+      },
+      () => {
+        this.ctx.container.classList.remove('gev-story-active');
+        if (window.innerWidth > 640) this.sidebar.expand();
+        this.syncLayers();
+      },
+    );
 
     const ghost = document.createElement('div');
     ghost.id = 'panelsGrid';
@@ -192,6 +223,7 @@ export class GevShell {
     this.sidebar.setMap(this.ctx.map);
     this.drawer.setMap(this.ctx.map);
     this.search.setMap(this.ctx.map);
+    this.story.setMap(this.ctx.map);
     this.search.setOnCountrySelect((name) => void this.countryPanel.show(name));
 
     // Register energy-specific country click handler
@@ -225,8 +257,11 @@ export class GevShell {
 
   private wireSidebarToggle(): void {
     this.ctx.container.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('#gevSidebarToggle')) {
+      const target = e.target as HTMLElement;
+      if (target.closest('#gevSidebarToggle')) {
         this.sidebar.toggle();
+      } else if (target.closest('#gevStoryBtn')) {
+        this.story.start();
       }
     });
   }
@@ -243,5 +278,6 @@ export class GevShell {
     this.drawer.destroy();
     this.toast.destroy();
     this.search.destroy();
+    this.story.destroy();
   }
 }

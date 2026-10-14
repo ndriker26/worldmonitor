@@ -28,8 +28,7 @@ export class GevTopBar {
             <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
-        <span class="gev-brand">GRID'S EYE VIEW</span>
-        <span class="gev-version">v1.0</span>
+        <span class="gev-brand">Grid’s Eye View</span>
       </div>
 
       <div class="gev-topbar-center">
@@ -39,6 +38,10 @@ export class GevTopBar {
       </div>
 
       <div class="gev-topbar-right">
+        <button class="gev-story-launch" id="gevStoryBtn" title="Play the Caspian story" aria-label="Play the Caspian story">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          <span>Caspian story</span>
+        </button>
         <button class="gev-theme-btn" id="gevThemeBtn" title="Toggle light/dark theme" aria-label="Toggle theme">
           ${theme === 'dark' ? '☀' : '🌙'}
         </button>

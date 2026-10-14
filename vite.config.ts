@@ -136,17 +136,17 @@ function htmlVariantPlugin(activeMeta: VariantMeta, activeVariant: string, isDes
           // GevShell.initEarly() removes #gev-preload when the real loading screen takes over.
           .replace(
             /<body>([\s\S]*?)(?=\s*<!-- Force-clear stale service worker)/,
-            `<body style="margin:0;background:#0a0f1a;">
+            `<body style="margin:0;background:#0d0c0a;">
     <div id="app"></div>
-    <div id="gev-preload" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0f1a;z-index:99999;">
+    <div id="gev-preload" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0d0c0a;z-index:99999;">
       <div style="text-align:center;">
-        <div style="color:#a855f7;font-size:20px;font-weight:700;letter-spacing:0.05em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">GRID'S EYE VIEW</div>
-        <div style="width:200px;height:2px;background:#1e293b;margin:16px auto 0;border-radius:1px;overflow:hidden;">
-          <div style="width:40%;height:100%;background:#a855f7;animation:gevLoad 1.5s ease-in-out infinite;border-radius:1px;"></div>
+        <div style="color:#ece6da;font-size:30px;font-weight:400;letter-spacing:-0.01em;font-family:'Instrument Serif',Georgia,'Times New Roman',serif;">Grid’s Eye View</div>
+        <div style="width:120px;height:2px;background:rgba(236,230,218,0.12);margin:18px auto 0;border-radius:1px;overflow:hidden;">
+          <div style="width:40%;height:100%;background:#f2a33a;animation:gevLoad 1.6s cubic-bezier(.65,0,.35,1) infinite;border-radius:1px;"></div>
         </div>
       </div>
     </div>
-    <style>@keyframes gevLoad{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}</style>
+    <style>@keyframes gevLoad{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}</style>
     `
           );
       }
