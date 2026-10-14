@@ -245,9 +245,9 @@ export class GevStoryPlayer {
       padding: { top: padding.top + 40, bottom: padding.bottom + 40, left: padding.left + 20, right: padding.right + 40 },
       bearing: step.camera.bearing ?? 0,
     });
-    if (!cam?.center || cam.zoom == null) return null;
-    const ctr = maplibregl.LngLat.convert(cam.center);
-    return { center: [ctr.lng, ctr.lat], zoom: Math.min(cam.zoom, step.camera.zoom + 1) };
+    if (!cam || cam.zoom == null) return null;
+    // Use the bounds' midpoint: flyTo's own padding shifts it into the open area.
+    return { center: [(minX + maxX) / 2, (minY + maxY) / 2], zoom: Math.min(cam.zoom, step.camera.zoom + 1) };
   }
 
   private allowPitch(on: boolean): void {
@@ -293,7 +293,7 @@ export class GevStoryPlayer {
     }
     // flyTo starts from the live camera, so a mid-flight click just re-targets.
     ml.flyTo({ ...opts, duration: 2600, curve: 1.35, essential: true });
-    ml.once('moveend', () => console.debug('[GEV story] camera', { pitch: ml.getPitch(), maxPitch: ml.getMaxPitch(), zoom: ml.getZoom() }));
+    ml.once('moveend', () => console.debug('[GEV story] camera ' + JSON.stringify({ pitch: ml.getPitch(), maxPitch: ml.getMaxPitch(), zoom: ml.getZoom() })));
   }
 
   /** Story shows only what it talks about. The visitor's layers come back on exit. */
