@@ -16,6 +16,11 @@ const LINE_LAYER = 'gev-story-line';
 const GLOW_LAYER = 'gev-story-glow';
 const SEEN_KEY = 'gev_story_seen';
 
+// Read before the app rewrites the URL with map state.
+const NO_STORY_AT_LOAD = (() => {
+  try { return new URLSearchParams(location.search).has('nostory'); } catch { return false; }
+})();
+
 interface PipelineFeature {
   id: string;
   coordinates: [number, number][];
@@ -34,6 +39,7 @@ export class GevStoryPlayer {
   private onExit: (() => void) | null = null;
   private onEnter: (() => void) | null = null;
   private savedMaxPitch: number | null = null;
+  private savedLayers: MapLayers | null = null;
   private reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
   constructor(story: GevStory) {
@@ -64,7 +70,7 @@ export class GevStoryPlayer {
   /** True when the visitor hasn't seen the story in this browser session. */
   static shouldAutoplay(): boolean {
     try {
-      if (new URLSearchParams(location.search).has('nostory')) return false;
+      if (NO_STORY_AT_LOAD) return false;
       return sessionStorage.getItem(SEEN_KEY) !== '1';
     } catch {
       return true;
@@ -76,7 +82,8 @@ export class GevStoryPlayer {
     this.active = true;
     this.onEnter?.();
     this.allowPitch(true);
-    this.enableLayers(this.story.steps.flatMap((s) => s.layers ?? []));
+    this.focusLayers(this.story.steps.flatMap((s) => s.layers ?? []));
+    void this.loadPipelines();
     this.el.classList.add('open');
     document.addEventListener('keydown', this.keyHandler);
     this.go(0);
@@ -89,6 +96,10 @@ export class GevStoryPlayer {
     document.removeEventListener('keydown', this.keyHandler);
     this.el.classList.remove('open');
     this.clearMarker();
+    if (this.savedLayers && this.map) {
+      this.map.setLayers(this.savedLayers);
+      this.savedLayers = null;
+    }
     // Flatten the camera, then clean up the story overlays.
     const ml = this.getMapLibre();
     if (ml) {
@@ -127,7 +138,11 @@ export class GevStoryPlayer {
     const dir = i >= this.index ? 1 : -1;
     this.index = i;
     this.renderStep(step, dir);
-    this.fly(step);
+    if (step.pipelines?.length && !this.pipelineCache) {
+      void this.loadPipelines().then(() => { if (this.active && this.index === i) this.fly(step); });
+    } else {
+      this.fly(step);
+    }
     this.updateMarker(step);
     void this.updateLines(step);
   }
@@ -212,6 +227,29 @@ export class GevStoryPlayer {
     return ml ?? null;
   }
 
+  /** For route stops, frame the whole pipeline instead of a fixed point. */
+  private routeCamera(
+    ml: MapLibreLike,
+    step: GevStoryStep,
+    padding: { top: number; bottom: number; left: number; right: number },
+  ): { center: [number, number]; zoom: number } | null {
+    if (!step.pipelines?.length || !this.pipelineCache || step.marker && step.camera.zoom > 7) return null;
+    const pts = step.pipelines.flatMap((id) => this.pipelineCache?.get(id)?.coordinates ?? []);
+    if (pts.length < 2) return null;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const [x, y] of pts) {
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    const cam = ml.cameraForBounds([[minX, minY], [maxX, maxY]], {
+      padding: { top: padding.top + 40, bottom: padding.bottom + 40, left: padding.left + 20, right: padding.right + 40 },
+      bearing: step.camera.bearing ?? 0,
+    });
+    if (!cam?.center || cam.zoom == null) return null;
+    const ctr = maplibregl.LngLat.convert(cam.center);
+    return { center: [ctr.lng, ctr.lat], zoom: Math.min(cam.zoom, step.camera.zoom + 1) };
+  }
+
   private allowPitch(on: boolean): void {
     const ml = this.getMapLibre();
     if (!ml) return;
@@ -238,9 +276,13 @@ export class GevStoryPlayer {
     const padding = mobile
       ? { top: 40, bottom: Math.round(window.innerHeight * 0.42), left: 20, right: 20 }
       : { top: 60, bottom: 60, left: 440, right: 40 };
+    let center: [number, number] = [c.lon, c.lat];
+    let zoom = c.zoom;
+    const fit = this.routeCamera(ml, step, padding);
+    if (fit) { center = fit.center; zoom = fit.zoom; }
     const opts = {
-      center: [c.lon, c.lat] as [number, number],
-      zoom: c.zoom,
+      center,
+      zoom,
       pitch: c.pitch ?? 0,
       bearing: c.bearing ?? 0,
       padding,
@@ -251,13 +293,19 @@ export class GevStoryPlayer {
     }
     // flyTo starts from the live camera, so a mid-flight click just re-targets.
     ml.flyTo({ ...opts, duration: 2600, curve: 1.35, essential: true });
+    ml.once('moveend', () => console.debug('[GEV story] camera', { pitch: ml.getPitch(), maxPitch: ml.getMaxPitch(), zoom: ml.getZoom() }));
   }
 
-  private enableLayers(keys: string[]): void {
+  /** Story shows only what it talks about. The visitor's layers come back on exit. */
+  private focusLayers(keys: string[]): void {
     if (!this.map) return;
-    for (const k of new Set(keys)) {
-      try { this.map.enableLayer(k as keyof MapLayers); } catch { /* unknown layer */ }
-    }
+    const current = this.map.getState().layers;
+    if (!current) return;
+    this.savedLayers = { ...current };
+    const want = new Set(keys);
+    const next = { ...current };
+    for (const k of Object.keys(next) as (keyof MapLayers)[]) next[k] = want.has(k);
+    this.map.setLayers(next);
   }
 
   // ── Marker ───────────────────────────────────────────────────

@@ -417,6 +417,10 @@
 .gev-shell .deckgl-controls .map-btn + .map-btn { border-top: 1px solid var(--gev-hair); }
 .gev-shell .deckgl-controls .map-btn:hover { background: var(--gev-island-solid); color: var(--gev-paper); border-color: var(--gev-hair); }
 
+/* GEV's sidebar replaces World Monitor's floating layer list and legend */
+.gev-shell .deckgl-layer-toggles,
+.gev-shell .deckgl-legend { display: none !important; }
+
 /* Soft vignette so islands float above the map instead of sitting on it */
 .gev-map-wrap::after {
   content: '';
