@@ -290,13 +290,25 @@ function buildAtlas(): void {
 
 /** Small at world view, full size from about zoom 7. */
 function zoomFactor(zoom: number): number {
-  return Math.max(0.34, Math.min(1, 0.34 + (zoom - 2) * 0.13));
+  return Math.max(0.24, Math.min(1, 0.24 + (zoom - 2) * 0.16));
 }
 
 const PLANT_KEYS = new Set(['nuclear', 'coal', 'natural_gas', 'oil', 'wind', 'solar', 'hydro', 'biomass', 'geothermal']);
 
+// deck draws in data order: sort small-to-large so big plants sit on top of the crowd.
+let sortedSrc: UsPowerPlant[] | null = null;
+let sorted: UsPowerPlant[] = [];
+function bySize(data: UsPowerPlant[]): UsPowerPlant[] {
+  if (data !== sortedSrc) {
+    sortedSrc = data;
+    sorted = [...data].sort((a, b) => (a.capacityMW || 0) - (b.capacityMW || 0));
+  }
+  return sorted;
+}
+
 export function createGevPlantIconLayer(data: UsPowerPlant[], zoom: number): IconLayer<UsPowerPlant> {
   buildAtlas();
+  data = bySize(data);
   const f = zoomFactor(zoom);
   return new IconLayer<UsPowerPlant>({
     id: 'us-plants-layer',
@@ -310,7 +322,7 @@ export function createGevPlantIconLayer(data: UsPowerPlant[], zoom: number): Ico
       return Math.min(62, Math.max(22, 20 + Math.sqrt(mw) * 0.85)) * f;
     },
     sizeUnits: 'pixels',
-    sizeMinPixels: 6,
+    sizeMinPixels: 5,
     sizeMaxPixels: 66,
     updateTriggers: { getSize: [f] },
     pickable: true,

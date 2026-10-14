@@ -15,6 +15,7 @@ const LINE_SOURCE = 'gev-story-lines';
 const LINE_LAYER = 'gev-story-line';
 const GLOW_LAYER = 'gev-story-glow';
 const SEEN_KEY = 'gev_story_seen';
+const RESTORE_KEY = 'gev_story_restore_layers';
 
 // Read before the app rewrites the URL with map state.
 const NO_STORY_AT_LOAD = (() => {
@@ -51,7 +52,17 @@ export class GevStoryPlayer {
     this.el.innerHTML = this.renderShell();
   }
 
-  setMap(map: MapContainer): void { this.map = map; }
+  setMap(map: MapContainer): void {
+    this.map = map;
+    // If the visitor left mid-story last time, give them their own layers back.
+    try {
+      const raw = sessionStorage.getItem(RESTORE_KEY);
+      if (raw) {
+        sessionStorage.removeItem(RESTORE_KEY);
+        map.setLayers({ ...map.getState().layers, ...(JSON.parse(raw) as Partial<MapLayers>) });
+      }
+    } catch { /* storage blocked or bad JSON */ }
+  }
   setHandlers(onEnter: () => void, onExit: () => void): void {
     this.onEnter = onEnter;
     this.onExit = onExit;
@@ -99,6 +110,7 @@ export class GevStoryPlayer {
     if (this.savedLayers && this.map) {
       this.map.setLayers(this.savedLayers);
       this.savedLayers = null;
+      try { sessionStorage.removeItem(RESTORE_KEY); } catch { /* storage blocked */ }
     }
     // Flatten the camera, then clean up the story overlays.
     const ml = this.getMapLibre();
@@ -302,6 +314,7 @@ export class GevStoryPlayer {
     const current = this.map.getState().layers;
     if (!current) return;
     this.savedLayers = { ...current };
+    try { sessionStorage.setItem(RESTORE_KEY, JSON.stringify(this.savedLayers)); } catch { /* storage blocked */ }
     const want = new Set(keys);
     const next = { ...current };
     for (const k of Object.keys(next) as (keyof MapLayers)[]) next[k] = want.has(k);
