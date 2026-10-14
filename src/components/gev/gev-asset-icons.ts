@@ -307,11 +307,11 @@ export function createGevPlantIconLayer(data: UsPowerPlant[], zoom: number): Ico
     getPosition: (d) => [d.lon, d.lat],
     getSize: (d) => {
       const mw = d.capacityMW || 1;
-      return Math.min(50, Math.max(18, 16 + Math.sqrt(mw) * 0.7)) * f;
+      return Math.min(62, Math.max(22, 20 + Math.sqrt(mw) * 0.85)) * f;
     },
     sizeUnits: 'pixels',
     sizeMinPixels: 6,
-    sizeMaxPixels: 54,
+    sizeMaxPixels: 66,
     updateTriggers: { getSize: [f] },
     pickable: true,
     autoHighlight: false,
@@ -333,10 +333,10 @@ export function createGevFieldIconLayer(data: GlobalOilGasField[], zoom: number)
       return d.status === 'development' ? `${key}:dev` : key;
     },
     getPosition: (d) => [d.lon, d.lat],
-    getSize: (d) => (d.type === 'terminal' ? 40 : 34) * f,
+    getSize: (d) => (d.type === 'terminal' ? 52 : 44) * f,
     sizeUnits: 'pixels',
     sizeMinPixels: 8,
-    sizeMaxPixels: 44,
+    sizeMaxPixels: 56,
     updateTriggers: { getSize: [f] },
     pickable: true,
     alphaCutoff: 0.1,
